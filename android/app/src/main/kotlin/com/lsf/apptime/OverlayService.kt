@@ -35,6 +35,8 @@ class OverlayService : Service() {
     private var pmActive = false
     private var pmJustEnded = false       // triggers fade-in after PM fade-out
     private var pmCooldownUntil = 0L
+    private var pmQueue: List<String> = emptyList()   // active triggered messages
+    private var pmQueueIdx: Int = 0                   // next message to show
 
     // ── F.BN — breathing-nudge state ──────────────────────────────────────────
     private var breathingActive = false
@@ -200,7 +202,7 @@ class OverlayService : Service() {
         val shouldShow    = overlayEnabled && visible && text.isNotEmpty() && !isUnmonitored
 
         overlayView.text = text
-        overlayView.alpha = 1f
+        if (!breathingActive && !pmActive) overlayView.alpha = 1f
         overlayView.visibility = if (shouldShow) View.VISIBLE else View.INVISIBLE
 
         if (pmJustEnded && shouldShow) {
@@ -270,30 +272,36 @@ class OverlayService : Service() {
         var wantBn = false
         var wantVw = false
         var maxPct = 0
-        var pmMessage: String? = null
+        val pendingMessages = mutableListOf<String>()
 
         if (phonePct >= 100) {
             wantBn = true; maxPct = maxOf(maxPct, phonePct)
-            if (phonePct >= 200) { wantVw = true; pmMessage = pmMessage ?: PmMessages.phoneTimeExceeded(lang) }
+            if (phonePct >= 200) { wantVw = true; pendingMessages += PmMessages.phoneTimeExceeded(lang) }
         }
         if (appPct >= 100 && pkg != null && !isLauncher) {
             wantBn = true; maxPct = maxOf(maxPct, appPct)
             if (appPct >= 200) {
                 wantVw = true
-                pmMessage = pmMessage ?: PmMessages.appLimitExceeded(lang, pkg.split(".").last())
+                pendingMessages += PmMessages.appLimitExceeded(lang, pkg.split(".").last())
             }
         }
         if (sessionPct >= 100 && pkg != null && !isLauncher) {
             wantBn = true; maxPct = maxOf(maxPct, sessionPct)
-            if (sessionPct >= 200) { wantVw = true; pmMessage = pmMessage ?: PmMessages.sessionExceeded(lang) }
+            if (sessionPct >= 200) { wantVw = true; pendingMessages += PmMessages.sessionExceeded(lang) }
         }
         if (inSleepWindow && pkg != null && !isLauncher) {
             wantVw = true
-            pmMessage = pmMessage ?: PmMessages.sleepingHours(lang)
+            pendingMessages += PmMessages.sleepingHours(lang)
         }
         if (inWakeupWindow && isSocialApp) {
             wantVw = true
-            pmMessage = pmMessage ?: PmMessages.wakeupSocial(lang)
+            pendingMessages += PmMessages.wakeupSocial(lang)
+        }
+
+        // Reset cycling index whenever the active message set changes
+        if (pendingMessages != pmQueue) {
+            pmQueue = pendingMessages
+            pmQueueIdx = 0
         }
 
         val currentUnlocks = prefs.safeGetCount("flutter.unlock_count_$date").toInt()
@@ -307,7 +315,10 @@ class OverlayService : Service() {
 
         if (wantBn) startBreathing() else stopBreathing()
         if (wantVw) applyVisualWeight(maxPct) else resetVisualWeight()
-        if (pmMessage != null) triggerPm(pmMessage)
+        if (pmQueue.isNotEmpty()) {
+            val msg = pmQueue[pmQueueIdx % pmQueue.size]
+            if (triggerPm(msg)) pmQueueIdx = (pmQueueIdx + 1) % pmQueue.size
+        }
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -325,23 +336,24 @@ class OverlayService : Service() {
         if (!pmActive) {
             breathingAnimator?.cancel()
             breathingAnimator = null
-            if (isViewAdded && !pmJustEnded) overlayView.alpha = 1f
+            if (isViewAdded && !pmJustEnded) {
+                val from = overlayView.alpha
+                if (from < 1f) animateBreathe(overlayView, from, 1f, 400L) {}
+                else overlayView.alpha = 1f
+            }
         }
     }
 
     private fun scheduleBreathe() {
         if (!breathingActive || !isViewAdded || pmActive) return
         val fadeOutMs = (2_000L..3_000L).random()
-        val dimMs     = (3_000L..6_000L).random()
         val fadeInMs  = (2_000L..3_000L).random()
 
         animateBreathe(overlayView, 1f, DIM_ALPHA, fadeOutMs) {
-            handler.postDelayed({
-                if (!breathingActive || pmActive) return@postDelayed
-                animateBreathe(overlayView, DIM_ALPHA, 1f, fadeInMs) {
-                    if (breathingActive) scheduleBreathe()
-                }
-            }, dimMs)
+            if (!breathingActive || pmActive) return@animateBreathe
+            animateBreathe(overlayView, DIM_ALPHA, 1f, fadeInMs) {
+                if (breathingActive) scheduleBreathe()
+            }
         }
     }
 
@@ -364,13 +376,13 @@ class OverlayService : Service() {
     // F.PM — Personalized Message
     // ─────────────────────────────────────────────────────────────────────────
 
-    private fun triggerPm(message: String) {
+    private fun triggerPm(message: String): Boolean {
         val now = System.currentTimeMillis()
-        if (now < pmCooldownUntil) return
-        if (pmActive) return
-        if (!isViewAdded) return
+        if (now < pmCooldownUntil) return false
+        if (pmActive) return false
+        if (!isViewAdded) return false
         val prefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-        if (!prefs.getBoolean("flutter.overlay_enabled", true)) return
+        if (!prefs.getBoolean("flutter.overlay_enabled", true)) return false
 
         pmActive = true
         pmCooldownUntil = now + 60_000L
@@ -414,6 +426,7 @@ class OverlayService : Service() {
                 }, 20_000L)
             }
         }
+        return true
     }
 
     // ─────────────────────────────────────────────────────────────────────────

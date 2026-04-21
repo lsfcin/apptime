@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../data/insights.dart';
 import '../l10n/app_localizations.dart';
 import '../models/goal_config.dart';
-import '../services/service_channel.dart';
+import '../services/app_info_service.dart';
 import '../services/storage_service.dart';
 import '../theme/app_theme.dart';
 import '../utils/app_info.dart';
@@ -16,8 +16,9 @@ const _kNotMonitored = -1;
 const _kDefault = 0;
 
 class MonitoringScreen extends StatefulWidget {
-  const MonitoringScreen({super.key, required this.storage});
+  const MonitoringScreen({super.key, required this.storage, required this.appInfo});
   final StorageService storage;
+  final AppInfoService appInfo;
 
   @override
   State<MonitoringScreen> createState() => _MonitoringScreenState();
@@ -37,8 +38,8 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
 
   // ── Per-app list ──────────────────────────────────────────────────────────
   _Sort _sort = _Sort.usage;
-  Map<String, String> _appLabels = {};
-  Set<String> _launchers = {};
+
+  Map<String, String> get _appLabels => widget.appInfo.labels;
 
   @override
   void initState() {
@@ -48,25 +49,12 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
       final next = _currentInsightIndex();
       if (next != _insightIndex) setState(() => _insightIndex = next);
     });
-    _loadAppLabels();
   }
 
   @override
   void dispose() {
     _insightTimer?.cancel();
     super.dispose();
-  }
-
-  Future<void> _loadAppLabels() async {
-    final results = await Future.wait([
-      ServiceChannel.getInstalledAppLabels(),
-      ServiceChannel.getLaunchers(),
-    ]);
-    final labels = results[0] as Map<String, String>;
-    final launchers = results[1] as Set<String>;
-    seedDynamicLabels(labels);
-    seedDynamicLaunchers(launchers);
-    if (mounted) setState(() { _appLabels = labels; _launchers = launchers; });
   }
 
   // 4am boundary
@@ -102,13 +90,14 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
   }
 
   bool _showInList(String pkg) {
-    if (isLauncherPkg(pkg) || _launchers.contains(pkg)) return false;
+    if (isLauncherPkg(pkg) || widget.appInfo.launchers.contains(pkg)) return false;
     if (!isUserFacingApp(pkg)) return false;
     if (_appLabels.isEmpty) return true;
-    return _appLabels.containsKey(pkg) || kAppLabels.containsKey(pkg);
+    return _appLabels.containsKey(pkg) || kAppMeta.containsKey(pkg);
   }
 
-  String _labelFor(String pkg) => kAppLabels[pkg] ?? _appLabels[pkg] ?? labelForApp(pkg);
+  // R18: labelForApp() already checks kAppMeta first — no need for a duplicate lookup.
+  String _labelFor(String pkg) => _appLabels[pkg] ?? labelForApp(pkg);
 
   int _effectiveLevel(String pkg) {
     if (_s.disabledApps.contains(pkg)) return _kNotMonitored;
@@ -160,7 +149,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           // ── Insight of the day ──────────────────────────────────────────
-          _InsightCard(
+          _InsightRotatorCard(
             headerLabel: l10n.insightOfDay,
             sourceLabel: l10n.insightViewSource,
             entry: kInsights[_insightIndex],
@@ -284,8 +273,8 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
 
 // ── Insight card ───────────────────────────────────────────────────────────────
 
-class _InsightCard extends StatelessWidget {
-  const _InsightCard({
+class _InsightRotatorCard extends StatelessWidget {
+  const _InsightRotatorCard({
     required this.headerLabel,
     required this.sourceLabel,
     required this.entry,
@@ -325,10 +314,12 @@ class _InsightCard extends StatelessWidget {
                   minimumSize: const Size(0, 32),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                onPressed: () => launchUrl(
-                  Uri.parse(entry.url),
-                  mode: LaunchMode.externalApplication,
-                ),
+                onPressed: () async {
+                  final uri = Uri.tryParse(entry.url);
+                  if (uri != null && await canLaunchUrl(uri)) {
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  }
+                },
                 child: Text(
                   sourceLabel,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(

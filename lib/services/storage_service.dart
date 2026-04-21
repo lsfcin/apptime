@@ -137,13 +137,6 @@ class StorageService {
   int getUnlockToday() => getUnlockCount();
   int getUnlockYesterday() => getUnlockCount(date: _yesterdayKey());
 
-  // Legacy rolling-24h helpers kept for compatibility with AnalyticsService.
-  // They now simply return today's totals (since the day starts at 4am, this
-  // is a cleaner window than the old fractional approximation).
-  int getLast24hMs(String packageName) => getTodayMs(packageName);
-  int getDeviceLast24hMs() => getDeviceTodayMs();
-  int getUnlockLast24h() => getUnlockToday();
-
   /// Packages that have any usage data today (since 04:00) or yesterday.
   List<String> packagesLast24h() {
     final today = _todayKey();
@@ -202,11 +195,6 @@ class StorageService {
   /// Prevents repeated auto-start if the user manually stops monitoring.
   bool get monitoringEverStarted => _prefs.getBool('monitoring_ever_started') ?? false;
   set monitoringEverStarted(bool v) => _prefs.setBool('monitoring_ever_started', v);
-
-  // ── Daily goal ──
-
-  int get dailyGoalMinutes => _prefs.getInt('daily_goal_minutes') ?? 0;
-  set dailyGoalMinutes(int v) => _prefs.setInt('daily_goal_minutes', v);
 
   // ── Language ──
   // null = follow system locale; 'pt' or 'en' = explicit override.

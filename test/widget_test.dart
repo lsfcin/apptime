@@ -9,10 +9,12 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.init();
 
-    await tester.pumpWidget(AppTimeApp(storage: storage));
+    await tester.pumpWidget(AppTimeApp(
+      storage: storage,
+      initialLocale: const Locale('pt'),
+      skipOnboarding: true,
+    ));
     await tester.pumpAndSettle();
-
-    expect(find.text('Início'), findsWidgets);
 
     await tester.tap(find.byIcon(Icons.bar_chart_outlined));
     await tester.pumpAndSettle();

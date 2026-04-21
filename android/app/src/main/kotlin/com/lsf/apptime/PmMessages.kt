@@ -10,7 +10,7 @@ object PmMessages {
     /** 24h total phone time doubled the limit. */
     fun phoneTimeExceeded(lang: String): String =
         if (lang == "en")
-            "you've hit your daily screen limit — excessive use may impair prefrontal control — step away, your brain needs recovery"
+            "you've hit your daily screen limit — excessive use may impair prefrontal control. consider step away, your brain needs recovery"
         else
             "você atingiu seu limite diário de tela — uso excessivo pode prejudicar o controle pré-frontal — afaste-se, seu cérebro precisa recuperar"
 

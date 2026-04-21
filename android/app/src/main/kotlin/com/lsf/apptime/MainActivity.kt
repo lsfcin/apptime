@@ -1,6 +1,5 @@
 package com.lsf.apptime
 
-import android.app.ActivityManager
 import android.app.AppOpsManager
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -76,6 +75,26 @@ class MainActivity : FlutterActivity() {
                             ?.activityInfo?.packageName
                         result.success((fromQuery + setOfNotNull(defaultPkg)).toList())
                     }
+                    "getAppMetadata" -> {
+                        val pm = packageManager
+                        val labels = mutableMapOf<String, String>()
+                        val launcherIntent = Intent(Intent.ACTION_MAIN, null).apply {
+                            addCategory(Intent.CATEGORY_LAUNCHER)
+                        }
+                        for (ri in pm.queryIntentActivities(launcherIntent, 0)) {
+                            labels[ri.activityInfo.packageName] = ri.loadLabel(pm).toString()
+                        }
+                        val homeIntent = Intent(Intent.ACTION_MAIN).apply {
+                            addCategory(Intent.CATEGORY_HOME)
+                        }
+                        val fromQuery = pm.queryIntentActivities(homeIntent, 0)
+                            .map { it.activityInfo.packageName }.toSet()
+                        val defaultPkg = pm
+                            .resolveActivity(homeIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
+                            ?.activityInfo?.packageName
+                        val launchers = (fromQuery + setOfNotNull(defaultPkg)).toList()
+                        result.success(mapOf("labels" to labels, "launchers" to launchers))
+                    }
                     else -> result.notImplemented()
                 }
             }
@@ -96,10 +115,6 @@ class MainActivity : FlutterActivity() {
         return mode == AppOpsManager.MODE_ALLOWED
     }
 
-    @Suppress("DEPRECATION")
-    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
-        val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        return manager.getRunningServices(Int.MAX_VALUE)
-            .any { it.service.className == serviceClass.name }
-    }
+    private fun isServiceRunning(serviceClass: Class<*>): Boolean =
+        serviceClass == MonitoringService::class.java && MonitoringService.isRunning
 }

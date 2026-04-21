@@ -172,10 +172,10 @@ Rule of thumb: a file doing more than one thing should be split. Target ≤ 400 
 - [x] **R33. Migrate `_classificationMessage()` in `analytics_screen.dart` through `AppLocalizations`.**
   Already bilingual via inline PT/EN ternaries — functionally complete. Full l10n key extraction deferred (40 keys, no user-facing regression).
 
-- [ ] **R34. Localise `kInsights` (insights rotator) to English.**
+- [x] **R34. Localise `kInsights` (insights rotator) to English.**
   All 50 entries in `data/insights.dart` are Portuguese only. Add English versions or load from `AppLocalizations`.
 
-- [ ] **R35. Add English versions of `_alertas` / `_solucoes` in `insights_screen.dart`.**
+- [x] **R35. Add English versions of `_alertas` / `_solucoes` in `insights_screen.dart`.**
   Currently Portuguese-only content — English users see PT text.
 
 - [x] **R36. Document `migrateCorruptedDeviceDaily()` run-every-start behavior.**

@@ -23,6 +23,10 @@ class FeedbackEngine(
     private val getMaxWidthPx: () -> Int,
     private val getPrefs: () -> SharedPreferences,
 ) {
+    enum class Phase { TIMER, BREATHING, PM_FADE_OUT, PM_VISIBLE, PM_FADE_IN }
+
+    var phase: Phase = Phase.TIMER
+        private set
     var pmActive = false
         private set
     var pmJustEnded = false
@@ -44,7 +48,7 @@ class FeedbackEngine(
 
         if (goalLevel == 0) {
             stopBreathing()
-            resetVisualWeight()
+            //resetVisualWeight()
             return
         }
 
@@ -54,7 +58,7 @@ class FeedbackEngine(
         if (pkg != null && !isLauncher &&
             AppConstants.parseDisabledApps(prefs).contains(pkg)) {
             stopBreathing()
-            resetVisualWeight()
+            //resetVisualWeight()
             return
         }
 
@@ -134,7 +138,7 @@ class FeedbackEngine(
         }
 
         if (wantBn) startBreathing() else stopBreathing()
-        if (wantVw) applyVisualWeight(maxPct) else resetVisualWeight()
+        //if (wantVw) applyVisualWeight(maxPct) else resetVisualWeight()
         if (pmQueue.isNotEmpty()) {
             val msg = pmQueue[pmQueueIdx % pmQueue.size]
             if (triggerPm(msg)) pmQueueIdx = (pmQueueIdx + 1) % pmQueue.size
@@ -151,6 +155,7 @@ class FeedbackEngine(
     private fun startBreathing() {
         if (breathingActive || pmActive) return
         breathingActive = true
+        phase = Phase.BREATHING
         scheduleBreathe()
     }
 
@@ -159,6 +164,7 @@ class FeedbackEngine(
         if (!pmActive) {
             breathingAnimator?.cancel()
             breathingAnimator = null
+            phase = Phase.TIMER
             if (getViewAdded() && !pmJustEnded) {
                 val from = view.alpha
                 if (from < 1f) animateBreathe(view, from, 1f, 400L) {}
@@ -182,14 +188,14 @@ class FeedbackEngine(
 
     // ── F.VW — Visual Weight ───────────────────────────────────────────────────
 
-    private fun applyVisualWeight(pct: Int) {
-        // 80% → 1.0×  …  100% → 1.2×  …  200% → 1.5× (capped)
-        visualWeightMult = (1f + ((pct - 80).coerceAtLeast(0) * 0.007f)).coerceAtMost(1.5f)
-    }
+    // private fun applyVisualWeight(pct: Int) {
+    //     // 80% → 1.0×  …  100% → 1.2×  …  200% → 1.5× (capped)
+    //     visualWeightMult = (1f + ((pct - 80).coerceAtLeast(0) * 0.007f)).coerceAtMost(1.5f)
+    // }
 
-    private fun resetVisualWeight() {
-        visualWeightMult = 1f
-    }
+    // private fun resetVisualWeight() {
+    //     visualWeightMult = 1f
+    // }
 
     // ── F.PM — Personalized Message ────────────────────────────────────────────
 
@@ -202,6 +208,7 @@ class FeedbackEngine(
         if (!prefs.getBoolean("flutter.overlay_enabled", true)) return false
 
         pmActive = true
+        phase = Phase.PM_FADE_OUT
         pmCooldownUntil = now + 60_000L
         breathingActive = false
         breathingAnimator?.cancel()
@@ -217,13 +224,17 @@ class FeedbackEngine(
             view.textSize = pmFontSize
             view.text = message
             view.visibility = View.VISIBLE
+            phase = Phase.PM_FADE_IN
             animatePm(view, 0f, 1f, 800L) {
+                phase = Phase.PM_VISIBLE
                 handler.postDelayed({
                     if (!pmActive) return@postDelayed
+                    phase = Phase.PM_FADE_OUT
                     animatePm(view, 1f, 0f, 800L) {
                         view.textSize = fontSizeBase
                         setWindowWidth(WindowManager.LayoutParams.WRAP_CONTENT)
                         pmActive = false
+                        phase = Phase.TIMER
                         pmJustEnded = true
                     }
                 }, 20_000L)

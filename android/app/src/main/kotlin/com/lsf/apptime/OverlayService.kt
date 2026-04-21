@@ -14,6 +14,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.PowerManager
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
@@ -25,6 +26,7 @@ class OverlayService : Service() {
     // ── Regular overlay (tiny counter in status-bar zone) ─────────────────────
     private lateinit var overlayView: TextView
     private lateinit var prefs: SharedPreferences
+    private lateinit var powerManager: PowerManager
     private val handler = Handler(Looper.getMainLooper())
     private var isViewAdded = false
 
@@ -41,14 +43,19 @@ class OverlayService : Service() {
     private var lastTopY = -1
 
     // ── Poll loop ─────────────────────────────────────────────────────────────
+    // Use a slower interval when the screen is off — the overlay is invisible
+    // and feedback evaluation is unnecessary, so 2 s wastes ~4× less CPU.
     private val pollRunnable = object : Runnable {
         override fun run() {
-            updateOverlay()
-            if (++evalTick >= 5) {
-                evalTick = 0
-                feedbackEngine.evaluate()
+            val screenOn = powerManager.isInteractive
+            if (screenOn) {
+                updateOverlay()
+                if (++evalTick >= 5) {
+                    evalTick = 0
+                    feedbackEngine.evaluate()
+                }
             }
-            handler.postDelayed(this, 500)
+            handler.postDelayed(this, if (screenOn) 500L else 2_000L)
         }
     }
 
@@ -61,6 +68,7 @@ class OverlayService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(NOTIF_ID, buildNotification())
         prefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        powerManager = getSystemService(POWER_SERVICE) as PowerManager
         if (!isViewAdded) addOverlayView()
         feedbackEngine = FeedbackEngine(
             view         = overlayView,
@@ -131,26 +139,25 @@ class OverlayService : Service() {
     private fun updateOverlay() {
         if (!isViewAdded) return
 
-        val showBg     = prefs.getBoolean("flutter.overlay_show_background", true)
-        val showBorder = prefs.getBoolean("flutter.overlay_show_border", true)
-        val topDp      = readFloat(prefs, "flutter.overlay_top_dp", 40f).coerceIn(0f, 800f)
+        // Snapshot once — prefs.all copies the entire map; reusing it here avoids
+        // multiple copies and reduces synchronized lock acquisitions on the 500ms path.
+        val snap = prefs.all
+
+        val showBg     = snap["flutter.overlay_show_background"] as? Boolean ?: true
+        val showBorder = snap["flutter.overlay_show_border"] as? Boolean ?: true
+        val topDp      = readFloat(snap, "flutter.overlay_top_dp", 40f).coerceIn(0f, 800f)
         val density    = resources.displayMetrics.density
 
         // Font size stored as Int for cross-process reliability;
         // fall back to readFloat for any existing Float/Double legacy data.
         // Flutter shared_preferences stores int as Long on Android; use getLong().toInt().
         val fontSizeBase = run {
-            val asLong = try { prefs.getLong("flutter.overlay_font_size", 0L) }
-                         catch (_: ClassCastException) { 0L }
+            val asLong = snap["flutter.overlay_font_size"] as? Long ?: 0L
             if (asLong > 0L) asLong.toFloat()
-            else readFloat(prefs, "flutter.overlay_font_size", 14f)
+            else readFloat(snap, "flutter.overlay_font_size", 14f)
         }.coerceIn(10f, 30f)
 
         val fontSize = fontSizeBase * feedbackEngine.visualWeightMult
-
-        overlayView.textSize = fontSize
-        overlayView.scaleX = 1f   // never use view scale — font size does the work
-        overlayView.scaleY = 1f
 
         val bg = GradientDrawable().apply {
             cornerRadius = 8f * density
@@ -177,24 +184,34 @@ class OverlayService : Service() {
             }
         }
 
-        if (feedbackEngine.pmActive) return   // PM owns text and visibility
+        if (feedbackEngine.pmActive) return   // PM owns text, size, alpha, and visibility
 
-        val text           = prefs.getString("flutter.overlay_text", "") ?: ""
-        val visible        = prefs.getBoolean("flutter.overlay_visible", false)
-        val overlayEnabled = prefs.getBoolean("flutter.overlay_enabled", true)
-        val currentPkg    = prefs.getString("flutter.current_pkg", null)
-        val isUnmonitored = currentPkg != null &&
+        // Font size is only written in TIMER/BREATHING phase — PM phase sets its own size.
+        overlayView.textSize = fontSize
+        overlayView.scaleX = 1f
+        overlayView.scaleY = 1f
+
+        val text           = snap["flutter.overlay_text"] as? String ?: ""
+        val visible        = snap["flutter.overlay_visible"] as? Boolean ?: false
+        val overlayEnabled = snap["flutter.overlay_enabled"] as? Boolean ?: true
+        val currentPkg     = snap["flutter.current_pkg"] as? String
+        val isUnmonitored  = currentPkg != null &&
             AppConstants.parseDisabledApps(prefs).contains(currentPkg)
         val shouldShow    = overlayEnabled && visible && text.isNotEmpty() && !isUnmonitored
 
-        overlayView.text = text
-        if (!feedbackEngine.breathingActive && !feedbackEngine.pmActive) overlayView.alpha = 1f
-        overlayView.visibility = if (shouldShow) View.VISIBLE else View.INVISIBLE
-
         if (feedbackEngine.pmJustEnded && shouldShow) {
             feedbackEngine.pmJustEnded = false
+            overlayView.text = text
+            overlayView.visibility = View.VISIBLE
+            overlayView.alpha = 0f   // anchor start point before animating
             feedbackEngine.fadeInView(500L)
+            return
         }
+
+        overlayView.text = text
+        // Only hard-reset alpha in TIMER phase; BREATHING phase owns alpha via its animator.
+        if (feedbackEngine.phase == FeedbackEngine.Phase.TIMER) overlayView.alpha = 1f
+        overlayView.visibility = if (shouldShow) View.VISIBLE else View.INVISIBLE
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -214,8 +231,8 @@ class OverlayService : Service() {
     // Helpers
     // ─────────────────────────────────────────────────────────────────────────
 
-    private fun readFloat(prefs: SharedPreferences, key: String, default: Float): Float {
-        val raw = prefs.all[key] ?: return default
+    private fun readFloat(snap: Map<String, *>, key: String, default: Float): Float {
+        val raw = snap[key] ?: return default
         return when (raw) {
             is Float  -> raw
             is Double -> raw.toFloat()

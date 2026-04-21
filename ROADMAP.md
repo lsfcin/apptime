@@ -5,8 +5,8 @@ Read the next milestone, implement it bullet by bullet. After a bullet is done, 
 ## Milestone — Refactor ✓
 x Performed the planned refactor in REFACTOR_PLAN, all items ticked. CODE_STRUCTURE_pre_refactor.md archived; CODE_STRUCTURE.md updated to reflect post-refactor layout.
 
-## Milestone — Optimization
-- Perform the planned optimization in the OPTIMIZATION_PLAN, point by point, ticking them with an x. But before you may consult our plan and compare with the updated CODE_STRUCTURE.md, given we've performed major refactors lately the optimization plan may require adjustments. If there are core decisions to make about the the optimization tasks, ask me, give me the options before, and then follow the plan. then rename the previous CODE_STRUCTURE file as old, or deprecated, or any other word you see more fit and create a new one representing the current structure.
+## Milestone — Optimization ✓
+x Performed the planned optimization in OPTIMIZATION_PLAN: O1–O8, O10–O16, O21 implemented; O11 (package index) added. O9 superseded by O8. O17–O19 deferred (acceptable for current scale). O20 (SQLite) is a future architectural change.
 
 ## Milestone — Prepare to PlayStore submission
 

@@ -38,6 +38,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
 
   // ── Per-app list ──────────────────────────────────────────────────────────
   _Sort _sort = _Sort.usage;
+  late List<(String, int)> _packages;
 
   Map<String, String> get _appLabels => widget.appInfo.labels;
 
@@ -45,9 +46,13 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
   void initState() {
     super.initState();
     _insightIndex = _currentInsightIndex();
+    _packages = _sortedPackages();
     _insightTimer = Timer.periodic(const Duration(seconds: 30), (_) {
       final next = _currentInsightIndex();
-      if (next != _insightIndex) setState(() => _insightIndex = next);
+      setState(() {
+        if (next != _insightIndex) _insightIndex = next;
+        _packages = _sortedPackages();
+      });
     });
   }
 
@@ -66,20 +71,20 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
 
   List<(String, int)> _sortedPackages() {
     final today = _anchor(DateTime.now());
-    final packages = <String>{};
+    // Single pass: accumulate per-package ms while scanning each day's packages.
+    // Eliminates the previous O(7n) double-iteration (collect set, then re-scan per pkg).
+    final acc = <String, int>{};
     for (int i = 0; i < 7; i++) {
       final dateStr = _fmt(today.subtract(Duration(days: i)));
-      packages.addAll(_s.packagesDailyMs(dateStr));
+      for (final pkg in _s.packagesDailyMs(dateStr)) {
+        acc[pkg] = (acc[pkg] ?? 0) + _s.getDailyMs(pkg, date: dateStr);
+      }
     }
 
-    final visible = packages.where(_showInList).map((pkg) {
-      int ms = 0;
-      for (int i = 0; i < 7; i++) {
-        final dateStr = _fmt(today.subtract(Duration(days: i)));
-        ms += _s.getDailyMs(pkg, date: dateStr);
-      }
-      return (pkg, ms);
-    }).toList();
+    final visible = acc.entries
+        .where((e) => _showInList(e.key))
+        .map((e) => (e.key, e.value))
+        .toList();
 
     if (_sort == _Sort.usage) {
       visible.sort((a, b) => b.$2.compareTo(a.$2));
@@ -128,7 +133,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final globalLevel = _s.goalLevel;
-    final packages = _sortedPackages();
+    final packages = _packages;
 
     return Scaffold(
       appBar: AppBar(
@@ -141,6 +146,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
             ),
             onPressed: () => setState(() {
               _sort = _sort == _Sort.usage ? _Sort.alpha : _Sort.usage;
+              _packages = _sortedPackages();
             }),
           ),
         ],
@@ -305,7 +311,12 @@ class _InsightRotatorCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: AppSpacing.sm),
-            Text(entry.text, style: Theme.of(context).textTheme.bodySmall),
+            Text(
+              Localizations.localeOf(context).languageCode == 'en'
+                  ? entry.textEn
+                  : entry.text,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(

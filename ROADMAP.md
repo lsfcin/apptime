@@ -2,12 +2,6 @@
 
 Read the next milestone, implement it bullet by bullet. After a bullet is done, change the dash - to an x, and commit.
 
-## Milestone — Refactor ✓
-x Performed the planned refactor in REFACTOR_PLAN, all items ticked. CODE_STRUCTURE_pre_refactor.md archived; CODE_STRUCTURE.md updated to reflect post-refactor layout.
-
-## Milestone — Optimization ✓
-x Performed the planned optimization in OPTIMIZATION_PLAN: O1–O8, O10–O16, O21 implemented; O11 (package index) added. O9 superseded by O8. O17–O19 deferred (acceptable for current scale). O20 (SQLite) is a future architectural change.
-
 ## Milestone — Prepare to PlayStore submission
 
 ### Checklist

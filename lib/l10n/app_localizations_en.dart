@@ -64,14 +64,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override String fontSize(int size) => 'Font size: ${size}sp';
   @override String get sectionBehavior => 'Behavior';
   @override String get noGoalSet => 'No goal set';
-  @override String get perAppControlTitle => 'Per-app control';
+  @override String get perAppControlTitle => 'Per-app definitions';
   @override String get perAppUsageCaption => 'Usage shown is the total for the last 7 days';
   @override String get levelChipOff => 'off';
   @override String get levelChipDefault => 'default';
   @override String get levelChipMin => 'min';
   @override String get levelChipMax => 'max';
   @override String get levelMenuNotMonitored => 'not monitored';
-  @override String get levelMenuDefault => 'default (global goal)';
+  @override String get levelMenuDefault => 'default (global config.)';
   @override String get levelMenuMinimal => 'occasional';
   @override String get levelMenuNormal => 'regular';
   @override String get levelMenuExtensive => 'frequent';

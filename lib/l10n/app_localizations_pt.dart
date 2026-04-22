@@ -66,14 +66,14 @@ class AppLocalizationsPt extends AppLocalizations {
   @override String fontSize(int size) => 'Tamanho da fonte: ${size}sp';
   @override String get sectionBehavior => 'Comportamento';
   @override String get noGoalSet => 'Sem meta definida';
-  @override String get perAppControlTitle => 'Controle por app';
+  @override String get perAppControlTitle => 'Definições por app';
   @override String get perAppUsageCaption => 'O uso exibido é o total dos últimos 7 dias';
   @override String get levelChipOff => 'desl.';
   @override String get levelChipDefault => 'padrão';
   @override String get levelChipMin => 'mín.';
   @override String get levelChipMax => 'máx.';
   @override String get levelMenuNotMonitored => 'não monitorado';
-  @override String get levelMenuDefault => 'padrão (meta global)';
+  @override String get levelMenuDefault => 'padrão (config. geral)';
   @override String get levelMenuMinimal => 'ocasional';
   @override String get levelMenuNormal => 'regular';
   @override String get levelMenuExtensive => 'frequente';

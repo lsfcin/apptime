@@ -37,6 +37,56 @@ Completed milestones → [HISTORY.md](HISTORY.md)
 - `disabledApps` stored as JSON string via `setString` (not `setStringList`) for cross-process compatibility
 - `com.google.android.googlequicksearchbox` is treated as a launcher (excluded from per-app lists, overlay follows launcher rules)
 
+## File Map
+
+**Flutter / Dart (`lib/`)**
+
+- `main.dart` — app entry point; initializes Flutter binding and root widget
+- `main_screen.dart` — root navigation shell with bottom navigation bar
+- `models/goal_config.dart` — GoalConfig model; goal level enum and per-app overrides
+- `services/storage_service.dart` — all SharedPreferences reads/writes; single source of persisted state
+- `services/service_channel.dart` — MethodChannel bridge to Kotlin MonitoringService
+- `services/analytics_service.dart` — computes usage statistics from raw SharedPreferences data
+- `services/app_info_service.dart` — queries installed app metadata from the OS
+- `screens/home_screen.dart` — home tab; today's usage summary and quick controls
+- `screens/monitoring_screen.dart` — per-app enable/disable and goal override list
+- `screens/goal_screen.dart` — global goal level selection (Off/Light/Moderate/Intense)
+- `screens/settings_screen.dart` — language toggle, data management, delete-all
+- `screens/onboarding_screen.dart` — first-run permissions and setup flow
+- `screens/per_app_screen.dart` — per-app detail with usage history and goal override
+- `screens/analytics/analytics_screen.dart` — analytics tab shell; day/week/month tab controller
+- `screens/analytics/analytics_helpers.dart` — shared computation helpers for all analytics tabs
+- `screens/analytics/tab_day.dart` — 1-day hourly chart and daily summary
+- `screens/analytics/tab_week.dart` — 7-day trend view
+- `screens/analytics/tab_month.dart` — 30-day trend view
+- `screens/analytics/classification_message.dart` — behavioral classification message widget
+- `screens/insights/insights_screen.dart` — insights tab; research-backed card browser
+- `screens/insights/insight_data.dart` — insight card data model and category definitions
+- `data/insights.dart` — insight card list (category, tab assignment, content reference)
+- `data/insight_content.dart` — full bilingual (PT+EN) text content for insight cards
+- `theme/app_theme.dart` — ThemeData; colors, typography, component styles
+- `utils/date_utils.dart` — date helpers respecting the 04:00 day boundary
+- `utils/time_utils.dart` — time formatting and session duration helpers
+- `utils/duration_format.dart` — human-readable duration strings
+- `utils/app_info.dart` — app metadata and package name helpers
+- `widgets/section_header.dart` — reusable section header widget
+- `l10n/app_localizations.dart` — generated base localization class (do not edit manually)
+- `l10n/app_localizations_en.dart` — English strings
+- `l10n/app_localizations_pt.dart` — Portuguese (PT-BR) strings
+
+**Kotlin (`android/app/src/main/kotlin/com/lsf/apptime/`)**
+
+- `MonitoringService.kt` — foreground service; tracks active app via UsageStatsManager; writes session data to SharedPreferences
+- `OverlayService.kt` — manages TYPE_APPLICATION_OVERLAY window; shows/hides timer overlay; reads SharedPreferences
+- `MainActivity.kt` — Flutter host activity; registers MethodChannels; requests PACKAGE_USAGE_STATS and overlay permissions
+- `BootReceiver.kt` — BroadcastReceiver; auto-starts MonitoringService on BOOT_COMPLETED
+- `FeedbackEngine.kt` — computes nudge messages and overlay visual behavior from goal level and usage duration
+- `GoalThresholds.kt` — goal level constants and time thresholds (Off/Light/Moderate/Intense)
+- `AppConstants.kt` — shared constants: SharedPreferences keys, MethodChannel names
+- `DateUtils.kt` — date key computation with 04:00 day boundary
+- `HistoryBackfill.kt` — backfills missing historical data from UsageStatsManager on first launch
+- `PmMessages.kt` — behavioral nudge message string pools
+
 ## Status
 
 | Item | Value |

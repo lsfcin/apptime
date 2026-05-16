@@ -1,7 +1,10 @@
+// AppLocalizations: hand-written i18n class supporting English and Portuguese
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'app_localizations_pt.dart';
 import 'app_localizations_en.dart';
+
+part 'app_localizations_delegate.dart';
 
 /// Hand-written localizations class — same contract as flutter gen-l10n output.
 /// Supports: pt (PT-BR default), en.
@@ -164,12 +167,10 @@ abstract class AppLocalizations {
   String get insightsTitle;
   String get tabAlerts;
   String get tabSolutions;
-
   // ── Tab30d ───────────────────────────────────────────────────────────────────
   String get block30dSummaryTitle;
   String get block30dChartTitle;
   String get block30dChartText;
-
   // ── GoalScreen ───────────────────────────────────────────────────────────────
   String get goalScreenTitle;
   String get goalLevelSectionTitle;
@@ -185,7 +186,6 @@ abstract class AppLocalizations {
   String get goalOverrideGlobal;
   String get goalSettingsTile;
   String get goalSettingsSub;
-
   // ── Data / Privacy ───────────────────────────────────────────────────────────
   String get sectionData;
   String get deleteAllDataTitle;
@@ -196,24 +196,4 @@ abstract class AppLocalizations {
   String get privacyPolicySub;
   String get disclaimerTitle;
   String get disclaimerBody;
-}
-
-// ─── Delegate ────────────────────────────────────────────────────────────────
-
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
-  const _AppLocalizationsDelegate();
-
-  @override
-  bool isSupported(Locale locale) =>
-      ['pt', 'en'].contains(locale.languageCode);
-
-  @override
-  Future<AppLocalizations> load(Locale locale) async {
-    if (locale.languageCode == 'pt') return AppLocalizationsPt(locale);
-    return AppLocalizationsEn(locale);
-  }
-
-  @override
-  bool shouldReload(_AppLocalizationsDelegate old) => false;
 }

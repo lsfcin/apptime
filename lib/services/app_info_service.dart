@@ -1,3 +1,4 @@
+// AppInfoService: fetches app labels and launcher packages from the native platform channel
 import 'service_channel.dart';
 import '../utils/app_info.dart';
 

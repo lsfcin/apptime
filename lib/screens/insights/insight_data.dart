@@ -1,3 +1,4 @@
+// InsightData: aggregates storage metrics and app info needed to render the insights screen
 import '../../services/storage_service.dart';
 import '../../utils/app_info.dart';
 

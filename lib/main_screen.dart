@@ -1,3 +1,4 @@
+// Main scaffold: bottom navigation between Home, Monitoring, Analytics, Insights, and Settings tabs
 import 'package:flutter/material.dart';
 import 'l10n/app_localizations.dart';
 import 'screens/analytics/analytics_screen.dart';

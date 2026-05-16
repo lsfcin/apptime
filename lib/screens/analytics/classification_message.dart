@@ -1,3 +1,4 @@
+// Classification message: research-backed text feedback based on screen time and unlock count tiers
 import '../../l10n/app_localizations.dart';
 
 // Classification message: 5 time tiers × 4 unlock tiers

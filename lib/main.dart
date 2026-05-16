@@ -1,3 +1,4 @@
+// App entry point: initializes Flutter, requests usage permissions, and routes to onboarding or home
 import 'package:flutter/material.dart';
 import 'l10n/app_localizations.dart';
 import 'screens/onboarding_screen.dart';

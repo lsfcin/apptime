@@ -1,3 +1,4 @@
+// AnalyticsService: computes daily/weekly/monthly usage aggregates from StorageService data
 import '../services/storage_service.dart';
 
 class AppUsage {

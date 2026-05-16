@@ -1,4 +1,5 @@
 # AppTime
+> Android app to reduce phone addiction through awareness, without blocking
 
 Android app to reduce phone addiction through awareness — without blocking. A native floating overlay shows real-time session time for the active app and delivers behavioral nudges based on configurable goal levels.
 
@@ -94,3 +95,25 @@ Completed milestones → [HISTORY.md](HISTORY.md)
 | Phase | Pre-release — Play Store submission pending |
 | Last milestone | Optimization ✓ |
 | Next | Play Store submission (see ROADMAP) |
+
+<!-- routing:start -->
+## Routing
+
+| Subdirectory | Description |
+|--------------|-------------|
+| [`lib/`](lib/CONTEXT.md) | — |
+
+| File | Interface | API | Description |
+|------|-----------|-----|-------------|
+| [`HISTORY.md`](HISTORY.md) | — | — | AppTime — Condensed History |
+| [`README.md`](README.md) | — | — | AppTime |
+| [`ROADMAP.md`](ROADMAP.md) | — | — | AppTime — Roadmap |
+| [`SPECS.md`](SPECS.md) | — | — | AppTime — Code Structure & Reference |
+| [`analysis_options.yaml`](analysis_options.yaml) | — | — | This file configures the analyzer, which statically analyzes Dart code to |
+| [`flutter_launcher_icons.yaml`](flutter_launcher_icons.yaml) | — | — | ← add first-line comment |
+| [`pubspec.yaml`](pubspec.yaml) | — | — | ← add first-line comment |
+| [`docs/privacy_policy.html`](docs/privacy_policy.html) | — | — | ← add first-line comment |
+| [`docs/store_listing.md`](docs/store_listing.md) | — | — | AppTime — Play Store Listing Copy |
+| [`test/goal_thresholds_test.dart`](test/goal_thresholds_test.dart) | [`test/goal_thresholds_test.dart.api`](test/goal_thresholds_test.dart.api) | — | Asserts that GoalThresholds.byLevel (Dart) matches GoalThresholds.kt (Kotlin). |
+| [`test/widget_test.dart`](test/widget_test.dart) | [`test/widget_test.dart.api`](test/widget_test.dart.api) | — | ← add first-line comment |
+<!-- routing:end -->

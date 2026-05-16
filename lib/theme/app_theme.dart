@@ -1,3 +1,4 @@
+// App theme: color palette, text styles, and ThemeData for light and dark mode
 import 'package:flutter/material.dart';
 
 abstract final class AppColors {

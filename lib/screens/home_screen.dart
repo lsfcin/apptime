@@ -1,3 +1,4 @@
+// Home screen: real-time usage summary, insight rotator, and quick-access goal card
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../data/insights.dart';

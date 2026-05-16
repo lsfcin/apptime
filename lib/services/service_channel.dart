@@ -1,3 +1,4 @@
+// ServiceChannel: MethodChannel bridge to Kotlin OverlayService and MonitoringService
 import 'package:flutter/services.dart';
 
 const kServiceChannel = 'apptime/service';

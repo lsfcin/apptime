@@ -5,7 +5,7 @@ Android app to reduce phone addiction through awareness — without blocking. A 
 
 ## Setup
 
-Android only · min SDK 23 · Flutter (UI) + Kotlin (overlay + monitoring)
+Android only · min SDK 23 · Flutter (UI) + Kotlin (overlay + monitoring). Full dev environment: [SETUP.md](SETUP.md)
 
 ## Architecture
 

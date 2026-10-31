@@ -79,7 +79,7 @@ segurar o dedo lá"*
 ## v1 — design decisions (session 1 of 3, 2026-10-30)
 
 Session 1 decides design, session 2 implements and tests on the phone, session 3 publishes.
-Reference: [Overlay Explorations, round 1](https://claude.ai/artifact/TWLxJSe9zxN1YWXSHuBNUY).
+References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas, Stitch).
 
 - **No drag.** Every touch passes through the overlay; `FLAG_NOT_TOUCHABLE` stays. Android hands the
   whole gesture to whichever window gets the DOWN, so "hold to drag, tap passes" cannot be built;
@@ -93,22 +93,39 @@ Reference: [Overlay Explorations, round 1](https://claude.ai/artifact/TWLxJSe9zx
 - **Typography**: one family, Inter, tabular figures (both panels, round 1).
 - **Window alpha**: set `LayoutParams.alpha` ≤ the system's maximum obscuring opacity (0.8), or
   Android 12+ blocks touches under the overlay (`OverlayService.kt:123`).
-- Open until round 2 picks: style finalists, app label on/off, calm colour, daily vs session goal.
+- **Styles to build** (round 2, 2026-10-31): **Quiet pill** (default; status bar, right of the
+  camera) · **Bloco acessível** (low vision; 17sp bold, 96% black + 1dp light rim) · **Side rail**,
+  left or right edge, upper third, in round 1's *tick* shape (horizontal number, readable) rather
+  than round 2's stacked 20dp one. *Selo de canto* is a stretch goal, offered only on gesture
+  navigation: on 3-button navigation that corner belongs to the nav bar, whose window sits above
+  ours. Cut: Notch, Floating capsule, Bottom strip, Ghost, Linha de borda, Anel (cutout fragmentation).
+- **State lives in the text, in every intensity**: `12m` → `52/60m` → `+18m`. Colour never alone.
+  Calm is white / auto ink, not lavender; amber near, orange past, apart in luminance too.
+- **No app name in the timer; daily goal per app** (a long session only triggers a message);
+  **never shrinks to a dot**.
+- **Message**: 6–7 s, 12–15 words at most, header `Mural · 1h 18m hoje` (restores the total that
+  `+18m` hides; from Stitch). Timer stays anchored; switching app cancels it.
+- **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos).
+- **Settings screen** (Claude canvas S4 is the base): gallery shows every built style; per-app
+  light/dark hint `Automático · Sempre escuro · Sempre claro` (the overlay cannot see pixels);
+  landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
+  "Grande").
+- **Open — progress with no goal**: the rail and `52/60m` fill toward the per-app goal
+  (`GoalThresholds.appLimitMinutes`: 60/30/15 min); goal level 0 has none. Recommended: number only,
+  no fill, always calm.
 
-Round 1 panel (Codex · Gemini, 0-10): Notch 7 · 8.5 — Quiet pill 8 · 6.5 — Side rail 4 · 5.5 —
-Bottom strip 5 · 4 — Floating capsule 4 · 5 — Ghost 3 · 3. Both: no variant was tested on a light
-photo, none serves low vision, colour must never carry the state alone.
+Panels: round 1 (Codex · Gemini) Notch 7 · 8.5, Quiet pill 8 · 6.5, Side rail (tick) 4 · 5.5.
+Round 2 (Claude version): Quiet pill 8 · 9, Bloco 7 · 8.5, Selo 7 · 8, Side rail 5 · 6.5 — the
+rail's weak point is glanceability. Both judged Claude's round far more buildable than Stitch's.
 
-**Next session, still design (session 1 continued):**
-1. Round 2 is back from both tools ([refs/REFS.md](refs/REFS.md)). Lucas exports the Stitch result
-   (PNG or HTML) — the agent cannot open it.
-2. Read the Claude Design canvas: `list` with scope `files`, read the `.dc.html` artboards, render
-   them to PNG with Playwright, compare with Stitch, run the Codex + Gemini panel, put the options
-   with their verdicts in front of Lucas.
-3. Screen review: Lucas turns on USB debugging; capture every screen with
-   `~/Android/platform-tools/adb exec-out screencap -p`. Screenshots carry personal usage data, so they stay in the scratchpad.
-   Then panel → one brief per screen group.
-4. Write every pick into this section; implementation (session 2) starts from it alone.
+**Session 2 tests first, on the phone**: the pill renders under the status bar icons (the
+`StatusBar` window is above ours but transparent); WindowInsets for 3-button nav, keyboard and
+rotation; app-switch latency of `UsageStatsManager` on Xiaomi (panel warns 2–5 s).
+
+**Next session, still design**: screen review of the app itself — tabs, their order, what lives in
+each. Phone over adb, capture every screen with `~/Android/platform-tools/adb exec-out screencap -p`
+(personal usage data: scratchpad only) → panel → one brief per screen group. Next design rounds
+use real screenshots of Lucas's phone: the mock phone is not his layout.
 
 Session 2 starts by installing Flutter SDK + JDK 17 in the background: this machine has neither
 (adb is already in `~/Android/platform-tools`).
@@ -134,7 +151,7 @@ prompt provided". The binary ships in the VS Code extension:
 ## Workspace drift, refiled from the wos list 2026-08-16
 
 These were tracked in `/ROADMAP.md`, which was the wrong home: the files live here and no
-workspace-level commit can touch them. The wos ledger's own rule is that a pointer to another
+workspace-level commit can touch them. The wos list's own rule is that a pointer to another
 ROADMAP is a duplicate by definition. Counts regenerate in `/ISSUES.md` § Entropy; never copy them here.
 
 - 🟡 **directories over the crowding cap** — `lib/screens/analytics` (18), `lib/screens` (15),

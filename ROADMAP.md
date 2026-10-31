@@ -81,12 +81,13 @@ segurar o dedo lá"*
 Session 1 decides design, session 2 implements and tests on the phone, session 3 publishes.
 References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas, Stitch).
 
-- **No drag.** Every touch passes through the overlay; `FLAG_NOT_TOUCHABLE` stays. Android hands the
-  whole gesture to whichever window gets the DOWN, so "hold to drag, tap passes" cannot be built;
-  re-injecting taps needs an AccessibilityService, a high Play-review risk. Position is chosen only
-  inside AppTime.
+- **Touch passes through every style but the side rail.** `FLAG_NOT_TOUCHABLE` stays on pill and
+  block: Android hands the whole gesture to whichever window gets the DOWN, so "hold to drag, tap
+  passes" cannot be built. The side rail is the one touchable window: a touch on it is consumed,
+  never passed. Dragging moves it along the edge; crossing the screen's midline moves it to the
+  other edge at the same relative height. Side + relative height are stored per app.
 - **Position per app, optional**: a global default plus "position in this app" on the per-app
-  screen, with "back to default".
+  screen, with "back to default" (the rail also learns it from the drag).
 - **Intensity is a user setting**: none · colour/weight · contrast · grow slowly (capped, smooth
   ~300 ms transition between apps). Session 2 builds all four; Lucas tests one week, then picks the
   default.
@@ -99,20 +100,21 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   than round 2's stacked 20dp one. *Selo de canto* is a stretch goal, offered only on gesture
   navigation: on 3-button navigation that corner belongs to the nav bar, whose window sits above
   ours. Cut: Notch, Floating capsule, Bottom strip, Ghost, Linha de borda, Anel (cutout fragmentation).
-- **State lives in the text, in every intensity**: `12m` → `52/60m` → `+18m`. Colour never alone.
-  Calm is white / auto ink, not lavender; amber near, orange past, apart in luminance too.
-- **No app name in the timer; daily goal per app** (a long session only triggers a message);
-  **never shrinks to a dot**.
-- **Message**: 6–7 s, 12–15 words at most, header `Mural · 1h 18m hoje` (restores the total that
-  `+18m` hides; from Stitch). Timer stays anchored; switching app cancels it.
+- **No goal in the overlay — the reference is your own average** (Lucas, 2026-10-31: nobody can
+  name a meaningful goal in advance). Two independent switches in settings: **number** (today's time
+  in this app; the calm state) and **average feedback** (today vs this app's usual by this hour; a
+  bar on the rail, in another form on pill and block). Average feedback on by default, to be tested.
+  The near/past states and every `52/60m`-style text in the round-2 boards become "vs average".
+  Colour never alone; calm is white / auto ink, not lavender; amber/orange differ in luminance too.
+- **Open — the goal levels elsewhere**: `GoalThresholds` (4 levels) also drives reminders and the
+  analytics metrics (phone limit, unlocks, sleep cutoff). Whether they go too is the screen review's.
+- **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
+- **Message**: 6–7 s, 12–15 words at most, header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos).
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style; per-app
   light/dark hint `Automático · Sempre escuro · Sempre claro` (the overlay cannot see pixels);
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
   "Grande").
-- **Open — progress with no goal**: the rail and `52/60m` fill toward the per-app goal
-  (`GoalThresholds.appLimitMinutes`: 60/30/15 min); goal level 0 has none. Recommended: number only,
-  no fill, always calm.
 
 Panels: round 1 (Codex · Gemini) Notch 7 · 8.5, Quiet pill 8 · 6.5, Side rail (tick) 4 · 5.5.
 Round 2 (Claude version): Quiet pill 8 · 9, Bloco 7 · 8.5, Selo 7 · 8, Side rail 5 · 6.5 — the
@@ -120,7 +122,8 @@ rail's weak point is glanceability. Both judged Claude's round far more buildabl
 
 **Session 2 tests first, on the phone**: the pill renders under the status bar icons (the
 `StatusBar` window is above ours but transparent); WindowInsets for 3-button nav, keyboard and
-rotation; app-switch latency of `UsageStatsManager` on Xiaomi (panel warns 2–5 s).
+rotation; app-switch latency of `UsageStatsManager` on Xiaomi (panel warns 2–5 s); the touchable
+rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of vertical video).
 
 **Next session, still design**: screen review of the app itself — tabs, their order, what lives in
 each. Phone over adb, capture every screen with `~/Android/platform-tools/adb exec-out screencap -p`

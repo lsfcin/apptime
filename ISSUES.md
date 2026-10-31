@@ -33,7 +33,7 @@ history retroactively, or only from the day it was switched off?
 | Routing tables pointing at files git does not carry | 0 |
 | Projects not declaring their goal | 0 |
 | Wiki-links naming nothing | 0 |
-| Retired tokens still alive | 18 |
+| Retired tokens still alive | 17 |
 | Roadmap item numbers cited outside a roadmap | 0 |
 | Items claimed by two lists | 0 |
 | Size signals | 0 |
@@ -46,7 +46,7 @@ history retroactively, or only from the day it was switched off?
 | Header fields naming code that is not there | 0 |
 | Truncated routing descriptions | 0 |
 | Constraints trapped in a CONTEXT.md head | 1 |
-| Local branches holding unpromoted work | 0 |
+| Local branches holding unpromoted work | 1 |
 | Work that exists on this disk and nowhere else | 0 |
 | Local branches already merged into their base | 0 |
 | Remote branches already merged into their base | 0 |
@@ -67,7 +67,6 @@ history retroactively, or only from the day it was switched off?
 - CONTEXT.md: retired token 'slug' survives (line 105).
 - CONTEXT.md: retired token 'tier' survives (line 105).
 - README.md: retired token 'nudge' survives (line 12).
-- ROADMAP.md: retired token 'ledger' survives (line 137).
 - SPECS.md: retired token 'nudge' survives (line 75).
 - SPECS.md: retired token 'tier' survives (line 32).
 - docs/store_listing.md: retired token 'nudge' survives (line 21).
@@ -106,5 +105,11 @@ history retroactively, or only from the day it was switched off?
 *the only enforced-read type — move the contract to a sibling SPECS.md*
 
 - CONTEXT.md: head is 1619 tok carrying 2 constraint(s), over the warning
+
+### Local branches holding unpromoted work
+
+*promote when the work is green, or say which reason applies — /roundup Phase 5*
+
+- . — feature/v1-design-decisions is 4 ahead of main
 
 <!-- entropy:end -->

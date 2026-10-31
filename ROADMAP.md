@@ -106,8 +106,8 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   bar on the rail, in another form on pill and block). Average feedback on by default, to be tested.
   The near/past states and every `52/60m`-style text in the round-2 boards become "vs average".
   Colour never alone; calm is white / auto ink, not lavender; amber/orange differ in luminance too.
-- **Open — the goal levels elsewhere**: `GoalThresholds` (4 levels) also drives reminders and the
-  analytics metrics (phone limit, unlocks, sleep cutoff). Whether they go too is the screen review's.
+- **The goal levels leave the whole app** (Lucas, 2026-10-31): `GoalThresholds`, the four levels,
+  the per-app level chips and `GoalScreen`. Reminders key off the user's own average.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
 - **Message**: 6–7 s, 12–15 words at most, header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos).
@@ -125,10 +125,34 @@ rail's weak point is glanceability. Both judged Claude's round far more buildabl
 rotation; app-switch latency of `UsageStatsManager` on Xiaomi (panel warns 2–5 s); the touchable
 rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of vertical video).
 
-**Next session, still design**: screen review of the app itself — tabs, their order, what lives in
-each. Phone over adb, capture every screen with `~/Android/platform-tools/adb exec-out screencap -p`
-(personal usage data: scratchpad only) → panel → one brief per screen group. Next design rounds
-use real screenshots of Lucas's phone: the mock phone is not his layout.
+### App screens (screen review, 2026-10-31; panel Codex · Gemini agreed unless noted)
+
+- **Three tabs: Hoje (landing) · Análise · Ajustes**, plus a per-app screen opened by tapping any
+  app. Monit. and Insights stop being tabs. Today Config. is the landing tab, and `HomeScreen`,
+  `GoalScreen`, `PerAppScreen` are reachable from nowhere.
+- **Hoje** reuses `HomeScreen` without its goal card: today vs "your usual by this hour", then the
+  most-used apps with real icons. **Per-app screen** reuses `PerAppScreen`: that app's usage vs its
+  usual, and its overlay controls (on/off, position, light/dark hint, fullscreen/landscape).
+- **"Your usual" shows in three places**: Hoje, the per-app screen, the overlay preview in Ajustes.
+- **Análise: 7d · 30d** (the day lives in Hoje). Cut: Custo de oportunidade, Alerta de phubbing,
+  Balanço de engajamento, Padrão dos últimos 7 dias, the research bands `4–6h/dia` / `30–60/dia`.
+  Merge Uso diário + Tendência semanal; Fragmentação do foco + Índice de impulsividade → "Sessões e
+  desbloqueios"; Dreno de dopamina → "Apps mais abertos" (no thresholds). 30-day trend: total + average only.
+- **Insights goes.** At most a one-line note inside the matching Análise card; audit the claims
+  first (QI drop, 23 min per interruption, 21-day habit, a card that promotes One Sec).
+- **Ajustes order**: overlay (gallery, number, average feedback, size) · per-app exceptions ·
+  messages · collection · language (one row) · privacy. Permissions only when one is missing. Cut
+  the separate Parar button, Mostrar borda / Mostrar fundo, and the stale "(5s)" text.
+- **Visual: Obsidian Mono** (Lucas, over Codex's light editorial): carbon `#0B0C0E`, borderless
+  surfaces `#14161B`, text `#F3F4F6` / `#7E8594`, the usual in graphite, amber `#E5A93C` only well
+  above it; no red, neon green or electric blue; Inter `tnum`, metric 40sp Light, section labels
+  11sp caps; 24dp between sections, no card borders. Reference: Oura.
+- **Bugs seen**: "Visão geral — 30 dias" on the 1d and 7d tabs; "esta semana" on the 30d donut;
+  Y-axis labels collide in Tendência semanal; legend colours repeat (Claude/Google/outros); letter
+  circles instead of app icons; AppTime lists itself; 0m apps fill the list; English chips (`unlocks`, `session`).
+
+Screens via adb: MIUI blocks `input tap` until "Depuração USB (configurações de segurança)" is on
+**and the phone is rebooted**. Shots and panel answers stay in the session scratchpad (usage data).
 
 Session 2 starts by installing Flutter SDK + JDK 17 in the background: this machine has neither
 (adb is already in `~/Android/platform-tools`).

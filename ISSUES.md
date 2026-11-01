@@ -18,6 +18,15 @@ aggregates. `analytics_service.dart` computes from raw SharedPreferences data an
 boundary rather than in each tab. Decide once and state it: does an unmonitored app disappear from
 history retroactively, or only from the day it was switched off?
 
+## B2 — a screen left on counts as use
+
+**Symptom:** 2026-11-01, Instagram 04:00–09:25 counted as ~4h30 while Lucas slept: the phone was
+charging with "stay awake" on (`stay_on_while_plugged_in=7`, set for adb) and Instagram in front.
+
+**Why it matters:** it inflates today and the 30-day usual. Any user who props the phone on a
+charger with a video open gets the same. Open: delete that block from Lucas's data, and whether
+the app should stop counting after N minutes without a touch (no public API reports touches).
+
 <!-- entropy:start -->
 ## Entropy
 
@@ -108,7 +117,7 @@ history retroactively, or only from the day it was switched off?
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/v1-impl is 7 ahead of main
+- . — feature/v1-impl is 8 ahead of main
 - . — feature/v1-overlay is 3 ahead of main
 
 ### Local branches already merged into their base

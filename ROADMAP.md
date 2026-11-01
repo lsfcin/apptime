@@ -95,7 +95,8 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
 - **Window alpha**: set `LayoutParams.alpha` ≤ the system's maximum obscuring opacity (0.8), or
   Android 12+ blocks touches under the overlay (`OverlayService.kt:123`).
 - **Styles to build** (round 2, 2026-10-31): **Quiet pill** (default; status bar, right of the
-  camera) · **Bloco acessível** (low vision; 17sp bold, 96% black + 1dp light rim) · **Side rail**,
+  camera; bare, no background, Lucas 2026-11-01) · **Bloco acessível** (low vision; 17sp bold, 96% black,
+  no rim) · **Side rail**,
   left or right edge, upper third, in round 1's *tick* shape (horizontal number, readable) rather
   than round 2's stacked 20dp one. *Selo de canto* is a stretch goal, offered only on gesture
   navigation: on 3-button navigation that corner belongs to the nav bar, whose window sits above
@@ -127,7 +128,8 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   that row is "confirm you did it". Autostart is mandatory for v1 (Lucas, 2026-11-01). Seen on the Xiaomi: every reinstall resets the overlay to `ignore`.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
-- **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos).
+- **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos). The bare
+  pill has no floor, only a dark halo: check it on light status bars before the per-app hint ships.
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style; per-app
   light/dark hint `Automático · Sempre escuro · Sempre claro` (the overlay cannot see pixels);
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on

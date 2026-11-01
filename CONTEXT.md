@@ -2,7 +2,7 @@
 > Android app to reduce phone addiction through awareness, without blocking
 > goal: [startapps](../../brain/goals/startapps.md)
 
-Android app to reduce phone addiction through awareness — without blocking. A native floating overlay shows real-time session time for the active app and shows a short message when use passes the user's own 30-day usual.
+Android app to reduce phone addiction through awareness — without blocking. A native floating overlay shows today’s live total for the active app and shows a short message when use passes the user's own 30-day usual.
 
 ## Setup
 
@@ -21,8 +21,8 @@ Roadmap and pending milestones → [ROADMAP.md](ROADMAP.md)
 
 ## Current feature set
 
-- Overlay: `TYPE_APPLICATION_OVERLAY`, `FLAG_NOT_TOUCHABLE`, shows daily timer per app; hidden on unmonitored apps and (optionally) the launcher; timer-only display, immediate show/hide
-- Messages: three triggers — session ≥20 min, app past its usual, phone past its usual — each once a day, ≥90 min apart
+- Overlay: non-touchable Quiet pill (default, cutout-side status-bar slot with below-bar fallback) or Bloco acessível (17 sp); daily app timer + selectable usual feedback (`underline` default, `dots`, `underline_delta`, `outline`) after 7 real days, settings in PT/EN, alpha 0.8; hidden on unmonitored apps and (optionally) the launcher
+- Messages: three triggers — session ≥20 min, app past its usual, phone past its usual — each once a day, ≥90 min apart; separate 6.5 s message with app/phone total header; app switching cancels it
 - Analytics: 1d/7d/30d tabs; hourly stacked-bar pattern charts (yesterday + last 7 days); sleep hygiene, focus fragmentation, engagement balance, dopamine drain, weekly trend, 30-day trend
 - Insights screen: 40+ research-backed bilingual (PT+EN) cards in Alerts and Solutions tabs
 - Per-app control: enable/disable overlay per app

@@ -6,6 +6,12 @@ class StorageService
   set overlayText(String v)
   bool get overlayVisible
   set overlayVisible(bool v)
+  String get overlayStyle
+  set overlayStyle(String v)
+  static const overlayFeedbackVariants = [
+  static String _feedbackVariant(String? value)
+  String get overlayFeedback
+  set overlayFeedback(String v)
   double get overlayFontSize
   set overlayFontSize(double v)
   double get overlayTopDp

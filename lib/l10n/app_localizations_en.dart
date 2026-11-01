@@ -60,6 +60,14 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get sectionOverlay => 'Overlay';
   @override String get showOverlay => 'Show usage overlay';
   @override String get showOverlaySub => 'Display the floating counter while using apps. Monitoring (data collection) continues regardless.';
+  @override String get overlayStyle => 'Overlay style';
+  @override String get overlayStylePill => 'Quiet pill';
+  @override String get overlayStyleBlock => 'Accessible block';
+  @override String get overlayFeedback => 'Usual feedback';
+  @override String get overlayFeedbackDots => 'Dots';
+  @override String get overlayFeedbackUnderline => 'Underline';
+  @override String get overlayFeedbackDelta => 'Underline + brief margin';
+  @override String get overlayFeedbackOutline => 'Progressive outline';
   @override String get showBorder => 'Show border';
   @override String get showBackground => 'Show background';
   @override String fontSize(int size) => 'Font size: ${size}sp';

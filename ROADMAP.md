@@ -118,10 +118,13 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   transport (Waze, Maps, Moovit, Uber, 99), audio (Spotify, Deezer, podcasts, Audible), calls,
   clock, calculator, camera, banking, Pix, authenticators, gov.br. YouTube Music stays monitored
   (it pulls to video). The user can switch any back on.
-- **Permission guide — to study** (Lucas, 2026-11-01): walk the user through every permission,
-  in the app and with a pop-up or notification saying what to do at each step; reference AppBlock.
-  Covers the overlay pair and starting on boot — MIUI-style autostart and battery exemptions,
-  which `BootReceiver` alone does not get past (the service was off after this reinstall).
+- **Permission guide** (Lucas, 2026-11-01; studied, build with phase 5): one checklist screen like
+  AppBlock's Troubleshooting — each row live green/red, a "Fix" button opening the exact settings page,
+  re-checked on resume. Rows: overlay, usage access, battery optimization
+  (`ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`), and on Xiaomi autostart
+  (`com.miui.securitycenter/com.miui.permcenter.autostart.AutoStartManagementActivity`, unofficial:
+  resolve first, fall back to `ACTION_APPLICATION_DETAILS_SETTINGS`). MIUI cannot report autostart, so
+  that row is "confirm you did it". Seen on the Xiaomi: every reinstall resets the overlay to `ignore`.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos).

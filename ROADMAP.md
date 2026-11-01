@@ -106,6 +106,17 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   bar on the rail, in another form on pill and block). Average feedback on by default, to be tested.
   The near/past states and every `52/60m`-style text in the round-2 boards become "vs average".
   Colour never alone; calm is white / auto ink, not lavender; amber/orange differ in luminance too.
+- **"Your usual" = mean daily total over the 30 days before today** (Lucas, 2026-10-31, replacing
+  "by this hour"): measured zero days count, since not opening an app can be a choice; days
+  nothing was measured count as 60 min, so the window drifts to reality. Calm below 80% of the
+  mean (or 2 min before it), near up to it, past above (+1 min grace under a 5-min mean).
+  Built: `lib/services/usual_daily.dart`. Panel (Codex · Gemini) 9 · 9 for daily over hourly,
+  10 · 9 for real history over seeding everything; both warn the seed reads as an allowance.
+- **Messages without goals — open, Lucas decides.** Panel agrees: keep app past usual, phone
+  past usual, long session; drop sleep and wakeup (no setting-free definition of night or waking).
+  Split: unlocks (Gemini: keep, vs the 30-day mean; Codex: dashboard first), session threshold
+  (Codex: fixed 20 min; Gemini: max(15 min, 2× the app's usual session), cap 30), cadence (Codex:
+  once per trigger per day, ≤3/day, 90 min apart; Gemini: once per day, ≤1 per 15 min).
 - **The goal levels leave the whole app** (Lucas, 2026-10-31): `GoalThresholds`, the four levels,
   the per-app level chips and `GoalScreen`. Reminders key off the user's own average.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.

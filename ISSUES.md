@@ -108,7 +108,7 @@ history retroactively, or only from the day it was switched off?
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/v1-impl is 6 ahead of main
+- . — feature/v1-impl is 7 ahead of main
 - . — feature/v1-overlay is 3 ahead of main
 
 ### Local branches already merged into their base

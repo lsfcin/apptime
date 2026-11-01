@@ -14,9 +14,6 @@ object OverlayText {
         }
     }
 
-    fun clock(ms: Long): String =
-        "${minutes(ms) / 60}:${(minutes(ms) % 60).toString().padStart(2, '0')}"
-
     fun header(label: String?, ms: Long, lang: String): String {
         val minutes = minutes(ms)
         val duration = if (minutes < 60) "${minutes}m"

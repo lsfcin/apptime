@@ -19,14 +19,6 @@ class OverlayTextTest {
     }
 
     @Test
-    fun blockUsesHoursAndMinutes() {
-        assertEquals("0:00", OverlayText.clock(59_999))
-        assertEquals("0:12", OverlayText.clock(12 * min))
-        assertEquals("1:44", OverlayText.clock(104 * min))
-        assertEquals("24:00", OverlayText.clock(1440 * min))
-    }
-
-    @Test
     fun headersUseAppTotalOrPhoneTotalInBothLanguages() {
         assertEquals("Mural · 1h 18m hoje", OverlayText.header("Mural", 78 * min, "pt"))
         assertEquals("Mural · 1h 18m today", OverlayText.header("Mural", 78 * min, "en"))

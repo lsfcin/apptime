@@ -77,7 +77,7 @@ lib/
 | `FeedbackDrawable.kt` | Draws the filling dot, the bar under the text, or the clockwise outline, each over a 32% white track; scales cues 1.25× for block |
 | `MessageOverlay.kt` | Separate header/body window below status bar and timer, at most 88% screen width |
 | `OverlayPlacement.kt` | Pure: cutout-side slot eligibility, icon-row centring and below-status-bar fallback |
-| `OverlayText.kt` | Pure: compact/clock durations, localized message headers, 7-real-day feedback floor |
+| `OverlayText.kt` | Pure: compact durations (pill and block), localized message headers, 7-real-day feedback floor |
 | `LiveUsage.kt` | Pure: stored daily totals plus unflushed app/launcher session for both timer and messages |
 | `UsualCache.kt` | Per-package/phone usual cache shared by timer and messages; invalidated on 04:00 day-key change |
 | `MessageDisplay.kt` | Pure: 6.5 s message lifetime and foreground-package cancellation |
@@ -112,9 +112,9 @@ BootReceiver → starts MonitoringService on device reboot
 
 **Overlay behavior:** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Both styles use `FLAG_NOT_TOUCHABLE`, window alpha 0.8 and tabular figures; no drag or intensity modes.
 
-- `pill` (default): 14 sp, no border, rounded 71% black background (56% effective at window alpha 0.8). Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). On API 30+, a top cutout permits a slot at `boundingRectTop.right + 8dp`, centred on the status icon row (12 dp above the bottom of the status-bar/cutout top inset, clamped inside it; no API reports where the icons are), only if the complete pill including feedback cue fits within 44 dp and the bar height. Otherwise it moves just below the status bar at top-right; there it can use its natural width to preserve text at large system font scales. API <30 and no top cutout always use that fallback.
-- `block`: below the status bar, top-right; 17 sp bold, `h:mm`, 96% black background, no rim. Uses the selected feedback variant with cues scaled 1.25×.
-- Padding: block and `outline` add one blank character's width each side of the time; `fill` reserves the dot (6.9 dp, 1.25× on block) plus a fixed 3 dp gap left of the text, so the gap never varies with the state.
+- `pill` (default): 14 sp, no background: text and cues carry a 2 dp dark halo (black 67%), because no app can read another app's status-bar icon colour. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). On API 30+, a top cutout permits a slot at `boundingRectTop.right + 8dp`, centred on the status icon row (12 dp above the bottom of the status-bar/cutout top inset, clamped inside it; no API reports where the icons are), only if the complete pill including feedback cue fits within 44 dp and the bar height. Otherwise it moves just below the status bar at top-right; there it can use its natural width to preserve text at large system font scales. API <30 and no top cutout always use that fallback.
+- `block`: below the status bar, top-right; 17 sp bold, the pill's letter format (`12m`, `1h44`), 96% black background, no rim. Uses the selected feedback variant with cues scaled 1.25×.
+- Padding: block and `outline` add one blank character's width each side of the time, the bare pill 1 dp for its halo (a 4-character time plus the dot then fits 44 dp); `fill` reserves the dot (6.9 dp, 1.25× on block) plus a fixed 3 dp gap left of the text, so the gap never varies with the state; `bar` adds its own thickness below the text and leaves that much free under the bar.
 - Today's app total is compared with that app's 30-day `UsualDaily` mean; on the launcher the timer uses phone usage/usual. Before 7 real days feedback is calm and no cue is drawn. Calm is white; near is soft amber; past is amber (and bold pill). Background preferences cannot remove the contrast floor.
 - Settings exposes `overlay_feedback` beside the style selector in PT/EN, each choice and style with a one-line description. Missing/unknown values (including the retired `dots`, `underline`, `underline_delta`) use `bar`; it updates on the 500 ms poll without restarting monitoring. Drawing stays inside the measured timer, keeping the 44 dp status-bar cap and fallback.
   - `fill`: a dot left of the time fills clockwise from 12 o'clock like a pie; full at the usual.
@@ -196,7 +196,7 @@ BootReceiver → starts MonitoringService on device reboot
 | `usual_daily_test.dart` | "Your usual" against the shared fixture cases |
 | `android/app/src/test/…/UsualDailyTest.kt` | Same fixture cases against the Kotlin mirror |
 | `android/app/src/test/…/MessageRulesTest.kt` | Floors (7 real days, 15 min), once a day per trigger, 90-min gap |
-| `android/app/src/test/…/OverlayTextTest.kt` | ≤4-character timer, clock format, PT/EN app/phone headers, feedback floor |
+| `android/app/src/test/…/OverlayTextTest.kt` | ≤4-character timer, PT/EN app/phone headers, feedback floor |
 | `android/app/src/test/…/OverlayPlacementTest.kt` | Cutout slot on the icon row, clamping inside the bar, width/height fit, API/no-cutout/block/screen-edge fallbacks |
 | `android/app/src/test/…/UsualCacheTest.kt` | Cache reuse, app/phone separation, missing-day seed and day rollover |
 | `android/app/src/test/…/LiveUsageTest.kt` | Live app/phone totals, launcher session, missing/future session start |

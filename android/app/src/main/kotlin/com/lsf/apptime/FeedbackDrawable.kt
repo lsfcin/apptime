@@ -16,13 +16,17 @@ class FeedbackDrawable(
     private val density: Float,
     private val block: Boolean,
     private val ink: Int,
+    halo: Boolean = false,
 ) : Drawable() {
     var frame: OverlayFeedback.Frame? = null
         set(value) { field = value; invalidateSelf() }
     // Horizontal span of the time text inside the view; the bar matches it like an underline.
     var textLeft = 0f
     var textRight = 0f
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        // Same dark halo as the bare pill's text, so cues stay visible on a light status bar.
+        if (halo) setShadowLayer(HALO_DP * density, 0f, 0f, HALO)
+    }
     private fun dp(value: Float) = value * density * scale(block)
 
     override fun draw(canvas: Canvas) {
@@ -42,8 +46,9 @@ class FeedbackDrawable(
     }
 
     private fun drawBar(canvas: Canvas, progress: Float) {
-        val width = dp(2f)
-        val y = bounds.bottom - dp(1.6f) - width / 2
+        val width = barStroke(density, block)
+        // As much free space below the bar as the bar is thick.
+        val y = bounds.bottom - width - width / 2
         val start = bounds.left + textLeft
         val end = bounds.left + textRight
         OverlayFeedback.barSpan(start, end, width, 1f)?.let { (l, r) -> canvas.drawLine(l, y, r, y, stroke(TRACK, width)) }
@@ -101,7 +106,10 @@ class FeedbackDrawable(
         // Empty part of every cue: white at 32%, readable over light content at window alpha 0.8.
         val TRACK = Color.argb(82, 255, 255, 255)
         const val FILL_GAP_DP = 3f
+        const val HALO_DP = 2f
+        val HALO = Color.argb(170, 0, 0, 0)
         fun scale(block: Boolean) = if (block) 1.25f else 1f
+        fun barStroke(density: Float, block: Boolean) = 2f * density * scale(block)
         fun dotRadius(density: Float, block: Boolean) = 3.45f * density * scale(block)
         // Room the filling dot takes left of the text: its diameter plus the gap.
         fun fillReserve(density: Float, block: Boolean) =

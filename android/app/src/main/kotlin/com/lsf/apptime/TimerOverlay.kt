@@ -4,6 +4,7 @@ package com.lsf.apptime
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.view.Gravity
 import android.view.View
@@ -39,12 +40,16 @@ class TimerOverlay(context: Context) {
                 UsualState.PAST -> Color.rgb(255, 194, 80)
             }
             view.setTextColor(ink)
-            feedbackDrawable = FeedbackDrawable(window.background(block), density, block, ink)
+            // The pill has no background: a dark halo keeps it legible on light and dark status bars,
+            // whose icon colour no other app can read.
+            if (block) view.setShadowLayer(0f, 0f, 0f, 0) else view.setShadowLayer(FeedbackDrawable.HALO_DP * density, 0f, 0f, FeedbackDrawable.HALO)
+            feedbackDrawable = FeedbackDrawable(if (block) window.background(true) else ColorDrawable(Color.TRANSPARENT),
+                density, block, ink, halo = !block)
             view.background = feedbackDrawable
             pad(block, feedback.variant)
         }
         feedbackDrawable.frame = feedback
-        view.text = if (block) OverlayText.clock(totalMs) else OverlayText.compact(totalMs)
+        view.text = OverlayText.compact(totalMs)
         val bounds = window.bounds()
         view.maxWidth = (bounds.width * 0.88f).toInt()
         view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
@@ -59,14 +64,16 @@ class TimerOverlay(context: Context) {
         bottom = if (visible) slot.y + view.measuredHeight else 0
     }
 
-    // The block and the outline get one blank character of air each side; the filling dot sits left of the text.
+    // The block and the outline get one blank character of air each side (the bare pill 1 dp, so it fits 44 dp);
+    // the filling dot sits left of the text; the bar gets its own thickness free below it.
     private fun pad(block: Boolean, variant: String) {
         val outline = variant == "outline"
         val air = if (block || outline) view.paint.measureText(" ") else 0f
-        val side = window.dp(if (block) 8 else 4) + air
+        val side = window.dp(if (block) 8 else 1) + air
         val dot = if (variant == "fill") FeedbackDrawable.fillReserve(density, block) else 0f
         val vertical = window.dp(if (block) 5 else 2) + if (outline) window.dp(2) else 0
-        view.setPadding((side + dot).roundToInt(), vertical, side.roundToInt(), vertical)
+        val bar = if (variant == "bar") FeedbackDrawable.barStroke(density, block).roundToInt() else 0
+        view.setPadding((side + dot).roundToInt(), vertical, side.roundToInt(), vertical + bar)
     }
 
     fun remove() = window.remove()

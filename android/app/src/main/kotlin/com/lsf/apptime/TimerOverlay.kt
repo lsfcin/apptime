@@ -4,11 +4,11 @@ package com.lsf.apptime
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
+import kotlin.math.roundToInt
 
 class TimerOverlay(context: Context) {
     private val view = TextView(context).apply {
@@ -19,8 +19,9 @@ class TimerOverlay(context: Context) {
         visibility = View.INVISIBLE
     }
     private val window = OverlayWindow(context, view)
+    private val density = view.resources.displayMetrics.density
     private var lastAppearance: Triple<Boolean, UsualState, String>? = null
-    private var feedbackDrawable: FeedbackDrawable? = null
+    private lateinit var feedbackDrawable: FeedbackDrawable
     var bottom = 0
         private set
     val isAdded get() = window.isAdded
@@ -30,7 +31,7 @@ class TimerOverlay(context: Context) {
         val appearance = Triple(block, state, feedback.variant)
         if (lastAppearance != appearance) {
             lastAppearance = appearance
-            view.textSize = if (block) 17f else 12f
+            view.textSize = if (block) 17f else 14f
             view.typeface = if (block || state == UsualState.PAST) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
             val ink = when (state) {
                 UsualState.CALM -> Color.WHITE
@@ -38,31 +39,34 @@ class TimerOverlay(context: Context) {
                 UsualState.PAST -> Color.rgb(255, 194, 80)
             }
             view.setTextColor(ink)
-            feedbackDrawable = if (feedback.variant == "dots") null else FeedbackDrawable(
-                window.background(block, border = feedback.variant != "outline"), view.resources.displayMetrics.density, block, ink)
-            view.background = feedbackDrawable ?: window.background(block)
-            view.setPadding(window.dp(if (block) 8 else 4), window.dp(if (block) 5 else 2),
-                window.dp(if (block) 8 else 4), window.dp(if (block) 5 else 2))
-            val dot = if (feedback.variant == "dots" && state != UsualState.CALM) GradientDrawable().apply {
-                shape = GradientDrawable.OVAL
-                if (state == UsualState.PAST) setColor(ink)
-                else { setColor(Color.TRANSPARENT); setStroke(window.dp(1), ink) }
-                setSize(window.dp(4), window.dp(4))
-            } else null
-            view.setCompoundDrawablesWithIntrinsicBounds(dot, null, null, null)
-            view.compoundDrawablePadding = window.dp(2)
+            feedbackDrawable = FeedbackDrawable(window.background(block), density, block, ink)
+            view.background = feedbackDrawable
+            pad(block, feedback.variant)
         }
-        feedbackDrawable?.frame = feedback
-        view.text = feedback.deltaText ?: if (block) OverlayText.clock(totalMs) else OverlayText.compact(totalMs)
+        feedbackDrawable.frame = feedback
+        view.text = if (block) OverlayText.clock(totalMs) else OverlayText.compact(totalMs)
         val bounds = window.bounds()
         view.maxWidth = (bounds.width * 0.88f).toInt()
         view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        feedbackDrawable.textLeft = view.paddingLeft.toFloat()
+        feedbackDrawable.textRight = (view.measuredWidth - view.paddingRight).toFloat()
         val slot = OverlayPlacement.timer(Build.VERSION.SDK_INT, bounds.cutoutRight, bounds.statusBarHeight,
-            bounds.width, view.measuredWidth, view.measuredHeight, window.dp(44), window.dp(8), block)
+            bounds.width, view.measuredWidth, view.measuredHeight, window.dp(44), window.dp(8),
+            window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), block)
         view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         val x = slot.x + if (slot.inStatusBar) 0 else bounds.rightInset
         window.place(view.measuredWidth, view.measuredHeight, x, slot.y, slot.inStatusBar)
         bottom = if (visible) slot.y + view.measuredHeight else 0
+    }
+
+    // The block and the outline get one blank character of air each side; the filling dot sits left of the text.
+    private fun pad(block: Boolean, variant: String) {
+        val outline = variant == "outline"
+        val air = if (block || outline) view.paint.measureText(" ") else 0f
+        val side = window.dp(if (block) 8 else 4) + air
+        val dot = if (variant == "fill") FeedbackDrawable.fillReserve(density, block) else 0f
+        val vertical = window.dp(if (block) 5 else 2) + if (outline) window.dp(2) else 0
+        view.setPadding((side + dot).roundToInt(), vertical, side.roundToInt(), vertical)
     }
 
     fun remove() = window.remove()

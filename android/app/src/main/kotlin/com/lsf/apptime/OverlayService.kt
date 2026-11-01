@@ -77,8 +77,7 @@ class OverlayService : Service() {
         val monitored = pkg != null && !AppConstants.parseDisabledApps(prefs).contains(pkg)
         val allowed = enabled && visible && monitored
         val hasText = !(snap["flutter.overlay_text"] as? String).isNullOrEmpty()
-        val feedback = OverlayFeedback.frame(snap["flutter.overlay_feedback"] as? String,
-            total, usual, now, (snap["flutter.current_session_start_ms"] as? Long) ?: 0L, inApp)
+        val feedback = OverlayFeedback.frame(snap["flutter.overlay_feedback"] as? String, total, usual)
         timer.render(snap["flutter.overlay_style"] == "block", total, feedback, allowed && hasText)
         feedbackEngine?.refresh(pkg, now, allowed)
         if (++evalTick >= 5) {

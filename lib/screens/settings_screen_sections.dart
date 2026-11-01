@@ -39,11 +39,13 @@ class _OverlaySection extends StatelessWidget {
                   children: [
                     RadioListTile<String>(
                       title: Text(l10n.overlayStylePill),
+                      subtitle: Text(l10n.overlayStylePillSub),
                       value: 'pill',
                       enabled: s.overlayEnabled,
                     ),
                     RadioListTile<String>(
                       title: Text(l10n.overlayStyleBlock),
+                      subtitle: Text(l10n.overlayStyleBlockSub),
                       value: 'block',
                       enabled: s.overlayEnabled,
                     ),
@@ -62,14 +64,14 @@ class _OverlaySection extends StatelessWidget {
                 },
                 child: Column(
                   children: [
-                    for (final (value, label) in [
-                      ('dots', l10n.overlayFeedbackDots),
-                      ('underline', l10n.overlayFeedbackUnderline),
-                      ('underline_delta', l10n.overlayFeedbackDelta),
-                      ('outline', l10n.overlayFeedbackOutline),
+                    for (final (value, label, sub) in [
+                      ('fill', l10n.overlayFeedbackFill, l10n.overlayFeedbackFillSub),
+                      ('bar', l10n.overlayFeedbackBar, l10n.overlayFeedbackBarSub),
+                      ('outline', l10n.overlayFeedbackOutline, l10n.overlayFeedbackOutlineSub),
                     ])
                       RadioListTile<String>(
                         title: Text(label),
+                        subtitle: Text(sub),
                         value: value,
                         enabled: s.overlayEnabled,
                       ),

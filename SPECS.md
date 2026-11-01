@@ -1,6 +1,6 @@
 # AppTime — Code Structure & Reference
 
-Last updated: 2026-11-01 (phase 4A.2 selectable usual-feedback variants)
+Last updated: 2026-11-01 (overlay feedback narrowed to fill · bar · outline; pill on the icon row)
 
 ---
 
@@ -71,12 +71,12 @@ lib/
 | `MonitoringService.kt` | Foreground service — 1s tick, accumulateDailyMs, session tracking, overlay text |
 | `HistoryBackfill.kt` | Gap backfill (backfillGap) + 30-day history fill (backfillHistory); injectable |
 | `OverlayService.kt` | Foreground service — 500 ms poll, shared live-usage snapshot/cache, app labels, timer/message coordination |
-| `OverlayWindow.kt` | Non-touchable window lifecycle, alpha 0.8, status-bar/cutout geometry and shared backgrounds |
-| `TimerOverlay.kt` | Anchored Quiet pill / accessible block text, appearance and measured placement; attaches selected feedback drawable |
-| `OverlayFeedback.kt` | Pure: variant normalization, progress/edge/notch geometry over the shared `OverlayText.state` and ≤4-character app-entry delta/lifetime |
-| `FeedbackDrawable.kt` | Draws underline/tick/notch or clockwise progressive outline inside the existing timer background; scales cues 1.25× for block |
+| `OverlayWindow.kt` | Non-touchable window lifecycle, alpha 0.8, status-bar/cutout geometry and shared rimless backgrounds |
+| `TimerOverlay.kt` | Anchored Quiet pill / accessible block text, padding per variant, measured placement; hands the text span to the feedback drawable |
+| `OverlayFeedback.kt` | Pure: variant normalization, progress over the shared `OverlayText.state`, the bar's round-cap span |
+| `FeedbackDrawable.kt` | Draws the filling dot, the bar under the text, or the clockwise outline, each over a 32% white track; scales cues 1.25× for block |
 | `MessageOverlay.kt` | Separate header/body window below status bar and timer, at most 88% screen width |
-| `OverlayPlacement.kt` | Pure: cutout-side slot eligibility, vertical centring and below-status-bar fallback |
+| `OverlayPlacement.kt` | Pure: cutout-side slot eligibility, icon-row centring and below-status-bar fallback |
 | `OverlayText.kt` | Pure: compact/clock durations, localized message headers, 7-real-day feedback floor |
 | `LiveUsage.kt` | Pure: stored daily totals plus unflushed app/launcher session for both timer and messages |
 | `UsualCache.kt` | Per-package/phone usual cache shared by timer and messages; invalidated on 04:00 day-key change |
@@ -110,17 +110,18 @@ BootReceiver → starts MonitoringService on device reboot
 - Integer values stored as `Long` by the Flutter plugin on Android — Kotlin must use `getLong()`, not `getInt()`
 - SharedPreferences keys use `flutter.` prefix (Flutter plugin adds it); Kotlin reads them with that prefix
 
-**Overlay behavior (phase 4A.2):** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Both styles use `FLAG_NOT_TOUCHABLE`, window alpha 0.8 and tabular figures; no drag or intensity modes.
+**Overlay behavior:** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Both styles use `FLAG_NOT_TOUCHABLE`, window alpha 0.8 and tabular figures; no drag or intensity modes.
 
-- `pill` (default): 12 sp, no border, rounded 71% black background (56% effective at window alpha 0.8). Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). On API 30+, a top cutout permits a slot at `boundingRectTop.right + 8dp`, vertically centred in the status-bar/cutout top inset, only if the complete pill including feedback cue fits within 44 dp and the bar height. Otherwise it moves just below the status bar at top-right; there it can use its natural width to preserve text at large system font scales. API <30 and no top cutout always use that fallback.
-- `block`: below the status bar, top-right; 17 sp bold, `h:mm`, 96% black background and 1 dp light rim (omitted for `outline` so it does not mask the progressive border). Uses the selected feedback variant with cues scaled 1.25×, including the brief delta text.
-- Today's app total is compared with that app's 30-day `UsualDaily` mean; on the launcher the timer uses phone usage/usual. Before 7 real days feedback is calm, with comparison geometry and delta suppressed. Calm is white; near is soft amber; past is amber (and bold pill). Background preferences cannot remove the contrast floor.
-- Settings exposes `overlay_feedback` beside the style selector in PT/EN. Missing/unknown values use `underline`; it updates on the existing 500 ms poll without restarting monitoring or adding windows. Drawing stays inside the existing measured timer, retaining the 44 dp status-bar cap and fallback.
-  - `dots`: unchanged phase 4A hollow circle near / filled dot past; retains `OverlayText.state` / `UsualDaily.state` small-mean slack and grace, also used by messages.
-  - `underline` (default): 2 dp bottom line grows left→right, clamped to the usual; a short right-end tick marks 100%. While near, one static 2 dp gap appears centred at 80% of the usable track. Above 100% the gap disappears and the full line moves to the top. Tracks are inset 4 dp from the rounded ends; colour reinforces the position change.
-  - `underline_delta`: same line; only during the first 3 s of an app session below 80%, replaces time with the remaining margin (`−12m`, U+2212 minus). Uses the recorded `current_session_start_ms`, so polling cannot restart it; no delta on the launcher, near/past, missing/future session start or insufficient history. The minus counts toward the four-character limit: hour margins omit minute remainders (`−1h`, `−10h`, capped at `−99h`). Normal time returns when the interval expires, on the next 500 ms poll.
-  - `outline`: 1.5 dp border starts at top-centre and grows clockwise; the drawn part becomes dashed at 80–100%; above 100% a full solid 2.5 dp border replaces it.
-- Every variant takes its state from `OverlayText.state` (the `UsualDaily` rule plus the 7-day floor), so dots and lines never disagree. Progress is clamped to [0,1]; a zero usual draws a full line for any use (no division by zero).
+- `pill` (default): 14 sp, no border, rounded 71% black background (56% effective at window alpha 0.8). Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). On API 30+, a top cutout permits a slot at `boundingRectTop.right + 8dp`, centred on the status icon row (12 dp above the bottom of the status-bar/cutout top inset, clamped inside it; no API reports where the icons are), only if the complete pill including feedback cue fits within 44 dp and the bar height. Otherwise it moves just below the status bar at top-right; there it can use its natural width to preserve text at large system font scales. API <30 and no top cutout always use that fallback.
+- `block`: below the status bar, top-right; 17 sp bold, `h:mm`, 96% black background, no rim. Uses the selected feedback variant with cues scaled 1.25×.
+- Padding: block and `outline` add one blank character's width each side of the time; `fill` reserves the dot (6.9 dp, 1.25× on block) plus a fixed 3 dp gap left of the text, so the gap never varies with the state.
+- Today's app total is compared with that app's 30-day `UsualDaily` mean; on the launcher the timer uses phone usage/usual. Before 7 real days feedback is calm and no cue is drawn. Calm is white; near is soft amber; past is amber (and bold pill). Background preferences cannot remove the contrast floor.
+- Settings exposes `overlay_feedback` beside the style selector in PT/EN, each choice and style with a one-line description. Missing/unknown values (including the retired `dots`, `underline`, `underline_delta`) use `bar`; it updates on the 500 ms poll without restarting monitoring. Drawing stays inside the measured timer, keeping the 44 dp status-bar cap and fallback.
+  - `fill`: a dot left of the time fills clockwise from 12 o'clock like a pie; full at the usual.
+  - `bar` (default): 2 dp round-capped line under the time, ink spanning exactly the text width (caps included); fills left→right to the usual, then stays full.
+  - `outline`: 1 dp border starts at top-centre and grows clockwise, closing at the usual.
+  - Cut 2026-11-01 (Lucas, panel Codex · Gemini): `dots` (no progress, hollow ring unreadable at real size), `underline_delta` (`−32m` for 3 s read as a negative balance), the 80% notch, the 100% tick and the bar jumping to the top when past.
+- Every variant takes its state from `OverlayText.state` (the `UsualDaily` rule plus the 7-day floor), so shapes and messages never disagree. Progress is clamped to [0,1]; a zero usual draws a full line for any use (no division by zero).
 - Messages have a separate window, below the status bar and any fallback timer, right aligned and at most 88% screen width. This avoids overlapping non-touchable windows (whose combined obscuring opacity would exceed 0.8). The timer stays anchored. Header: `<app label> · 1h 18m hoje` / `today`; on the launcher `Celular` / `Phone` with the phone total. Language follows the saved override or system language (PT fallback).
 - A message ends after 6.5 s, on a detected package change (500 ms poll), overlay hiding/disabling, or screen off. Cancellation leaves the trigger recorded as shown. Trigger evaluation remains every ~2.5 s.
 - `MonitoringService` still writes `overlay_text`; its nonempty value/visibility gates the timer, including the existing launcher unlock-count / 5 s transition. Displayed timer text now comes from shared live totals rather than the legacy seconds/count string.
@@ -133,7 +134,7 @@ BootReceiver → starts MonitoringService on device reboot
 |-----|------|-------------|
 | `overlay_text` | String | Legacy timer string from MonitoringService; nonempty value gates timer visibility |
 | `overlay_style` | String | `"pill"` (default; also fallback for unknown values) or `"block"` |
-| `overlay_feedback` | String | `"dots"`, `"underline"` (default; also fallback for unknown values), `"underline_delta"`, `"outline"`; Kotlin reads `flutter.overlay_feedback` |
+| `overlay_feedback` | String | `"fill"`, `"bar"` (default; also fallback for unknown values), `"outline"`; Kotlin reads `flutter.overlay_feedback` |
 | `overlay_enabled` | Boolean | Show timer/messages; monitoring continues (default true) |
 | `monitor_launcher` | Boolean | Show overlay on launcher (default true) |
 | `overlay_visible` | Boolean | Whether overlay should appear |
@@ -196,12 +197,12 @@ BootReceiver → starts MonitoringService on device reboot
 | `android/app/src/test/…/UsualDailyTest.kt` | Same fixture cases against the Kotlin mirror |
 | `android/app/src/test/…/MessageRulesTest.kt` | Floors (7 real days, 15 min), once a day per trigger, 90-min gap |
 | `android/app/src/test/…/OverlayTextTest.kt` | ≤4-character timer, clock format, PT/EN app/phone headers, feedback floor |
-| `android/app/src/test/…/OverlayPlacementTest.kt` | Cutout slot, width/height fit, API/no-cutout/block/screen-edge fallbacks |
+| `android/app/src/test/…/OverlayPlacementTest.kt` | Cutout slot on the icon row, clamping inside the bar, width/height fit, API/no-cutout/block/screen-edge fallbacks |
 | `android/app/src/test/…/UsualCacheTest.kt` | Cache reuse, app/phone separation, missing-day seed and day rollover |
 | `android/app/src/test/…/LiveUsageTest.kt` | Live app/phone totals, launcher session, missing/future session start |
 | `android/app/src/test/…/MessageDisplayTest.kt` | Exact lifetime, app-switch cancellation, recorded trigger remains shown |
-| `android/app/src/test/…/OverlayFeedbackTest.kt` | Variant defaults, 80/100% boundaries, every variant on the shared rule, history floor, clamping/zero usual, notch segments, delta entry/expiry and ≤4-character minus text |
-| `overlay_feedback_test.dart` | Default/unknown feedback, all four choices persisted through PT/EN settings, style independence and disabled selector |
+| `android/app/src/test/…/OverlayFeedbackTest.kt` | Variant fallback (retired values included), 80/100% boundaries, every variant on the shared rule, history floor, clamping/zero usual, bar span with round caps |
+| `overlay_feedback_test.dart` | Default/unknown/retired feedback, all three choices persisted through PT/EN settings, style independence and disabled selector |
 | `overlay_style_test.dart` | Default/unknown style, PT/EN settings selector and persisted choices |
 | `widget_test.dart` | App smoke test — nav tabs render |
 

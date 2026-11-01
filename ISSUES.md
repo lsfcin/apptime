@@ -102,13 +102,13 @@ history retroactively, or only from the day it was switched off?
 
 *the only enforced-read type — move the contract to a sibling SPECS.md*
 
-- CONTEXT.md: head is 766 tok carrying 1 constraint(s), over the warning
+- CONTEXT.md: head is 760 tok carrying 1 constraint(s), over the warning
 
 ### Local branches holding unpromoted work
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/v1-impl is 3 ahead of main
+- . — feature/v1-impl is 6 ahead of main
 - . — feature/v1-overlay is 3 ahead of main
 
 ### Local branches already merged into their base

@@ -32,11 +32,9 @@ class StorageService {
   set overlayStyle(String v) =>
       _prefs.setString('overlay_style', v == 'block' ? 'block' : 'pill');
 
-  static const overlayFeedbackVariants = [
-    'dots', 'underline', 'underline_delta', 'outline',
-  ];
+  static const overlayFeedbackVariants = ['fill', 'bar', 'outline'];
   static String _feedbackVariant(String? value) =>
-      overlayFeedbackVariants.contains(value) ? value! : 'underline';
+      overlayFeedbackVariants.contains(value) ? value! : 'bar';
 
   String get overlayFeedback =>
       _feedbackVariant(_prefs.getString('overlay_feedback'));

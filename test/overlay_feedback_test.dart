@@ -10,18 +10,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('Missing/unknown feedback defaults to underline; all variants persist', () async {
-    for (final prefs in [<String, Object>{}, {'overlay_feedback': 'unknown'}]) {
+  test('Missing, unknown and retired feedback default to bar; all variants persist', () async {
+    for (final prefs in [<String, Object>{}, {'overlay_feedback': 'unknown'}, {'overlay_feedback': 'underline'}]) {
       SharedPreferences.setMockInitialValues(prefs);
       final storage = await StorageService.init();
-      expect(storage.overlayFeedback, 'underline');
+      expect(storage.overlayFeedback, 'bar');
       for (final variant in StorageService.overlayFeedbackVariants) {
         storage.overlayFeedback = variant;
         expect(storage.overlayFeedback, variant);
         expect((await SharedPreferences.getInstance()).getString('overlay_feedback'), variant);
       }
       storage.overlayFeedback = 'invalid';
-      expect(storage.overlayFeedback, 'underline');
+      expect(storage.overlayFeedback, 'bar');
     }
   });
 
@@ -44,8 +44,8 @@ void main() {
       ));
       await tester.pumpAndSettle();
       final labels = lang == 'pt'
-          ? ['Pontos', 'Linha inferior', 'Linha + margem breve', 'Contorno progressivo']
-          : ['Dots', 'Underline', 'Underline + brief margin', 'Progressive outline'];
+          ? ['Ponto que enche', 'Barra', 'Contorno']
+          : ['Filling dot', 'Bar', 'Outline'];
       for (var i = 0; i < labels.length; i++) {
         final label = find.text(labels[i]);
         await tester.ensureVisible(label);

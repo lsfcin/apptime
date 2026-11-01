@@ -21,7 +21,7 @@ Roadmap and pending milestones → [ROADMAP.md](ROADMAP.md)
 
 ## Current feature set
 
-- Overlay: non-touchable Quiet pill (default, cutout-side status-bar slot with below-bar fallback) or Bloco acessível (17 sp); daily app timer + selectable usual feedback (`underline` default, `dots`, `underline_delta`, `outline`) after 7 real days, settings in PT/EN, alpha 0.8; hidden on unmonitored apps and (optionally) the launcher
+- Overlay: non-touchable Quiet pill (default, cutout-side status-bar slot with below-bar fallback) or Bloco acessível (17 sp); daily app timer + selectable usual feedback (`bar` default, `fill`, `outline`) after 7 real days, settings in PT/EN, alpha 0.8; hidden on unmonitored apps and (optionally) the launcher
 - Messages: three triggers — session ≥20 min, app past its usual, phone past its usual — each once a day, ≥90 min apart; separate 6.5 s message with app/phone total header; app switching cancels it
 - Analytics: 1d/7d/30d tabs; hourly stacked-bar pattern charts (yesterday + last 7 days); sleep hygiene, focus fragmentation, engagement balance, dopamine drain, weekly trend, 30-day trend
 - Insights screen: 40+ research-backed bilingual (PT+EN) cards in Alerts and Solutions tabs

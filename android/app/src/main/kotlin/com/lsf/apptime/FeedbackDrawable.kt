@@ -1,9 +1,9 @@
-// Paints usual-progress cues inside the existing timer background without affecting its size.
+// Paints the usual-progress cue (filling dot, bar under the text, or outline) inside the timer background.
 package com.lsf.apptime
 
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.ColorFilter
-import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PathMeasure
@@ -19,44 +19,52 @@ class FeedbackDrawable(
 ) : Drawable() {
     var frame: OverlayFeedback.Frame? = null
         set(value) { field = value; invalidateSelf() }
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = ink }
-    private val scale = if (block) 1.25f else 1f
-    private fun dp(value: Float) = value * density * scale
+    // Horizontal span of the time text inside the view; the bar matches it like an underline.
+    var textLeft = 0f
+    var textRight = 0f
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private fun dp(value: Float) = value * density * scale(block)
 
     override fun draw(canvas: Canvas) {
         background.bounds = bounds
         background.draw(canvas)
         val feedback = frame ?: return
         if (!feedback.hasUsual) return
+        when (feedback.variant) {
+            "fill" -> drawFill(canvas, feedback.progress)
+            "outline" -> drawOutline(canvas, feedback.progress)
+            else -> drawBar(canvas, feedback.progress)
+        }
+    }
+
+    private fun stroke(color: Int, width: Float) = paint.apply {
+        this.color = color; style = Paint.Style.STROKE; strokeWidth = width; strokeCap = Paint.Cap.ROUND
+    }
+
+    private fun drawBar(canvas: Canvas, progress: Float) {
+        val width = dp(2f)
+        val y = bounds.bottom - dp(1.6f) - width / 2
+        val start = bounds.left + textLeft
+        val end = bounds.left + textRight
+        OverlayFeedback.barSpan(start, end, width, 1f)?.let { (l, r) -> canvas.drawLine(l, y, r, y, stroke(TRACK, width)) }
+        OverlayFeedback.barSpan(start, end, width, progress)?.let { (l, r) -> canvas.drawLine(l, y, r, y, stroke(ink, width)) }
+    }
+
+    private fun drawFill(canvas: Canvas, progress: Float) {
+        val radius = dotRadius(density, block)
+        val cx = bounds.left + textLeft - FILL_GAP_DP * density * scale(block) - radius
+        val cy = bounds.exactCenterY()
+        canvas.drawCircle(cx, cy, radius - density / 2, stroke(TRACK, density))
+        paint.style = Paint.Style.FILL
         paint.color = ink
-        paint.pathEffect = null
-        paint.strokeCap = Paint.Cap.BUTT
-        paint.style = Paint.Style.STROKE
-        if (feedback.variant == "outline") drawOutline(canvas, feedback)
-        else drawUnderline(canvas, feedback)
+        val oval = RectF(cx - radius, cy - radius, cx + radius, cy + radius)
+        if (progress >= 1f) canvas.drawCircle(cx, cy, radius, paint)
+        else if (progress > 0f) canvas.drawArc(oval, -90f, 360f * progress, true, paint)
     }
 
-    private fun drawUnderline(canvas: Canvas, feedback: OverlayFeedback.Frame) {
-        // Inset from rounded ends; both edges use the same track so moving past usual is visible.
-        val left = bounds.left + dp(4f)
-        val right = bounds.right - dp(4f)
-        val y = if (feedback.topEdge) bounds.top + dp(1.5f) else bounds.bottom - dp(1.5f)
-        paint.strokeWidth = dp(2f)
-        for (segment in OverlayFeedback.underlineSegments(feedback, right - left, dp(2f))) {
-            canvas.drawLine(left + segment.start, y, left + segment.end, y, paint)
-        }
-        // A short inward tick marks 100% even while the growing line has not reached it.
-        paint.strokeWidth = dp(1f)
-        val tickEnd = y + if (feedback.topEdge) dp(3f) else -dp(3f)
-        canvas.drawLine(right, y, right, tickEnd, paint)
-    }
-
-    private fun drawOutline(canvas: Canvas, feedback: OverlayFeedback.Frame) {
-        paint.strokeWidth = dp(if (feedback.state == UsualState.PAST) 2.5f else 1.5f)
-        if (feedback.state == UsualState.NEAR) {
-            paint.pathEffect = DashPathEffect(floatArrayOf(dp(3f), dp(2f)), 0f)
-        }
-        val inset = paint.strokeWidth / 2
+    private fun drawOutline(canvas: Canvas, progress: Float) {
+        val width = dp(1f)
+        val inset = width / 2
         val rect = RectF(bounds).apply { inset(inset, inset) }
         val radius = minOf((if (block) 8f else 12f) * density - inset, rect.height() / 2, rect.width() / 2)
             .coerceAtLeast(0f)
@@ -73,11 +81,13 @@ class FeedbackDrawable(
             arcTo(RectF(rect.left, rect.top, rect.left + 2 * radius, rect.top + 2 * radius), 180f, 90f)
             close()
         }
-        val drawn = if (feedback.progress >= 1f) path else Path().also {
+        canvas.drawPath(path, stroke(TRACK, width))
+        if (progress <= 0f) return
+        val drawn = if (progress >= 1f) path else Path().also {
             val measure = PathMeasure(path, false)
-            measure.getSegment(0f, measure.length * feedback.progress, it, true)
+            measure.getSegment(0f, measure.length * progress, it, true)
         }
-        canvas.drawPath(drawn, paint)
+        canvas.drawPath(drawn, stroke(ink, width))
     }
 
     override fun setAlpha(alpha: Int) { background.alpha = alpha; paint.alpha = alpha; invalidateSelf() }
@@ -86,4 +96,15 @@ class FeedbackDrawable(
     }
     @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
+
+    companion object {
+        // Empty part of every cue: white at 32%, readable over light content at window alpha 0.8.
+        val TRACK = Color.argb(82, 255, 255, 255)
+        const val FILL_GAP_DP = 3f
+        fun scale(block: Boolean) = if (block) 1.25f else 1f
+        fun dotRadius(density: Float, block: Boolean) = 3.45f * density * scale(block)
+        // Room the filling dot takes left of the text: its diameter plus the gap.
+        fun fillReserve(density: Float, block: Boolean) =
+            2 * dotRadius(density, block) + FILL_GAP_DP * density * scale(block)
+    }
 }

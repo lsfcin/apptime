@@ -47,10 +47,14 @@ abstract class AppLocalizations
   String get overlayStylePill;
   String get overlayStyleBlock;
   String get overlayFeedback;
-  String get overlayFeedbackDots;
-  String get overlayFeedbackUnderline;
-  String get overlayFeedbackDelta;
+  String get overlayStylePillSub;
+  String get overlayStyleBlockSub;
+  String get overlayFeedbackFill;
+  String get overlayFeedbackFillSub;
+  String get overlayFeedbackBar;
+  String get overlayFeedbackBarSub;
   String get overlayFeedbackOutline;
+  String get overlayFeedbackOutlineSub;
   String get showBorder;
   String get showBackground;
   String fontSize(int size);

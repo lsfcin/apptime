@@ -1,4 +1,4 @@
-// Checks cutout placement and every fallback that keeps the complete timer readable.
+// Checks cutout placement on the icon row and every fallback that keeps the complete timer readable.
 package com.lsf.apptime
 
 import org.junit.Assert.assertEquals
@@ -7,12 +7,19 @@ import org.junit.Test
 
 class OverlayPlacementTest {
     private fun place(api: Int = 30, cutout: Int = 100, width: Int = 44, height: Int = 18,
-                      block: Boolean = false) =
-        OverlayPlacement.timer(api, cutout, 30, 400, width, height, 44, 8, block)
+                      bar: Int = 30, iconRow: Int = 12, block: Boolean = false) =
+        OverlayPlacement.timer(api, cutout, bar, 400, width, height, 44, 8, iconRow, block)
 
     @Test
-    fun fittingPillIsRightOfCameraAndVerticallyCentered() {
-        assertEquals(TimerPlacement(true, 108, 6), place())
+    fun fittingPillIsRightOfCameraCentredOnTheIconRow() {
+        // Bar 30, icon row 12 above its bottom: centre at 18, top at 9.
+        assertEquals(TimerPlacement(true, 108, 9), place())
+    }
+
+    @Test
+    fun iconRowNeverPushesThePillOutOfTheBar() {
+        assertEquals(0, place(iconRow = 28).y)
+        assertEquals(12, place(iconRow = 0).y)
     }
 
     @Test

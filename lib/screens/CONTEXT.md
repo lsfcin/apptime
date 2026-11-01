@@ -25,6 +25,6 @@
 | [`onboarding_screen_steps.dart`](onboarding_screen_steps.dart) | — | Step widgets for OnboardingScreen: welcome step and permission step |
 | [`per_app_screen.dart`](per_app_screen.dart) | [`per_app_screen.dart.api`](per_app_screen.dart.api) | Per-app screen: displays detailed daily and weekly usage breakdown for a single app |
 | [`settings_screen.dart`](settings_screen.dart) | [`settings_screen.dart.api`](settings_screen.dart.api) | App settings screen: permissions, monitoring controls, overlay, behavior, data privacy, language |
-| [`settings_screen_sections.dart`](settings_screen_sections.dart) | — | Settings screen section widgets: overlay, behavior, data/privacy, language |
+| [`settings_screen_sections.dart`](settings_screen_sections.dart) | [`settings_screen_sections.dart.api`](settings_screen_sections.dart.api) | Settings screen section widgets: overlay, behavior, data/privacy, language |
 | [`settings_screen_widgets.dart`](settings_screen_widgets.dart) | — | SettingsScreen helper widgets and private action methods: permission tile, section header, dialogs |
 <!-- routing:end -->

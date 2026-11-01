@@ -50,6 +50,32 @@ class _OverlaySection extends StatelessWidget {
                   ],
                 ),
               ),
+              const Divider(height: 1, indent: 16),
+              ListTile(title: Text(l10n.overlayFeedback)),
+              RadioGroup<String>(
+                groupValue: s.overlayFeedback,
+                onChanged: (value) {
+                  if (s.overlayEnabled && value != null) {
+                    s.overlayFeedback = value;
+                    onChanged();
+                  }
+                },
+                child: Column(
+                  children: [
+                    for (final (value, label) in [
+                      ('dots', l10n.overlayFeedbackDots),
+                      ('underline', l10n.overlayFeedbackUnderline),
+                      ('underline_delta', l10n.overlayFeedbackDelta),
+                      ('outline', l10n.overlayFeedbackOutline),
+                    ])
+                      RadioListTile<String>(
+                        title: Text(label),
+                        value: value,
+                        enabled: s.overlayEnabled,
+                      ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

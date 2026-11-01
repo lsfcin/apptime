@@ -63,6 +63,11 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get overlayStyle => 'Estilo do visor';
   @override String get overlayStylePill => 'Pílula discreta';
   @override String get overlayStyleBlock => 'Bloco acessível';
+  @override String get overlayFeedback => 'Comparação com seu habitual';
+  @override String get overlayFeedbackDots => 'Pontos';
+  @override String get overlayFeedbackUnderline => 'Linha inferior';
+  @override String get overlayFeedbackDelta => 'Linha + margem breve';
+  @override String get overlayFeedbackOutline => 'Contorno progressivo';
   @override String get showBorder => 'Mostrar borda';
   @override String get showBackground => 'Mostrar fundo';
   @override String fontSize(int size) => 'Tamanho da fonte: ${size}sp';

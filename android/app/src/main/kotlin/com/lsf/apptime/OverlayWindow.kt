@@ -74,11 +74,11 @@ class OverlayWindow(private val context: Context, private val view: View) {
         }
     }
 
-    fun background(block: Boolean): GradientDrawable = GradientDrawable().apply {
+    fun background(block: Boolean, border: Boolean = true): GradientDrawable = GradientDrawable().apply {
         cornerRadius = dp(if (block) 8 else 12).toFloat()
         // With window alpha 0.8 the pill still has >45% effective black.
         setColor(Color.argb(if (block) 245 else 180, 0, 0, 0))
-        if (block) setStroke(dp(1), Color.LTGRAY)
+        if (block && border) setStroke(dp(1), Color.LTGRAY)
     }
 }
 

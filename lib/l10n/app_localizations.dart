@@ -82,6 +82,11 @@ abstract class AppLocalizations {
   String get overlayStyle;
   String get overlayStylePill;
   String get overlayStyleBlock;
+  String get overlayFeedback;
+  String get overlayFeedbackDots;
+  String get overlayFeedbackUnderline;
+  String get overlayFeedbackDelta;
+  String get overlayFeedbackOutline;
   String get showBorder;
   String get showBackground;
   String fontSize(int size);

@@ -32,6 +32,17 @@ class StorageService {
   set overlayStyle(String v) =>
       _prefs.setString('overlay_style', v == 'block' ? 'block' : 'pill');
 
+  static const overlayFeedbackVariants = [
+    'dots', 'underline', 'underline_delta', 'outline',
+  ];
+  static String _feedbackVariant(String? value) =>
+      overlayFeedbackVariants.contains(value) ? value! : 'underline';
+
+  String get overlayFeedback =>
+      _feedbackVariant(_prefs.getString('overlay_feedback'));
+  set overlayFeedback(String v) =>
+      _prefs.setString('overlay_feedback', _feedbackVariant(v));
+
   // Legacy appearance prefs are retained for compatibility; styles now define appearance.
   // Handles legacy double values that may be stored from older builds.
   double get overlayFontSize {

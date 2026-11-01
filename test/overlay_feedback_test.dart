@@ -44,8 +44,8 @@ void main() {
       ));
       await tester.pumpAndSettle();
       final labels = lang == 'pt'
-          ? ['Ponto que enche', 'Barra', 'Contorno']
-          : ['Filling dot', 'Bar', 'Outline'];
+          ? ['Ponto que enche', 'Barra', 'Contorno', 'Nenhuma']
+          : ['Filling dot', 'Bar', 'Outline', 'None'];
       for (var i = 0; i < labels.length; i++) {
         final label = find.text(labels[i]);
         await tester.ensureVisible(label);
@@ -68,7 +68,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text(labels.first));
       await tester.pumpAndSettle();
-      expect(storage.overlayFeedback, 'outline');
+      expect(storage.overlayFeedback, 'none');
     });
   }
 }

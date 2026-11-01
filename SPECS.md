@@ -120,6 +120,7 @@ BootReceiver → starts MonitoringService on device reboot
   - `fill`: a dot left of the time fills clockwise from 12 o'clock like a pie; full at the usual.
   - `bar` (default): 2 dp round-capped line under the time, ink spanning exactly the text width (caps included); fills left→right to the usual, then stays full.
   - `outline`: 1 dp border starts at top-centre and grows clockwise, closing at the usual.
+  - `none`: no cue and no state colour; the time stays calm white (messages keep their own rule).
   - Cut 2026-11-01 (Lucas, panel Codex · Gemini): `dots` (no progress, hollow ring unreadable at real size), `underline_delta` (`−32m` for 3 s read as a negative balance), the 80% notch, the 100% tick and the bar jumping to the top when past.
 - Every variant takes its state from `OverlayText.state` (the `UsualDaily` rule plus the 7-day floor), so shapes and messages never disagree. Progress is clamped to [0,1]; a zero usual draws a full line for any use (no division by zero).
 - Messages have a separate window, below the status bar and any fallback timer, right aligned and at most 88% screen width. This avoids overlapping non-touchable windows (whose combined obscuring opacity would exceed 0.8). The timer stays anchored. Header: `<app label> · 1h 18m hoje` / `today`; on the launcher `Celular` / `Phone` with the phone total. Language follows the saved override or system language (PT fallback).
@@ -134,7 +135,7 @@ BootReceiver → starts MonitoringService on device reboot
 |-----|------|-------------|
 | `overlay_text` | String | Legacy timer string from MonitoringService; nonempty value gates timer visibility |
 | `overlay_style` | String | `"pill"` (default; also fallback for unknown values) or `"block"` |
-| `overlay_feedback` | String | `"fill"`, `"bar"` (default; also fallback for unknown values), `"outline"`; Kotlin reads `flutter.overlay_feedback` |
+| `overlay_feedback` | String | `"fill"`, `"bar"` (default; also fallback for unknown values), `"outline"`, `"none"`; Kotlin reads `flutter.overlay_feedback` |
 | `overlay_enabled` | Boolean | Show timer/messages; monitoring continues (default true) |
 | `monitor_launcher` | Boolean | Show overlay on launcher (default true) |
 | `overlay_visible` | Boolean | Whether overlay should appear |
@@ -202,7 +203,7 @@ BootReceiver → starts MonitoringService on device reboot
 | `android/app/src/test/…/LiveUsageTest.kt` | Live app/phone totals, launcher session, missing/future session start |
 | `android/app/src/test/…/MessageDisplayTest.kt` | Exact lifetime, app-switch cancellation, recorded trigger remains shown |
 | `android/app/src/test/…/OverlayFeedbackTest.kt` | Variant fallback (retired values included), 80/100% boundaries, every variant on the shared rule, history floor, clamping/zero usual, bar span with round caps |
-| `overlay_feedback_test.dart` | Default/unknown/retired feedback, all three choices persisted through PT/EN settings, style independence and disabled selector |
+| `overlay_feedback_test.dart` | Default/unknown/retired feedback, all four choices persisted through PT/EN settings, style independence and disabled selector |
 | `overlay_style_test.dart` | Default/unknown style, PT/EN settings selector and persisted choices |
 | `widget_test.dart` | App smoke test — nav tabs render |
 

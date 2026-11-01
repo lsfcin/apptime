@@ -68,6 +68,7 @@ class _OverlaySection extends StatelessWidget {
                       ('fill', l10n.overlayFeedbackFill, l10n.overlayFeedbackFillSub),
                       ('bar', l10n.overlayFeedbackBar, l10n.overlayFeedbackBarSub),
                       ('outline', l10n.overlayFeedbackOutline, l10n.overlayFeedbackOutlineSub),
+                      ('none', l10n.overlayFeedbackNone, l10n.overlayFeedbackNoneSub),
                     ])
                       RadioListTile<String>(
                         title: Text(label),

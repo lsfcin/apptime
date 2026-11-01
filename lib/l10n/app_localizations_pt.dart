@@ -72,6 +72,8 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get overlayFeedbackBarSub => 'Uma linha embaixo do tempo vai enchendo até o seu habitual';
   @override String get overlayFeedbackOutline => 'Contorno';
   @override String get overlayFeedbackOutlineSub => 'A borda se desenha em volta do tempo e fecha no seu habitual';
+  @override String get overlayFeedbackNone => 'Nenhuma';
+  @override String get overlayFeedbackNoneSub => 'Só o tempo, sem comparar com o seu habitual';
   @override String get showBorder => 'Mostrar borda';
   @override String get showBackground => 'Mostrar fundo';
   @override String fontSize(int size) => 'Tamanho da fonte: ${size}sp';

@@ -2,7 +2,7 @@
 package com.lsf.apptime
 
 object OverlayFeedback {
-    val VARIANTS = listOf("fill", "bar", "outline")
+    val VARIANTS = listOf("fill", "bar", "outline", "none")
     const val DEFAULT = "bar"
 
     data class Frame(
@@ -19,8 +19,11 @@ object OverlayFeedback {
         val total = totalMs.coerceAtLeast(0L)
         val ratio = if (usual.meanMs > 0) total.toDouble() / usual.meanMs
                     else if (total > 0) Double.POSITIVE_INFINITY else 0.0
-        // One state for every variant: the shared UsualDaily rule, so shapes and messages never disagree.
-        return Frame(this.variant(variant), OverlayText.state(total, usual),
+        val chosen = this.variant(variant)
+        // "none" compares nothing, colour included: the time stays calm white.
+        if (chosen == "none") return Frame(chosen, UsualState.CALM, 0f, false)
+        // One state for every other variant: the shared UsualDaily rule, so shapes and messages never disagree.
+        return Frame(chosen, OverlayText.state(total, usual),
             if (ready) ratio.coerceIn(0.0, 1.0).toFloat() else 0f, ready)
     }
 

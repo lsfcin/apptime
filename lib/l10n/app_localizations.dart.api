@@ -55,6 +55,8 @@ abstract class AppLocalizations
   String get overlayFeedbackBarSub;
   String get overlayFeedbackOutline;
   String get overlayFeedbackOutlineSub;
+  String get overlayFeedbackNone;
+  String get overlayFeedbackNoneSub;
   String get showBorder;
   String get showBackground;
   String fontSize(int size);

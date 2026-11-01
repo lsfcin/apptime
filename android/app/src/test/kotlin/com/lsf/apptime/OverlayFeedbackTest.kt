@@ -6,6 +6,7 @@ import org.junit.Test
 
 class OverlayFeedbackTest {
     private val min = 60_000L
+    private val comparing = OverlayFeedback.VARIANTS - "none"
     private fun frame(total: Long = 20 * min, mean: Long = 60 * min, days: Int = 7, variant: String? = "bar") =
         OverlayFeedback.frame(variant, total, Usual(mean, days))
 
@@ -17,7 +18,7 @@ class OverlayFeedbackTest {
     }
 
     @Test fun fractionBoundariesAreExact() {
-        for (variant in OverlayFeedback.VARIANTS) {
+        for (variant in comparing) {
             assertEquals(UsualState.CALM, frame(48 * min - 1, variant = variant).state)
             val near = frame(48 * min, variant = variant)
             assertEquals(UsualState.NEAR, near.state)
@@ -30,11 +31,17 @@ class OverlayFeedbackTest {
     }
 
     @Test fun everyVariantSharesTheUsualDailyRuleIncludingLowMeanTolerances() {
-        for (variant in OverlayFeedback.VARIANTS) {
+        for (variant in comparing) {
             for (total in listOf(0L, min, 2 * min, 2 * min + 1, 3 * min + 1, 4 * min)) {
                 assertEquals(OverlayText.state(total, Usual(2 * min, 7)),
                     frame(total, mean = 2 * min, variant = variant).state)
             }
+        }
+    }
+
+    @Test fun noneStaysCalmWithNoCueWhateverTheUse() {
+        for (total in listOf(0L, 48 * min, 61 * min, Long.MAX_VALUE)) {
+            assertEquals(OverlayFeedback.Frame("none", UsualState.CALM, 0f, false), frame(total, variant = "none"))
         }
     }
 

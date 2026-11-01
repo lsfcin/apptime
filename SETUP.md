@@ -3,9 +3,11 @@
 
 ## Prerequisites
 
-- Flutter SDK ≥ 3.11 — [flutter.dev/docs/get-started/install](https://docs.flutter.dev/get-started/install)
-- Android SDK + build tools (via Android Studio or standalone `cmdline-tools`)
-- Java 17+ (required by Gradle)
+Installed system-wide (2026-11-01), so every shell and the commit hook see it:
+JDK 17 (`apt openjdk-17-jdk`), Android SDK in `/opt/android-sdk` (installed with
+`cmdline-tools/latest/bin/android sdk install`, the sdkmanager successor), Flutter stable in
+`/opt/flutter`, both owned by the user; env in `/etc/profile.d/apptime-toolchain.sh`; user in
+group `kvm` for the emulator. A shell opened before the relog needs those three vars exported.
 
 Verify:
 
@@ -33,6 +35,15 @@ flutter run
 ```bash
 flutter build apk --release
 ```
+
+## Install on a phone
+
+`adb install -r build/app/outputs/flutter-apk/app-debug.apk`. A different signing key fails
+with `INSTALL_FAILED_UPDATE_INCOMPATIBLE`: uninstall wipes the usage history, so first copy
+`run-as com.lsf.apptime cat shared_prefs/FlutterSharedPreferences.xml` out, then after the
+install push it back with `run-as ... cp` and `appops set <pkg> GET_USAGE_STATS allow` /
+`SYSTEM_ALERT_WINDOW allow`. MIUI asks on screen before each USB install and refuses
+`input tap`, so someone has to hold the phone.
 
 ## Kotlin
 

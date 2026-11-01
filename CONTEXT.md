@@ -112,10 +112,11 @@ Roadmap and pending milestones → [ROADMAP.md](ROADMAP.md)
 | [`SETUP.md`](SETUP.md) | — | Flutter + Kotlin Android dev environment |
 | [`SPECS.md`](SPECS.md) | — | AppTime — Code Structure & Reference |
 | [`analysis_options.yaml`](analysis_options.yaml) | — | This file configures the analyzer, which statically analyzes Dart code to check for errors, warnings, and lints. |
+| [`android/gradlew`](android/gradlew) | — | ############################################################################# # #  Gradle start up script for UN*X # ############################################################################# |
 | [`docs/privacy_policy.html`](docs/privacy_policy.html) | — | ← add first-line comment |
 | [`docs/store_listing.md`](docs/store_listing.md) | — | AppTime — Play Store Listing Copy |
 | [`flutter_launcher_icons.yaml`](flutter_launcher_icons.yaml) | — | ← add first-line comment |
 | [`pubspec.yaml`](pubspec.yaml) | — | ← add first-line comment |
-| [`test/goal_thresholds_test.dart`](test/goal_thresholds_test.dart) | [`test/goal_thresholds_test.dart.api`](test/goal_thresholds_test.dart.api) | Asserts that GoalThresholds.byLevel (Dart) matches GoalThresholds.kt (Kotlin). |
+| [`test/usual_daily_test.dart`](test/usual_daily_test.dart) | [`test/usual_daily_test.dart.api`](test/usual_daily_test.dart.api) | Asserts the 30-day "your usual" mean: seeded unmeasured days, zero-use days, and the calm/near/past cut-offs |
 | [`test/widget_test.dart`](test/widget_test.dart) | [`test/widget_test.dart.api`](test/widget_test.dart.api) | ← add first-line comment |
 <!-- routing:end -->

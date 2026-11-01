@@ -112,11 +112,12 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   mean (or 2 min before it), near up to it, past above (+1 min grace under a 5-min mean).
   Built: `lib/services/usual_daily.dart`. Panel (Codex · Gemini) 9 · 9 for daily over hourly,
   10 · 9 for real history over seeding everything; both warn the seed reads as an allowance.
-- **Messages without goals — open, Lucas decides.** Panel agrees: keep app past usual, phone
-  past usual, long session; drop sleep and wakeup (no setting-free definition of night or waking).
-  Split: unlocks (Gemini: keep, vs the 30-day mean; Codex: dashboard first), session threshold
-  (Codex: fixed 20 min; Gemini: max(15 min, 2× the app's usual session), cap 30), cadence (Codex:
-  once per trigger per day, ≤3/day, 90 min apart; Gemini: once per day, ≤1 per 15 min).
+- **Messages without goals** (Lucas, 2026-11-01, Codex's side on every split): three triggers —
+  app past usual, phone past usual, session over a fixed 20 min. Sleep and wakeup go (no
+  setting-free night or waking); unlocks show on a dashboard first, no message. Cadence: each
+  trigger once a day, ≤3 messages a day, ≥90 min apart.
+- **Some apps start unmonitored — open, list for Lucas** (Lucas, 2026-11-01): navigation (Waze,
+  Google Maps) and audio (Spotify, Deezer) by default; the user can switch them back on.
 - **The goal levels leave the whole app** (Lucas, 2026-10-31): `GoalThresholds`, the four levels,
   the per-app level chips and `GoalScreen`. Reminders key off the user's own average.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.

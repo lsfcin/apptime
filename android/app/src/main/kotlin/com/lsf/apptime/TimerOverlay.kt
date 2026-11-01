@@ -65,15 +65,16 @@ class TimerOverlay(context: Context) {
     }
 
     // The block and the outline get one blank character of air each side (the bare pill 1 dp, so it fits 44 dp);
-    // the filling dot sits left of the text; the bar gets its own thickness free below it.
+    // the filling dot sits left of the text; the bar's bottom padding holds the bar plus twice its thickness
+    // below it, so the bar sits right under the digits (their font descent is the only gap above it).
     private fun pad(block: Boolean, variant: String) {
         val outline = variant == "outline"
         val air = if (block || outline) view.paint.measureText(" ") else 0f
         val side = window.dp(if (block) 8 else 1) + air
         val dot = if (variant == "fill") FeedbackDrawable.fillReserve(density, block) else 0f
         val vertical = window.dp(if (block) 5 else 2) + if (outline) window.dp(2) else 0
-        val bar = if (variant == "bar") FeedbackDrawable.barStroke(density, block).roundToInt() else 0
-        view.setPadding((side + dot).roundToInt(), vertical, side.roundToInt(), vertical + bar)
+        val bottom = if (variant == "bar") (3 * FeedbackDrawable.barStroke(density, block)).roundToInt() else vertical
+        view.setPadding((side + dot).roundToInt(), vertical, side.roundToInt(), bottom)
     }
 
     fun remove() = window.remove()

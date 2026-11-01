@@ -47,8 +47,8 @@ class FeedbackDrawable(
 
     private fun drawBar(canvas: Canvas, progress: Float) {
         val width = barStroke(density, block)
-        // As much free space below the bar as the bar is thick.
-        val y = bounds.bottom - width - width / 2
+        // Twice the bar's thickness stays free between it and the bottom edge.
+        val y = bounds.bottom - 2 * width - width / 2
         val start = bounds.left + textLeft
         val end = bounds.left + textRight
         OverlayFeedback.barSpan(start, end, width, 1f)?.let { (l, r) -> canvas.drawLine(l, y, r, y, stroke(TRACK, width)) }

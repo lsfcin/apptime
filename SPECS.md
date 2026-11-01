@@ -20,16 +20,13 @@ lib/
 │   ├── app_localizations_en.dart    # English implementations
 │   └── app_localizations_pt.dart    # Portuguese implementations
 │
-├── models/
-│   └── goal_config.dart             # GoalLevel enum, GoalThresholds, goalLevelFromInt
-│
 ├── screens/
 │   ├── analytics/
 │   │   ├── analytics_screen.dart    # Shell: TabController + Tab1d/Tab7d/Tab30d
 │   │   ├── analytics_helpers.dart   # Shared widgets: AppAgg, DonutChart, HorizontalAppBars,
 │   │   │                            #   LegendDot/Item, Summary30dWidget, analysisCard(),
 │   │   │                            #   analyticsNoData(), sevenDayLabel()
-│   │   ├── classification_message.dart  # classificationMessage() — 5×4 tier matrix
+│   │   ├── classification_message.dart  # classificationMessage() — 5×4 level matrix
 │   │   ├── tab_day.dart             # Tab1d + hourly/session/opportunity charts
 │   │   ├── tab_month.dart           # Tab30d + UsageTrend30d charts
 │   │   └── tab_week.dart            # Tab7d + 7-day pattern + trend bars
@@ -40,14 +37,15 @@ lib/
 │   │
 │   ├── home_screen.dart             # Permissions + insight-of-day rotator
 │   ├── monitoring_screen.dart       # MonitoringScreen, _InsightRotatorCard
-│   ├── per_app_screen.dart          # Per-app goal/monitoring level selector
-│   └── settings_screen.dart        # Settings: overlay, goal, language, data
+│   ├── per_app_screen.dart          # Per-app usage and monitoring switch
+│   └── settings_screen.dart        # Settings: overlay, language, data
 │
 ├── services/
 │   ├── analytics_service.dart       # AnalyticsService — builds DaySummary list (30 days)
 │   ├── app_info_service.dart        # AppInfoService — loads labels + launchers once
 │   ├── service_channel.dart         # ServiceChannel — MethodChannel bridge to Kotlin
-│   └── storage_service.dart         # StorageService — SharedPreferences wrapper
+│   ├── storage_service.dart         # StorageService — SharedPreferences wrapper
+│   └── usual_daily.dart             # usualDaily(), usualState() — "your usual" (30-day mean)
 │
 ├── theme/
 │   └── app_theme.dart               # AppColors, AppSpacing
@@ -72,11 +70,12 @@ lib/
 | `MonitoringService.kt` | Foreground service — 1s tick, accumulateDailyMs, session tracking, overlay text |
 | `HistoryBackfill.kt` | Gap backfill (backfillGap) + 30-day history fill (backfillHistory); injectable |
 | `OverlayService.kt` | Foreground service — overlay view lifecycle, updateOverlay(); delegates feedback to FeedbackEngine |
-| `FeedbackEngine.kt` | F.BN breathing nudge, F.VW visual weight, F.PM personalized message; injectable |
-| `AppConstants.kt` | LAUNCHERS, SOCIAL_PATTERNS, parseDisabledApps(), CHANNEL constant |
-| `DateUtils.kt` | today(), currentHour(), safeGetCount() extension — shared by Monitoring/Overlay |
-| `GoalThresholds.kt` | GoalThresholds data class + forLevel() tier table; mirrors goal_config.dart |
-| `PmMessages.kt` | Personalized message strings (PT/EN) for all F.PM triggers |
+| `FeedbackEngine.kt` | Reads live usage, asks MessageRules, shows the message; cadence persisted in prefs |
+| `MessageRules.kt` | Pure: three triggers (session ≥20 min, app past usual, phone past usual), each once a day, ≥90 min apart |
+| `UsualDaily.kt` | "Your usual" — mirror of `usual_daily.dart`, held equal by `test/fixtures/usual_daily.json` |
+| `AppConstants.kt` | LAUNCHERS, parseDisabledApps(), CHANNEL constant |
+| `DateUtils.kt` | today(), currentHour(), daysBefore(), safeGetCount() extension |
+| `PmMessages.kt` | Message text (PT/EN) per trigger |
 | `BootReceiver.kt` | Restarts MonitoringService after device reboot |
 
 ---
@@ -124,8 +123,9 @@ BootReceiver → starts MonitoringService on device reboot
 | `disabled_apps` | String (JSON) | Packages with overlay disabled |
 | `onboarding_done` | Boolean | Whether onboarding has been completed |
 | `language_code` | String? | `null`=system · `"pt"` · `"en"` |
-| `goal_level` | Int | 0=none 1=minimal 2=normal 3=extensive |
-| `app_goal_{pkg}` | Int | Per-app goal override; 0=inherit global |
+| `pm_day` | String | Kotlin only — date key the shown set below belongs to |
+| `pm_shown` | String | Kotlin only — triggers shown on `pm_day`, comma-separated |
+| `pm_last_ms` | Long | Kotlin only — epoch ms of the last message (the 90-min gap spans days) |
 | `current_pkg` | String | Foreground package right now (written each tick) |
 | `current_session_start_ms` | Long | Epoch ms when current session began |
 
@@ -150,8 +150,9 @@ BootReceiver → starts MonitoringService on device reboot
 ## Key Invariants
 
 - **4am day boundary**: all date keys (`YYYY-MM-DD`) represent the 24h window starting at 04:00. `epochToDateKey()` (Kotlin) and `dayAnchor()` (Dart) implement this consistently. Cross-midnight sessions are split at the 4am boundary.
-- **Single source of truth**: `kPassivePatterns` (Dart) and `AppConstants.SOCIAL_PATTERNS` (Kotlin) reference the same canonical string values. `kAppMeta` is the sole source for app labels and colors.
-- **GoalThresholds parity**: enforced by `test/goal_thresholds_test.dart` (3 assertions, one per level).
+- **Single source of truth**: `kAppMeta` is the sole source for app labels and colors.
+- **"Your usual" parity**: Dart and Kotlin both run `test/fixtures/usual_daily.json`; a rule change edits both files and adds a case there.
+- **No goals** (rejected 2026-10-31): the four goal levels, per-app levels and `GoalScreen` are gone. Messages key off the user's own 30-day mean, never a target the user picked.
 - **Daily total == sum of hourly values**: `accumulateDailyMs` accumulates daily totals within the hourly walk loop.
 - **Heartbeat granularity**: written every 30s (not 1s) — sufficient for gap detection; reduces disk writes by 30×.
 
@@ -161,7 +162,9 @@ BootReceiver → starts MonitoringService on device reboot
 
 | File | What it tests |
 |------|--------------|
-| `goal_thresholds_test.dart` | Dart/Kotlin GoalThresholds values parity (3 levels × 6 fields) |
+| `usual_daily_test.dart` | "Your usual" against the shared fixture cases |
+| `android/app/src/test/…/UsualDailyTest.kt` | Same fixture cases against the Kotlin mirror |
+| `android/app/src/test/…/MessageRulesTest.kt` | Floors (7 real days, 15 min), once a day per trigger, 90-min gap |
 | `widget_test.dart` | App smoke test — nav tabs render |
 
 ---

@@ -1,0 +1,46 @@
+{
+  "_about": "Cases for \"your usual\", run by test/usual_daily_test.dart and android/app/src/test/kotlin/com/lsf/apptime/UsualDailyTest.kt so both sides stay equal. A day missing from dates reads as default.",
+  "usual": [
+    {
+      "name": "nothing measured: every day is the 60-minute seed",
+      "today": "2026-10-31",
+      "appMs": {"default": 0, "dates": {}},
+      "deviceMs": {"default": 0, "dates": {}},
+      "meanMs": 3600000, "realDays": 0
+    },
+    {
+      "name": "a measured day without this app counts as zero, not as seed",
+      "today": "2026-10-31",
+      "appMs": {"default": 0, "dates": {}},
+      "deviceMs": {"default": 0, "dates": {"2026-10-30": 5400000}},
+      "meanMs": 3480000, "realDays": 1
+    },
+    {
+      "name": "30 measured days give the plain mean, and today is outside the window",
+      "today": "2026-10-31",
+      "appMs": {"default": 1200000, "dates": {"2026-10-31": 59940000}},
+      "deviceMs": {"default": 6000000, "dates": {}},
+      "meanMs": 1200000, "realDays": 30
+    },
+    {
+      "name": "the window crosses a month: 30 days back is in, 31 is out",
+      "today": "2026-11-01",
+      "appMs": {"default": 0, "dates": {"2026-10-02": 1000, "2026-10-01": 1000}},
+      "deviceMs": {"default": 0, "dates": {"2026-10-02": 1000, "2026-10-01": 1000}},
+      "meanMs": 3480033, "realDays": 1
+    }
+  ],
+  "state": [
+    {"name": "below 80% is calm", "todayMs": 2340000, "meanMs": 3000000, "state": "calm"},
+    {"name": "80% is near", "todayMs": 2400000, "meanMs": 3000000, "state": "near"},
+    {"name": "the mean itself is near", "todayMs": 3000000, "meanMs": 3000000, "state": "near"},
+    {"name": "above the mean is past", "todayMs": 3060000, "meanMs": 3000000, "state": "past"},
+    {"name": "low mean: calm before the 2-minute slack", "todayMs": 59999, "meanMs": 180000, "state": "calm"},
+    {"name": "low mean: near 2 minutes before it", "todayMs": 60000, "meanMs": 180000, "state": "near"},
+    {"name": "low mean: near through the grace minute", "todayMs": 240000, "meanMs": 180000, "state": "near"},
+    {"name": "low mean: past after the grace minute", "todayMs": 240001, "meanMs": 180000, "state": "past"},
+    {"name": "zero mean: no use is calm", "todayMs": 0, "meanMs": 0, "state": "calm"},
+    {"name": "zero mean: any use is near", "todayMs": 1, "meanMs": 0, "state": "near"},
+    {"name": "zero mean: past after the grace minute", "todayMs": 60001, "meanMs": 0, "state": "past"}
+  ]
+}

@@ -9,10 +9,10 @@ No app blocking. No punishments. Just honest visibility into your own habits.
 ## What it does
 
 - **Floating overlay** — a small counter follows you across every app, showing the current app's daily usage time
-- **Goal system** — four control levels (Off / Light / Moderate / Intense) trigger gentle behavioral nudges: breathing animations, visual weight scaling, and research-backed messages
+- **Messages** — a short note when a session runs past 20 minutes, or an app or the whole phone goes past your own 30-day usual; once a day each, never closer than 90 minutes
 - **Analytics** — daily, 7-day, and 30-day views with hourly usage patterns, focus fragmentation, dopamine drain, engagement balance, sleep hygiene, and trend analysis
 - **Insights** — two tabs (Alerts / Solutions) with 40+ research-backed cards on habit change, focus, sleep, and social impact
-- **Per-app control** — enable/disable overlay and set goal levels per app independently
+- **Per-app control** — enable/disable the overlay per app
 
 ## Privacy
 

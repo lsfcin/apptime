@@ -7,14 +7,6 @@ object AppConstants {
 
     const val CHANNEL = "apptime/service"
 
-    /** Social/communication apps — used by OverlayService for wakeup-hour feedback. */
-    val SOCIAL_PATTERNS: List<String> = listOf(
-        "instagram", "tiktok", "twitter", "facebook", "snapchat",
-        "reddit", "pinterest", "linkedin", "threads", "bluesky",
-        "gmail", "outlook", "yahoo.mail", "protonmail",
-        "whatsapp", "telegram", "signal", "discord"
-    )
-
     val LAUNCHERS: Set<String> = setOf(
         "com.google.android.apps.nexuslauncher",
         "com.sec.android.app.launcher",

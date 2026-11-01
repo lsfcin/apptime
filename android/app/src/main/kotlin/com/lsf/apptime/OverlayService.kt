@@ -82,7 +82,6 @@ class OverlayService : Service() {
                 setWindowWidth = ::setWindowWidth,
                 getMaxWidthPx  = { maxWidthPx },
                 getPrefs       = { prefs },
-                getAppLabel    = ::resolveAppLabel,
             )
         }
         handler.removeCallbacks(pollRunnable)
@@ -246,17 +245,17 @@ class OverlayService : Service() {
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // App label resolution — mirrors the Dart labelForApp() three-tier strategy
+    // App label resolution — mirrors the Dart labelForApp() three-level strategy
     // ─────────────────────────────────────────────────────────────────────────
 
     private fun resolveAppLabel(pkg: String): String {
-        // Tier 1 — PackageManager display name (same source as AppInfoService.labels in Dart)
+        // Level 1 —PackageManager display name (same source as AppInfoService.labels in Dart)
         try {
             return packageManager.getApplicationInfo(pkg, 0)
                 .loadLabel(packageManager).toString()
         } catch (_: Exception) { /* app not installed or PM unavailable */ }
 
-        // Tier 3 — heuristic fallback matching Dart's labelForApp()
+        // Level 3 —heuristic fallback matching Dart's labelForApp()
         val tld   = setOf("com", "org", "net", "io", "br", "uk", "de", "fr", "co")
         val noise = setOf("android", "app", "apps", "mobile", "production", "release",
                           "mediaclient", "frontpage", "katana", "barcelona")

@@ -112,20 +112,18 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   mean (or 2 min before it), near up to it, past above (+1 min grace under a 5-min mean).
   Built: `lib/services/usual_daily.dart`. Panel (Codex · Gemini) 9 · 9 for daily over hourly,
   10 · 9 for real history over seeding everything; both warn the seed reads as an allowance.
-- **Messages without goals** (Lucas, 2026-11-01, Codex's side on every split): three triggers —
-  app past usual, phone past usual, session over a fixed 20 min. Sleep and wakeup go (no
-  setting-free night or waking); unlocks show on a dashboard first, no message. Cadence: each
-  trigger once a day, ≤3 messages a day, ≥90 min apart.
-- **Some apps start unmonitored — open, list for Lucas** (Lucas, 2026-11-01): navigation (Waze,
-  Google Maps) and audio (Spotify, Deezer) by default; the user can switch them back on.
+- **Unlocks show on a dashboard first, no message** (Lucas, 2026-11-01); the three message
+  triggers are built (SPECS § `MessageRules.kt`).
+- **Some apps start unmonitored** (Lucas, 2026-11-01; build with Ajustes): navigation and
+  transport (Waze, Maps, Moovit, Uber, 99), audio (Spotify, Deezer, podcasts, Audible), calls,
+  clock, calculator, camera, banking, Pix, authenticators, gov.br. YouTube Music stays monitored
+  (it pulls to video). The user can switch any back on.
 - **Permission guide — to study** (Lucas, 2026-11-01): walk the user through every permission,
   in the app and with a pop-up or notification saying what to do at each step; reference AppBlock.
   Covers the overlay pair and starting on boot — MIUI-style autostart and battery exemptions,
   which `BootReceiver` alone does not get past (the service was off after this reinstall).
-- **The goal levels leave the whole app** (Lucas, 2026-10-31): `GoalThresholds`, the four levels,
-  the per-app level chips and `GoalScreen`. Reminders key off the user's own average.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
-- **Message**: 6–7 s, 12–15 words at most, header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
+- **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos).
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style; per-app
   light/dark hint `Automático · Sempre escuro · Sempre claro` (the overlay cannot see pixels);

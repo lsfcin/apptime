@@ -118,6 +118,10 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   trigger once a day, ≤3 messages a day, ≥90 min apart.
 - **Some apps start unmonitored — open, list for Lucas** (Lucas, 2026-11-01): navigation (Waze,
   Google Maps) and audio (Spotify, Deezer) by default; the user can switch them back on.
+- **Permission guide — to study** (Lucas, 2026-11-01): walk the user through every permission,
+  in the app and with a pop-up or notification saying what to do at each step; reference AppBlock.
+  Covers the overlay pair and starting on boot — MIUI-style autostart and battery exemptions,
+  which `BootReceiver` alone does not get past (the service was off after this reinstall).
 - **The goal levels leave the whole app** (Lucas, 2026-10-31): `GoalThresholds`, the four levels,
   the per-app level chips and `GoalScreen`. Reminders key off the user's own average.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.

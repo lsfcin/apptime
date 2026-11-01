@@ -1,9 +1,7 @@
 // Analytics screen: tabbed view of daily, weekly, and monthly usage statistics
 import 'package:flutter/material.dart';
-import '../../l10n/app_localizations.dart';
-import '../../services/analytics_service.dart';
-import '../../services/app_info_service.dart';
-import '../../services/storage_service.dart';
+import '../../l10n/index.dart';
+import '../../services/index.dart';
 import 'tab_day.dart';
 import 'tab_month.dart';
 import 'tab_week.dart';

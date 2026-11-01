@@ -1,8 +1,8 @@
 // Soluções cards 12-19
 part of 'insight_content.dart';
 
-final _kSolucoesB = <InsightEntry>[
-  InsightEntry(
+final _kSolucoesB = <InsightCardEntry>[
+  InsightCardEntry(
     icon: Icons.trending_up_outlined,
     title: 'Metas adaptativas',
     titleEn: 'Adaptive Goals',
@@ -19,7 +19,7 @@ final _kSolucoesB = <InsightEntry>[
         ? 'you are at ${d.avgDailyMin} min/day — a 10% reduction goal = ${(d.avgDailyMin * 0.9).round()} min/day'
         : 'record use for a week to set your 10% reduction goal',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.access_time_outlined,
     title: 'Custo de oportunidade',
     titleEn: 'Opportunity Cost',
@@ -36,7 +36,7 @@ final _kSolucoesB = <InsightEntry>[
         ? '${(d.weeklyMin / 60).toStringAsFixed(0)}h of screen time last week — equivalent to ${(d.weeklyMin / 60 * 30).round()} pages read, ${(d.weeklyMin / 60 * 5).round()} km walked'
         : 'record use for a week to calculate what you could have done instead',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.park_outlined,
     title: 'Reinicialização pela natureza',
     titleEn: 'Nature Reset',
@@ -53,7 +53,7 @@ final _kSolucoesB = <InsightEntry>[
         ? '${(d.weeklyMin / 60).toStringAsFixed(0)}h of screen time this week — your prefrontal cortex needs nature to recover'
         : 'record use for a week to plan your next nature detox',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.fitness_center_outlined,
     title: 'Fortalecimento pré-frontal',
     titleEn: 'Prefrontal Strengthening',
@@ -70,7 +70,7 @@ final _kSolucoesB = <InsightEntry>[
         ? '${d.microSessions} checking impulses last week — the prefrontal cortex can reclaim this control'
         : 'record use to measure how much the digital impulse dominates your choices',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.directions_walk_outlined,
     title: 'Recuperação ativa',
     titleEn: 'Active Recovery',
@@ -87,7 +87,7 @@ final _kSolucoesB = <InsightEntry>[
         ? '${(d.weeklyMin / 60).toStringAsFixed(0)}h of screen time this week — replacing 5 min of scrolling with walking makes a real difference'
         : 'record use to identify windows where a walk could replace scrolling',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.bar_chart_outlined,
     title: 'A lacuna da subestimação',
     titleEn: 'The Underestimation Gap',
@@ -104,7 +104,7 @@ final _kSolucoesB = <InsightEntry>[
         ? 'the tracker records ${d.avgDailyMin} min/day — more than most people estimate for themselves'
         : 'use the app to get the real data and compare with what you imagine you use',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.filter_list_outlined,
     title: 'Auditoria do feed',
     titleEn: 'Feed Audit',
@@ -121,7 +121,7 @@ final _kSolucoesB = <InsightEntry>[
         ? '${d.passiveMin} min on passive apps this week — worth auditing what that feed is delivering to you'
         : 'record use to see how much time goes to passive content consumption',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.menu_book_outlined,
     title: 'Leitura longa como antídoto',
     titleEn: 'Long Reading as Antidote',

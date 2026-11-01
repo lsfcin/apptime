@@ -6,6 +6,7 @@
 
 | File | Interface | Description |
 |------|-----------|-------------|
+| [`index.dart`](index.dart) | — | **facade** — Facade for screens/analytics/: analytics tabs |
 | [`analytics_charts.dart`](analytics_charts.dart) | — | Shared analytics chart widgets: summary stats widget |
 | [`analytics_engagement_charts.dart`](analytics_engagement_charts.dart) | — | Horizontal app bars and donut engagement chart for analytics |
 | [`analytics_helpers.dart`](analytics_helpers.dart) | [`analytics_helpers.dart.api`](analytics_helpers.dart.api) | Shared analytics utilities: data classes, card layout, legend widgets |

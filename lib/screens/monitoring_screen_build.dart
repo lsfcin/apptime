@@ -78,22 +78,13 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
 
   String _labelFor(String pkg) => _appLabels[pkg] ?? labelForApp(pkg);
 
-  int _effectiveLevel(String pkg) {
-    if (_s.disabledApps.contains(pkg)) return _kNotMonitored;
-    return _s.getAppGoalLevel(pkg);
-  }
+  bool _isMonitored(String pkg) => !_s.disabledApps.contains(pkg);
 
-  void _setLevel(String pkg, int level) {
+  void _setMonitored(String pkg, bool monitored) {
     setState(() {
-      if (level == _kNotMonitored) {
-        final apps = _s.disabledApps..add(pkg);
-        _s.disabledApps = apps;
-        _s.setAppGoalLevel(pkg, 0);
-      } else {
-        final apps = _s.disabledApps..remove(pkg);
-        _s.disabledApps = apps;
-        _s.setAppGoalLevel(pkg, level);
-      }
+      final apps = _s.disabledApps;
+      monitored ? apps.remove(pkg) : apps.add(pkg);
+      _s.disabledApps = apps;
     });
   }
 
@@ -106,7 +97,6 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final globalLevel = _s.goalLevel;
     final packages = _packages;
 
     return Scaffold(
@@ -134,12 +124,7 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
             entry: kInsights[_insightIndex],
           ),
           const SizedBox(height: AppSpacing.lg),
-          _GoalLevelSection(
-            globalLevel: globalLevel,
-            onLevelChanged: (v) => setState(() => _s.goalLevel = v),
-            l10n: l10n,
-          ),
-          _SectionHeader(l10n.perAppControlTitle),
+          SectionHeader(l10n.perAppControlTitle),
           Padding(
             padding: const EdgeInsets.only(left: 4, bottom: AppSpacing.xs),
             child: Text(
@@ -183,8 +168,8 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
       label: _labelFor(pkg),
       usageStr: _fmtMs(ms),
       appColor: colorForApp(pkg),
-      level: _effectiveLevel(pkg),
-      onLevelSelected: (v) => _setLevel(pkg, v),
+      monitored: _isMonitored(pkg),
+      onMonitoredChanged: (v) => _setMonitored(pkg, v),
     );
   }
 }

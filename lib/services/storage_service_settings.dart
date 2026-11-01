@@ -1,4 +1,4 @@
-// StorageService extension: per-app control, onboarding, language, and goal level settings
+// StorageService extension: per-app control, onboarding, and language settings
 part of 'storage_service.dart';
 
 extension StorageServiceSettings on StorageService {
@@ -49,15 +49,4 @@ extension StorageServiceSettings on StorageService {
       _prefs.setString('language_code', v);
     }
   }
-
-  // ── Goal level ──
-
-  int get goalLevel => _prefs.getInt('goal_level') ?? 0;
-  set goalLevel(int v) => _prefs.setInt('goal_level', v);
-
-  int getAppGoalLevel(String packageName) =>
-      _prefs.getInt('app_goal_$packageName') ?? 0;
-
-  void setAppGoalLevel(String packageName, int level) =>
-      _prefs.setInt('app_goal_$packageName', level);
 }

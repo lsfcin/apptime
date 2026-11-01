@@ -1,10 +1,10 @@
-// Home screen: real-time usage summary, insight rotator, and quick-access goal card
+// Home screen: real-time usage summary and insight rotator
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../data/insights.dart';
-import '../l10n/app_localizations.dart';
-import '../services/service_channel.dart';
-import '../theme/app_theme.dart';
+import '../data/index.dart';
+import '../l10n/index.dart';
+import '../services/index.dart';
+import '../theme/index.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

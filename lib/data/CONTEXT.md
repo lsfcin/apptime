@@ -6,6 +6,7 @@
 
 | File | Interface | Description |
 |------|-----------|-------------|
+| [`index.dart`](index.dart) | — | **facade** — Facade for data/: insight content |
 | [`insight_alertas_1.dart`](insight_alertas_1.dart) | — | Alertas cards 1-10 |
 | [`insight_alertas_2.dart`](insight_alertas_2.dart) | — | Alertas cards 11-20 |
 | [`insight_alertas_3.dart`](insight_alertas_3.dart) | — | Alertas cards 21-26 |

@@ -1,5 +1,5 @@
 // Classification message: research-backed text feedback based on screen time and unlock count tiers
-import '../../l10n/app_localizations.dart';
+import '../../l10n/index.dart';
 
 // Classification message: 5 time tiers × 4 unlock tiers
 // Time tiers:    T0 <60min  T1 60–120  T2 120–240  T3 240–360  T4 >360

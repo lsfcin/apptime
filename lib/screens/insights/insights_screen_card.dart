@@ -8,7 +8,7 @@ class _InsightCard extends StatelessWidget {
     required this.index,
     required this.total,
   });
-  final InsightEntry insight;
+  final InsightCardEntry insight;
   final InsightData data;
   final int index;
   final int total;

@@ -1,8 +1,8 @@
 // Soluções cards 20-22
 part of 'insight_content.dart';
 
-final _kSolucoesC = <InsightEntry>[
-  InsightEntry(
+final _kSolucoesC = <InsightCardEntry>[
+  InsightCardEntry(
     icon: Icons.self_improvement_outlined,
     title: 'Tédio como exercício cognitivo',
     titleEn: 'Boredom as Cognitive Exercise',
@@ -23,7 +23,7 @@ final _kSolucoesC = <InsightEntry>[
         ? '${d.microSessions} times you reached for your phone when bored this week — try waiting 2 minutes before picking it up'
         : 'record use to identify how many openings are automatic responses to boredom',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.spa_outlined,
     title: 'Protocolos de dependência aplicados ao celular',
     titleEn: 'Addiction Protocols Applied to the Phone',
@@ -44,7 +44,7 @@ final _kSolucoesC = <InsightEntry>[
         ? 'you have ${d.weeklyUnlocks} weekly unlocks — identify the top 3 triggers and create friction for each'
         : 'record use for a week to map your main opening triggers',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.group_work_outlined,
     title: 'Responsabilidade social como âncora',
     titleEn: 'Social Accountability as Anchor',
@@ -65,5 +65,4 @@ final _kSolucoesC = <InsightEntry>[
         ? 'your current average: if a friend knew your ${d.avgDailyMin} min/day, would it change your behavior?'
         : 'record use for a week and share the data with someone you trust',
   ),
-];
 ];

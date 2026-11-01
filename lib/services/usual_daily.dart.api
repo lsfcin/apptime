@@ -1,0 +1,14 @@
+// usual_daily.dart
+typedef Usual = (
+  required DateTime today,
+  required int Function(String date) dailyMs,
+  required int Function(String date) deviceDailyMs,
+  var totalMs = 0;
+  var realDays = 0;
+  for (var back = 1; back <= kUsualWindowDays; back++)
+  return (meanMs: totalMs ~/ kUsualWindowDays, realDays: realDays);
+enum UsualState
+  if (todayMs <= 0) return UsualState.calm;
+  if (todayMs > pastAt) return UsualState.past;
+  if (todayMs >= (byFraction < bySlack ? byFraction : bySlack)) return UsualState.near;
+  return UsualState.calm;

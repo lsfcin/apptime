@@ -1,3 +1,0 @@
-// goal_screen.dart
-class GoalScreen extends StatefulWidget
-  State<GoalScreen> createState()

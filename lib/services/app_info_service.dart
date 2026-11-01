@@ -1,6 +1,6 @@
 // AppInfoService: fetches app labels and launcher packages from the native platform channel
 import 'service_channel.dart';
-import '../utils/app_info.dart';
+import '../utils/index.dart';
 
 /// Holds runtime app metadata (PackageManager labels + launcher packages).
 /// Created once in MainScreen, loaded via a single channel call, then passed

@@ -1,4 +1,4 @@
-// StorageService: typed SharedPreferences wrapper for screen time, goals, and settings
+// StorageService: typed SharedPreferences wrapper for screen time and settings
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 

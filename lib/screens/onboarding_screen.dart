@@ -1,10 +1,9 @@
-// Onboarding screen: walks the user through permission grants and initial goal setup
+// Onboarding screen: walks the user through permission grants and first-run setup
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations.dart';
-import '../services/service_channel.dart';
-import '../services/storage_service.dart';
-import '../theme/app_theme.dart';
-import '../main_screen.dart';
+import '../l10n/index.dart';
+import '../services/index.dart';
+import '../theme/index.dart';
+import '../index.dart';
 
 part 'onboarding_screen_steps.dart';
 

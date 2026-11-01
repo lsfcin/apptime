@@ -3,7 +3,7 @@ part of 'insights_screen.dart';
 
 class _InsightCarousel extends StatefulWidget {
   const _InsightCarousel({required this.insights, required this.data});
-  final List<InsightEntry> insights;
+  final List<InsightCardEntry> insights;
   final InsightData data;
 
   @override

@@ -1,10 +1,9 @@
 // App entry point: initializes Flutter, requests usage permissions, and routes to onboarding or home
 import 'package:flutter/material.dart';
-import 'l10n/app_localizations.dart';
-import 'screens/onboarding_screen.dart';
-import 'services/service_channel.dart';
-import 'services/storage_service.dart';
-import 'theme/app_theme.dart';
+import 'l10n/index.dart';
+import 'screens/index.dart';
+import 'services/index.dart';
+import 'theme/index.dart';
 import 'main_screen.dart';
 
 void main() async {

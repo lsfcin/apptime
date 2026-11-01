@@ -1,0 +1,2 @@
+// app_localizations_pt_base.dart
+abstract class AppLocalizationsPtBase extends AppLocalizations

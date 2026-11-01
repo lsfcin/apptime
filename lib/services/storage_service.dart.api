@@ -38,26 +38,3 @@ class StorageService
   int getUnlockToday()
   int getUnlockYesterday()
   List<String> packagesLast24h()
-  bool get monitorLauncher
-  set monitorLauncher(bool v)
-  Set<String> get disabledApps
-  set disabledApps(Set<String> apps)
-  void toggleApp(String packageName)
-  bool get onboardingDone
-  set onboardingDone(bool v)
-  bool get monitoringEverStarted
-  set monitoringEverStarted(bool v)
-  String? get languageCode
-  set languageCode(String? v)
-  int get goalLevel
-  set goalLevel(int v)
-  int getAppGoalLevel(String packageName)
-  void setAppGoalLevel(String packageName, int level)
-  String _fmt(DateTime d)
-  List<String> lastNDatesForWeekday(int weekday, int n)
-  List<int> avgDeviceHourlyMs(List<String> dates)
-  Map<String, List<int>> avgAppHourlyMs(List<String> dates)
-  Future<void> deleteAllData() async
-  Future<void> pruneOldData(
-  List<String> packagesDailyMs(String date)
-  List<String> _packagesFromIndex(String date)

@@ -1,12 +1,10 @@
 // Main scaffold: bottom navigation between Home, Monitoring, Analytics, Insights, and Settings tabs
 import 'package:flutter/material.dart';
-import 'l10n/app_localizations.dart';
-import 'screens/analytics/analytics_screen.dart';
-import 'screens/insights/insights_screen.dart';
-import 'screens/monitoring_screen.dart';
-import 'screens/settings_screen.dart';
-import 'services/app_info_service.dart';
-import 'services/storage_service.dart';
+import 'l10n/index.dart';
+import 'screens/analytics/index.dart';
+import 'screens/insights/index.dart';
+import 'screens/index.dart';
+import 'services/index.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({

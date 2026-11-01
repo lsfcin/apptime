@@ -1,10 +1,9 @@
 // App settings screen: permissions, monitoring controls, overlay, behavior, data privacy, language
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../l10n/app_localizations.dart';
-import '../services/service_channel.dart';
-import '../services/storage_service.dart';
-import '../theme/app_theme.dart';
+import '../l10n/index.dart';
+import '../services/index.dart';
+import '../theme/index.dart';
 
 part 'settings_screen_widgets.dart';
 part 'settings_screen_sections.dart';

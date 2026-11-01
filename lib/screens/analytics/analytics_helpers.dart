@@ -1,10 +1,9 @@
 // Shared analytics utilities: data classes, card layout, legend widgets
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import '../../l10n/app_localizations.dart';
-import '../../theme/app_theme.dart';
-import '../../utils/app_info.dart';
-import '../../utils/time_utils.dart';
+import '../../l10n/index.dart';
+import '../../theme/index.dart';
+import '../../utils/index.dart';
 
 part 'analytics_charts.dart';
 part 'analytics_engagement_charts.dart';

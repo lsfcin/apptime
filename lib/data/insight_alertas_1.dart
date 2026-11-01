@@ -1,8 +1,8 @@
 // Alertas cards 1-10
 part of 'insight_content.dart';
 
-final _kAlertasA = <InsightEntry>[
-  InsightEntry(
+final _kAlertasA = <InsightCardEntry>[
+  InsightCardEntry(
     icon: Icons.timer_outlined,
     title: 'A regra dos 23 minutos',
     titleEn: 'The 23-Minute Rule',
@@ -19,7 +19,7 @@ final _kAlertasA = <InsightEntry>[
         ? 'you picked up your phone ~${d.workUnlocks} times between 9am–6pm last week — each one costs 23 min of refocus'
         : 'record use for a few days to see how many work interruptions you accumulate',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.psychology_outlined,
     title: 'Queda temporária de QI',
     titleEn: 'Temporary IQ Drop',
@@ -36,7 +36,7 @@ final _kAlertasA = <InsightEntry>[
         ? '${d.microSessions} of your sessions last week lasted under 1 min — pure multitasking cost'
         : 'use the app for a few days to see how many brief sessions you accumulate',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.hourglass_empty_outlined,
     title: 'Erosão da atenção',
     titleEn: 'Attention Erosion',
@@ -53,7 +53,7 @@ final _kAlertasA = <InsightEntry>[
         ? 'you used your phone an average of ${d.avgDailyMin} min/day last week — each short session fragments attention further'
         : 'record a few days of use to see your average session duration',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.trending_down_outlined,
     title: 'Dreno de produtividade',
     titleEn: 'Productivity Drain',
@@ -70,7 +70,7 @@ final _kAlertasA = <InsightEntry>[
         ? 'you unlocked your phone ~${d.workUnlocks} times during work hours (9am–6pm) last week'
         : 'use the app on weekdays to see how often the phone interrupts your work',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.bedtime_outlined,
     title: 'Atraso da melatonina',
     titleEn: 'Melatonin Delay',
@@ -87,7 +87,7 @@ final _kAlertasA = <InsightEntry>[
         ? 'you spent ${d.lateNightMin} min on screen after 10pm last week'
         : 'track nighttime use to see how much of your sleep is being affected',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.alarm_outlined,
     title: 'Acordar estressado',
     titleEn: 'Waking Up Stressed',
@@ -104,7 +104,7 @@ final _kAlertasA = <InsightEntry>[
         ? 'you unlocked ${d.earlyUnlocks} times before 8am last week'
         : 'track your morning use to see how your days start',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.airline_seat_flat_outlined,
     title: 'Perda de sono REM',
     titleEn: 'REM Sleep Loss',
@@ -121,7 +121,7 @@ final _kAlertasA = <InsightEntry>[
         ? '${d.lateNightMin} min of your weekly screen time happened after 10pm'
         : 'use the app to track how much of your usage falls during sleep time',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.schedule_outlined,
     title: 'Duração do sono',
     titleEn: 'Sleep Duration',
@@ -138,7 +138,7 @@ final _kAlertasA = <InsightEntry>[
         ? 'your average was ${d.avgDailyMin} min/day (${(d.weeklyMin / 60).toStringAsFixed(0)}h this week) — above 63h/week there is clinical risk'
         : 'record use for a week to compare with the risk threshold',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.autorenew_outlined,
     title: 'O ciclo da ansiedade',
     titleEn: 'The Anxiety Cycle',
@@ -157,7 +157,7 @@ final _kAlertasA = <InsightEntry>[
         ? 'you unlocked ${d.todayUnlocks}× today — average of ${d.weeklyUnlocks ~/ 7}/day last week'
         : 'record use today to see how often you seek that reward',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.lock_open_outlined,
     title: 'O custo de desbloquear',
     titleEn: 'The Cost of Unlocking',

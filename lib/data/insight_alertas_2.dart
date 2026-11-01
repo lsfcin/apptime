@@ -1,8 +1,8 @@
 // Alertas cards 11-20
 part of 'insight_content.dart';
 
-final _kAlertasB = <InsightEntry>[
-  InsightEntry(
+final _kAlertasB = <InsightCardEntry>[
+  InsightCardEntry(
     icon: Icons.phone_android_outlined,
     title: 'Frequência vs. Sono',
     titleEn: 'Frequency vs. Sleep',
@@ -19,7 +19,7 @@ final _kAlertasB = <InsightEntry>[
         ? 'you unlocked ~${d.weeklyUnlocks} times last week${d.weeklyUnlocks > 400 ? " — above the risk threshold (400×)" : ""}'
         : 'record a full week to compare with the risk threshold',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.bolt_outlined,
     title: 'Estresse do micro-uso',
     titleEn: 'Micro-Use Stress',
@@ -36,7 +36,7 @@ final _kAlertasB = <InsightEntry>[
         ? '${d.microSessions} sessions under 1 min last week — each one is a boredom check'
         : 'use the app for a few days to see how many brief checks you make',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.sentiment_dissatisfied_outlined,
     title: 'Dreno emocional',
     titleEn: 'Emotional Drain',
@@ -53,7 +53,7 @@ final _kAlertasB = <InsightEntry>[
         ? 'you spent ${d.passiveMin} min on passive apps (social, video) last week'
         : 'record use for a week to see how much time goes to passive consumption',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.compare_arrows_outlined,
     title: 'O mito do multitarefa',
     titleEn: 'The Multitasking Myth',
@@ -70,7 +70,7 @@ final _kAlertasB = <InsightEntry>[
         ? 'you switched context ~${d.workUnlocks} times during work hours last week'
         : 'record use on weekdays to see your multitasking pattern',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.dynamic_feed_outlined,
     title: 'Doomscrolling',
     titleEn: 'Doomscrolling',
@@ -87,7 +87,7 @@ final _kAlertasB = <InsightEntry>[
         ? '${d.passiveMin} min on social, video, and news apps last week'
         : 'record use to see how much of your time goes to content consumption',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.flight_outlined,
     title: 'Fuga maladaptativa',
     titleEn: 'Maladaptive Escape',
@@ -104,7 +104,7 @@ final _kAlertasB = <InsightEntry>[
         ? 'you used your phone for ${d.weeklyMin} min total last week — how much was intention vs. escape?'
         : 'record use for a week to evaluate escape patterns',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.arrow_downward_outlined,
     title: 'Pressão no pescoço',
     titleEn: 'Neck Pressure',
@@ -121,7 +121,7 @@ final _kAlertasB = <InsightEntry>[
         ? 'you spent ${d.avgDailyMin} min/day looking down — ${(d.avgDailyMin / 60).toStringAsFixed(1)}h of daily cervical load'
         : 'record use to quantify your daily mechanical load on your neck',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.visibility_outlined,
     title: 'Fadiga visual digital',
     titleEn: 'Digital Eye Strain',
@@ -138,7 +138,7 @@ final _kAlertasB = <InsightEntry>[
         ? '${d.weeklyMin} min on screen last week — your eyes spent a long time without rest'
         : 'record use to calculate your weekly visual load',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.healing_outlined,
     title: 'Risco de dor crônica',
     titleEn: 'Chronic Pain Risk',
@@ -155,7 +155,7 @@ final _kAlertasB = <InsightEntry>[
         ? '${d.avgDailyMin} min/day — consistent daily use accumulates chronic risk over time'
         : 'record daily use to see your cumulative exposure',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.group_outlined,
     title: 'A presença silenciosa',
     titleEn: 'The Silent Presence',

@@ -1,17 +1,9 @@
 // Per-app screen: displays detailed daily and weekly usage breakdown for a single app
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations.dart';
-import '../services/storage_service.dart';
-import '../theme/app_theme.dart';
-import '../utils/app_info.dart';
-
-part 'per_app_screen_level_chip.dart';
-
-// ─── App goal level ───────────────────────────────────────────────────────────
-// -1 = not monitored   0 = default   1 = minimal   2 = normal   3 = extensive
-
-const _kNotMonitored = -1;
-const _kDefault = 0;
+import '../l10n/index.dart';
+import '../services/index.dart';
+import '../theme/index.dart';
+import '../utils/index.dart';
 
 // ─── Sort mode ────────────────────────────────────────────────────────────────
 
@@ -66,23 +58,13 @@ class _PerAppScreenState extends State<PerAppScreen> {
     return entries;
   }
 
-  // Effective level: -1 if disabled, else app_goal (0 = default).
-  int _effectiveLevel(String pkg) {
-    if (_s.disabledApps.contains(pkg)) return _kNotMonitored;
-    return _s.getAppGoalLevel(pkg);
-  }
+  bool _isMonitored(String pkg) => !_s.disabledApps.contains(pkg);
 
-  void _setLevel(String pkg, int level) {
+  void _setMonitored(String pkg, bool monitored) {
     setState(() {
-      if (level == _kNotMonitored) {
-        final apps = _s.disabledApps..add(pkg);
-        _s.disabledApps = apps;
-        _s.setAppGoalLevel(pkg, 0); // reset specific goal
-      } else {
-        final apps = _s.disabledApps..remove(pkg);
-        _s.disabledApps = apps;
-        _s.setAppGoalLevel(pkg, level);
-      }
+      final apps = _s.disabledApps;
+      monitored ? apps.remove(pkg) : apps.add(pkg);
+      _s.disabledApps = apps;
     });
   }
 
@@ -114,7 +96,6 @@ class _PerAppScreenState extends State<PerAppScreen> {
               separatorBuilder: (_, _) => const Divider(height: 1, indent: 16),
               itemBuilder: (_, i) {
                 final (pkg, ms) = packages[i];
-                final level = _effectiveLevel(pkg);
                 final label = labelForApp(pkg);
                 final usageStr = _fmtMs(ms);
                 final appColor = colorForApp(pkg);
@@ -158,9 +139,9 @@ class _PerAppScreenState extends State<PerAppScreen> {
                                   color:
                                       Theme.of(context).colorScheme.outline)),
                       const SizedBox(width: 8),
-                      _LevelChip(
-                        level: level,
-                        onSelected: (v) => _setLevel(pkg, v),
+                      Switch(
+                        value: _isMonitored(pkg),
+                        onChanged: (v) => _setMonitored(pkg, v),
                       ),
                     ],
                   ),

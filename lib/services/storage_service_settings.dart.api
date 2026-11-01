@@ -1,0 +1,13 @@
+// storage_service_settings.dart
+extension StorageServiceSettings on StorageService
+  bool get monitorLauncher
+  set monitorLauncher(bool v)
+  Set<String> get disabledApps
+  set disabledApps(Set<String> apps)
+  void toggleApp(String packageName)
+  bool get onboardingDone
+  set onboardingDone(bool v)
+  bool get monitoringEverStarted
+  set monitoringEverStarted(bool v)
+  String? get languageCode
+  set languageCode(String? v)

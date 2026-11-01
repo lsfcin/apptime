@@ -1,8 +1,8 @@
 // Alertas cards 21-26
 part of 'insight_content.dart';
 
-final _kAlertasC = <InsightEntry>[
-  InsightEntry(
+final _kAlertasC = <InsightCardEntry>[
+  InsightCardEntry(
     icon: Icons.person_remove_outlined,
     title: 'Solidão digital',
     titleEn: 'Digital Loneliness',
@@ -19,7 +19,7 @@ final _kAlertasC = <InsightEntry>[
         ? '${d.mealUnlocks} unlocks during meal hours last week — each one was a moment of phubbing'
         : 'record use to quantify moments of interrupted social connection',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.favorite_border_outlined,
     title: 'Declínio da empatia',
     titleEn: 'Empathy Decline',
@@ -36,7 +36,7 @@ final _kAlertasC = <InsightEntry>[
         ? '${(d.weeklyMin / 60).toStringAsFixed(0)}h of screen time last week reduces time for face-to-face connection'
         : 'record use to see how much time the phone replaces human interaction',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.psychology_alt_outlined,
     title: 'Brain-rot: atrofia cognitiva digital',
     titleEn: 'Brain-Rot: Digital Cognitive Atrophy',
@@ -59,7 +59,7 @@ final _kAlertasC = <InsightEntry>[
         ? '${d.microSessions} sessions under 1 min this week — each one trains the brain to reject longer content'
         : 'record use for a few days to see your proportion of ultra-short sessions',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.auto_graph_outlined,
     title: 'Conteúdo curto destrói a memória',
     titleEn: 'Short Content Destroys Memory',
@@ -80,7 +80,7 @@ final _kAlertasC = <InsightEntry>[
         ? '${d.passiveMin} min on video/social apps last week — how much of that content do you still remember?'
         : 'record use to see how much time goes to disposable content consumption',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.science_outlined,
     title: 'Celular = droga de design',
     titleEn: 'Phone = Designed Drug',
@@ -103,7 +103,7 @@ final _kAlertasC = <InsightEntry>[
         ? '${d.weeklyUnlocks} unlocks last week — each one is a search for the next dopamine peak'
         : 'record a week of use to see how often you seek that reward',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.warning_amber_outlined,
     title: 'Tolerância e abstinência digital',
     titleEn: 'Digital Tolerance and Withdrawal',
@@ -125,5 +125,4 @@ final _kAlertasC = <InsightEntry>[
         ? 'you used ${d.avgDailyMin} min/day this week — notice if the pattern has increased over recent months'
         : 'record use for several weeks to identify a trend of increasing tolerance',
   ),
-];
 ];

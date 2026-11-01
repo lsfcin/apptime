@@ -53,7 +53,7 @@ extension StorageServiceQueries on StorageService {
 
   /// Erases all usage history keys (daily_ms_, device_daily_ms_, open_count_,
   /// unlock_count_, device_hourly_ms_, hourly_*, session_bucket_).
-  /// Settings (overlay, goals, language, etc.) are preserved.
+  /// Settings (overlay, language, etc.) are preserved.
   Future<void> deleteAllData() async {
     const historyPrefixes = [
       'daily_ms_', 'device_daily_ms_', 'open_count_', 'unlock_count_',

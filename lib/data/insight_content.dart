@@ -1,6 +1,6 @@
 // Insight content registry — awareness cards (kAlertas) and solution cards (kSolucoes)
 import 'package:flutter/material.dart';
-import '../screens/insights/insight_data.dart';
+import '../screens/insights/index.dart';
 
 part 'insight_alertas_1.dart';
 part 'insight_alertas_2.dart';
@@ -9,8 +9,8 @@ part 'insight_solucoes_1.dart';
 part 'insight_solucoes_2.dart';
 part 'insight_solucoes_3.dart';
 
-class InsightEntry {
-  const InsightEntry({
+class InsightCardEntry {
+  const InsightCardEntry({
     required this.icon,
     required this.title,
     required this.body,
@@ -33,5 +33,5 @@ class InsightEntry {
   final String Function(InsightData)? analysisFnEn;
 }
 
-final kAlertas = <InsightEntry>[..._kAlertasA, ..._kAlertasB, ..._kAlertasC];
-final kSolucoes = <InsightEntry>[..._kSolucoesA, ..._kSolucoesB, ..._kSolucoesC];
+final kAlertas = <InsightCardEntry>[..._kAlertasA, ..._kAlertasB, ..._kAlertasC];
+final kSolucoes = <InsightCardEntry>[..._kSolucoesA, ..._kSolucoesB, ..._kSolucoesC];

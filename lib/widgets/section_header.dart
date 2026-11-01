@@ -1,6 +1,6 @@
 // SectionHeader widget: styled section title bar used across multiple screens
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+import '../theme/index.dart';
 
 class SectionHeader extends StatelessWidget {
   const SectionHeader(this.title, {super.key});

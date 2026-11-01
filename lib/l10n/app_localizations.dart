@@ -83,7 +83,6 @@ abstract class AppLocalizations {
   String get showBackground;
   String fontSize(int size);
   String get sectionBehavior;
-  String get noGoalSet;
   String get perAppControlTitle;
   String get perAppUsageCaption;
   // Level chip / popup strings (per-app monitoring level selector)
@@ -99,8 +98,6 @@ abstract class AppLocalizations {
   String get perAppControlSub;
   String get monitorLauncherTitle;
   String get monitorLauncherSub;
-  String get dialogNoGoal;
-  String dialogGoalMinDay(int min);
   String get sectionLanguage;
   String get languageSystem;
   String get languagePtBr;
@@ -171,21 +168,6 @@ abstract class AppLocalizations {
   String get block30dSummaryTitle;
   String get block30dChartTitle;
   String get block30dChartText;
-  // ── GoalScreen ───────────────────────────────────────────────────────────────
-  String get goalScreenTitle;
-  String get goalLevelSectionTitle;
-  String get goalLevelSectionCaption;
-  String get goalLevelNone;
-  String get goalLevelMinimal;
-  String get goalLevelNormal;
-  String get goalLevelExtensive;
-  String get goalRationaleNone;
-  String get goalRationaleMinimal;
-  String get goalRationaleNormal;
-  String get goalRationaleExtensive;
-  String get goalOverrideGlobal;
-  String get goalSettingsTile;
-  String get goalSettingsSub;
   // ── Data / Privacy ───────────────────────────────────────────────────────────
   String get sectionData;
   String get deleteAllDataTitle;

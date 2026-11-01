@@ -1,10 +1,10 @@
 // Insights screen: browsable list of research-backed smartphone insights with source links
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../data/insight_content.dart';
-import '../../l10n/app_localizations.dart';
-import '../../services/storage_service.dart';
-import '../../theme/app_theme.dart';
+import '../../data/index.dart';
+import '../../l10n/index.dart';
+import '../../services/index.dart';
+import '../../theme/index.dart';
 import 'insight_data.dart';
 
 part 'insights_screen_widgets.dart';

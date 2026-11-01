@@ -1,0 +1,10 @@
+// storage_service_queries.dart
+extension StorageServiceQueries on StorageService
+  String _fmt(DateTime d)
+  List<String> lastNDatesForWeekday(int weekday, int n)
+  List<int> avgDeviceHourlyMs(List<String> dates)
+  Map<String, List<int>> avgAppHourlyMs(List<String> dates)
+  Future<void> deleteAllData() async
+  Future<void> pruneOldData(
+  List<String> packagesDailyMs(String date)
+  List<String> _packagesFromIndex(String date)

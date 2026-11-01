@@ -1,8 +1,8 @@
 // Soluções cards 1-11
 part of 'insight_content.dart';
 
-final _kSolucoesA = <InsightEntry>[
-  InsightEntry(
+final _kSolucoesA = <InsightCardEntry>[
+  InsightCardEntry(
     icon: Icons.hourglass_empty_outlined,
     title: 'A regra do atrito',
     titleEn: 'The Friction Rule',
@@ -19,7 +19,7 @@ final _kSolucoesA = <InsightEntry>[
         ? '${d.microSessions} impulsive sessions (< 1 min) last week — a 10s delay could have prevented most of them'
         : 'record use for a few days to see how many openings are impulsive',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.invert_colors_off_outlined,
     title: 'O poder do escala de cinza',
     titleEn: 'The Power of Grayscale',
@@ -36,7 +36,7 @@ final _kSolucoesA = <InsightEntry>[
         ? 'your average is ${d.avgDailyMin} min/day — grayscale could save 20–40 min daily'
         : 'record use for a week and compare after activating grayscale',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.visibility_off_outlined,
     title: 'Fora da vista',
     titleEn: 'Out of Sight',
@@ -53,7 +53,7 @@ final _kSolucoesA = <InsightEntry>[
         ? '${d.workUnlocks} times the phone interrupted your work (9am–6pm) last week'
         : 'record use on weekdays to measure the phone\'s impact on your concentration',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.center_focus_strong_outlined,
     title: 'Treinamento unitarefa',
     titleEn: 'Unitasking Training',
@@ -70,7 +70,7 @@ final _kSolucoesA = <InsightEntry>[
         ? '${d.microSessions} sessions under 1 min last week — your focus muscle needs training'
         : 'record use to see your current ability to sustain focus',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.spa_outlined,
     title: 'Detox de tela',
     titleEn: 'Screen Detox',
@@ -87,7 +87,7 @@ final _kSolucoesA = <InsightEntry>[
         ? '${(d.weeklyMin / 60).toStringAsFixed(0)}h of screen time last week — 3 weeks of reduction already yields clinical gains'
         : 'record a week of use to plan your detox',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.remove_circle_outline_outlined,
     title: 'Remoção de gatilhos',
     titleEn: 'Trigger Removal',
@@ -104,7 +104,7 @@ final _kSolucoesA = <InsightEntry>[
         ? '${d.microSessions} impulsive checks last week — remove visual triggers from your home screen'
         : 'record use to identify which apps you open by impulse',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.lock_outlined,
     title: 'Senhas manuais',
     titleEn: 'Manual Passcodes',
@@ -121,7 +121,7 @@ final _kSolucoesA = <InsightEntry>[
         ? '${d.weeklyUnlocks} unlocks last week — added friction would reduce the impulsive ones'
         : 'record how many unlocks you make to assess the impact of friction',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.hotel_outlined,
     title: 'A regra do quarto',
     titleEn: 'The Bedroom Rule',
@@ -138,7 +138,7 @@ final _kSolucoesA = <InsightEntry>[
         ? '${d.lateNightMin} min on screen after 10pm last week — the charger should be in another room'
         : 'record your nighttime use to measure the phone\'s impact in the bedroom',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.notifications_off_outlined,
     title: 'Notificações seletivas',
     titleEn: 'Selective Notifications',
@@ -155,7 +155,7 @@ final _kSolucoesA = <InsightEntry>[
         ? '${d.workUnlocks} interruptions during work hours last week — how many were notifications?'
         : 'record use to see the impact of notifications on your attention',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.pause_circle_outlined,
     title: 'Pausa de atenção plena',
     titleEn: 'Mindful Pause',
@@ -172,7 +172,7 @@ final _kSolucoesA = <InsightEntry>[
         ? '${d.weeklyUnlocks} unlocks last week — how many were conscious?'
         : 'record use to discover the proportion of automatic vs. intentional openings',
   ),
-  InsightEntry(
+  InsightCardEntry(
     icon: Icons.remove_red_eye_outlined,
     title: 'A regra 20-20-20',
     titleEn: 'The 20-20-20 Rule',

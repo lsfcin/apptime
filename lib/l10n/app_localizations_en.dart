@@ -1,5 +1,4 @@
 // English localizations: all AppLocalizations string overrides for the EN locale
-import 'app_localizations.dart';
 import 'app_localizations_en_base.dart';
 
 class AppLocalizationsEn extends AppLocalizationsEnBase {
@@ -65,7 +64,6 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get showBackground => 'Show background';
   @override String fontSize(int size) => 'Font size: ${size}sp';
   @override String get sectionBehavior => 'Behavior';
-  @override String get noGoalSet => 'No goal set';
   @override String get perAppControlTitle => 'Per-app definitions';
   @override String get perAppUsageCaption => 'Usage shown is the total for the last 7 days';
   @override String get levelChipOff => 'off';
@@ -80,8 +78,6 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get perAppControlSub => 'Enable / disable overlay per app';
   @override String get monitorLauncherTitle => 'Monitor home screen';
   @override String get monitorLauncherSub => 'Show overlay on the launcher / home screen';
-  @override String get dialogNoGoal => 'No goal';
-  @override String dialogGoalMinDay(int min) => '$min min / day';
   @override String get sectionLanguage => 'Language';
   @override String get languageSystem => 'System';
   @override String get languagePtBr => 'Português (Brasil)';

@@ -1,9 +1,7 @@
 // Portuguese localizations: all AppLocalizations string overrides for the PT-BR locale
-import 'package:flutter/material.dart';
-import 'app_localizations.dart';
 import 'app_localizations_pt_base.dart';
 class AppLocalizationsPt extends AppLocalizationsPtBase {
-  const AppLocalizationsPt(Locale locale) : super(locale);
+  const AppLocalizationsPt(super.locale);
 
   @override String get navAnalysis => 'Análise';
   @override String get navInsights => 'Insights';
@@ -66,7 +64,6 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get showBackground => 'Mostrar fundo';
   @override String fontSize(int size) => 'Tamanho da fonte: ${size}sp';
   @override String get sectionBehavior => 'Comportamento';
-  @override String get noGoalSet => 'Sem meta definida';
   @override String get perAppControlTitle => 'Definições por app';
   @override String get perAppUsageCaption => 'O uso exibido é o total dos últimos 7 dias';
   @override String get levelChipOff => 'desl.';
@@ -81,8 +78,6 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get perAppControlSub => 'Configurar monitoramento individualmente por app';
   @override String get monitorLauncherTitle => 'Monitorar tela inicial';
   @override String get monitorLauncherSub => 'Mostrar o visor ao voltar para a tela inicial';
-  @override String get dialogNoGoal => 'Sem meta';
-  @override String dialogGoalMinDay(int min) => '$min min / dia';
   @override String get sectionLanguage => 'Idioma';
   @override String get languageSystem => 'Sistema';
   @override String get languagePtBr => 'Português (Brasil)';

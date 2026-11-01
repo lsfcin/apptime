@@ -1,2 +1,2 @@
 // app_localizations_pt.dart
-class AppLocalizationsPt extends AppLocalizations
+class AppLocalizationsPt extends AppLocalizationsPtBase

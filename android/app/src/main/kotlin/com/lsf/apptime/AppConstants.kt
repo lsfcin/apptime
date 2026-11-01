@@ -1,6 +1,8 @@
 package com.lsf.apptime
 
 import android.content.SharedPreferences
+import android.content.Intent
+import android.content.pm.PackageManager
 import org.json.JSONArray
 
 object AppConstants {
@@ -17,6 +19,17 @@ object AppConstants {
         "com.oneplus.launcher",
         "com.google.android.googlequicksearchbox",
     )
+
+    fun resolveLaunchers(packageManager: PackageManager): Set<String> {
+        val home = Intent(Intent.ACTION_MAIN).apply { addCategory(Intent.CATEGORY_HOME) }
+        val installed = packageManager.queryIntentActivities(home, 0).map { it.activityInfo.packageName }
+        val default = packageManager.resolveActivity(home, PackageManager.MATCH_DEFAULT_ONLY)
+            ?.activityInfo?.packageName
+        return LAUNCHERS + installed + setOfNotNull(default)
+    }
+
+    fun isLauncher(pkg: String, launchers: Set<String>): Boolean =
+        pkg in launchers || pkg.endsWith("launcher") || pkg.endsWith(".home")
 
     /** Parse the disabled-apps set stored by Flutter as a plain JSON string via setString(). */
     fun parseDisabledApps(prefs: SharedPreferences): Set<String> {

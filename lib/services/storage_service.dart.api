@@ -6,6 +6,8 @@ class StorageService
   set overlayText(String v)
   bool get overlayVisible
   set overlayVisible(bool v)
+  String get overlayStyle
+  set overlayStyle(String v)
   double get overlayFontSize
   set overlayFontSize(double v)
   double get overlayTopDp

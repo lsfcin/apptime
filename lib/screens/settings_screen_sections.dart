@@ -26,31 +26,28 @@ class _OverlaySection extends StatelessWidget {
                 onChanged: (v) { s.overlayEnabled = v; onChanged(); },
               ),
               const Divider(height: 1, indent: 16),
-              SwitchListTile(
-                title: Text(l10n.showBorder),
-                value: s.overlayShowBorder,
-                onChanged: s.overlayEnabled
-                    ? (v) { s.overlayShowBorder = v; onChanged(); }
-                    : null,
-              ),
-              SwitchListTile(
-                title: Text(l10n.showBackground),
-                value: s.overlayShowBackground,
-                onChanged: s.overlayEnabled
-                    ? (v) { s.overlayShowBackground = v; onChanged(); }
-                    : null,
-              ),
-              ListTile(
-                enabled: s.overlayEnabled,
-                title: Text(l10n.fontSize(s.overlayFontSize.round())),
-                subtitle: Slider(
-                  min: 10,
-                  max: 30,
-                  divisions: 20,
-                  value: s.overlayFontSize,
-                  onChanged: s.overlayEnabled
-                      ? (v) { s.overlayFontSize = v; onChanged(); }
-                      : null,
+              ListTile(title: Text(l10n.overlayStyle)),
+              RadioGroup<String>(
+                groupValue: s.overlayStyle,
+                onChanged: (value) {
+                  if (s.overlayEnabled && value != null) {
+                    s.overlayStyle = value;
+                    onChanged();
+                  }
+                },
+                child: Column(
+                  children: [
+                    RadioListTile<String>(
+                      title: Text(l10n.overlayStylePill),
+                      value: 'pill',
+                      enabled: s.overlayEnabled,
+                    ),
+                    RadioListTile<String>(
+                      title: Text(l10n.overlayStyleBlock),
+                      value: 'block',
+                      enabled: s.overlayEnabled,
+                    ),
+                  ],
                 ),
               ),
             ],

@@ -60,6 +60,9 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get sectionOverlay => 'Visor flutuante';
   @override String get showOverlay => 'Exibir visor de uso';
   @override String get showOverlaySub => 'Mostra o contador flutuante ao usar apps. O monitoramento (coleta de dados) continua independentemente.';
+  @override String get overlayStyle => 'Estilo do visor';
+  @override String get overlayStylePill => 'Pílula discreta';
+  @override String get overlayStyleBlock => 'Bloco acessível';
   @override String get showBorder => 'Mostrar borda';
   @override String get showBackground => 'Mostrar fundo';
   @override String fontSize(int size) => 'Tamanho da fonte: ${size}sp';

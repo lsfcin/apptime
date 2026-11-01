@@ -93,13 +93,7 @@ class MonitoringService : Service() {
         usageStatsManager = getSystemService(USAGE_STATS_SERVICE) as UsageStatsManager
         prefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         powerManager = getSystemService(POWER_SERVICE) as PowerManager
-        val homeIntent = Intent(Intent.ACTION_MAIN).apply { addCategory(Intent.CATEGORY_HOME) }
-        val fromQuery = packageManager.queryIntentActivities(homeIntent, 0)
-            .map { it.activityInfo.packageName }.toSet()
-        val defaultLauncher = packageManager
-            .resolveActivity(homeIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
-            ?.activityInfo?.packageName
-        effectiveLaunchers = AppConstants.LAUNCHERS + fromQuery + setOfNotNull(defaultLauncher)
+        effectiveLaunchers = AppConstants.resolveLaunchers(packageManager)
         lastDate = today()
         migrateCorruptedDeviceDaily()
         backfill = HistoryBackfill(usageStatsManager, prefs, ::accumulateDailyMs, ::epochToDateKey)
@@ -174,9 +168,7 @@ class MonitoringService : Service() {
             return
         }
 
-        val isLauncher = effectiveLaunchers.contains(current)
-            || current.endsWith("launcher")
-            || current.endsWith(".home")
+        val isLauncher = AppConstants.isLauncher(current, effectiveLaunchers)
 
         if (current != lastPackage) {
             // App switch — close previous session, open new one

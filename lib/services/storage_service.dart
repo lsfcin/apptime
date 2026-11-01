@@ -27,7 +27,12 @@ class StorageService {
 
   // ── Overlay appearance (escrito pelo Flutter, lido pelo OverlayService) ──
 
-  // Stored as Int so the Kotlin OverlayService can read it with getInt() reliably.
+  String get overlayStyle =>
+      _prefs.getString('overlay_style') == 'block' ? 'block' : 'pill';
+  set overlayStyle(String v) =>
+      _prefs.setString('overlay_style', v == 'block' ? 'block' : 'pill');
+
+  // Legacy appearance prefs are retained for compatibility; styles now define appearance.
   // Handles legacy double values that may be stored from older builds.
   double get overlayFontSize {
     final raw = _prefs.get('overlay_font_size');

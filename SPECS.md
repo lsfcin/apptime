@@ -1,6 +1,6 @@
 # AppTime — Code Structure & Reference
 
-Last updated: 2026-04-21 (post-refactor + post-optimization milestones)
+Last updated: 2026-11-01 (phase 4A overlay styles and message header)
 
 ---
 
@@ -38,7 +38,8 @@ lib/
 │   ├── home_screen.dart             # Permissions + insight-of-day rotator
 │   ├── monitoring_screen.dart       # MonitoringScreen, _InsightRotatorCard
 │   ├── per_app_screen.dart          # Per-app usage and monitoring switch
-│   └── settings_screen.dart        # Settings: overlay, language, data
+│   ├── settings_screen.dart         # Settings shell and lifecycle
+│   └── settings_screen_sections.dart # Overlay style selector, data/privacy and language sections
 │
 ├── services/
 │   ├── analytics_service.dart       # AnalyticsService — builds DaySummary list (30 days)
@@ -69,11 +70,19 @@ lib/
 | `MainActivity.kt` | Flutter MethodChannel handler — start/stop service, permissions, getAppMetadata, getStartupStatus |
 | `MonitoringService.kt` | Foreground service — 1s tick, accumulateDailyMs, session tracking, overlay text |
 | `HistoryBackfill.kt` | Gap backfill (backfillGap) + 30-day history fill (backfillHistory); injectable |
-| `OverlayService.kt` | Foreground service — overlay view lifecycle, updateOverlay(); delegates feedback to FeedbackEngine |
-| `FeedbackEngine.kt` | Reads live usage, asks MessageRules, shows the message; cadence persisted in prefs |
+| `OverlayService.kt` | Foreground service — 500 ms poll, shared live-usage snapshot/cache, app labels, timer/message coordination |
+| `OverlayWindow.kt` | Non-touchable window lifecycle, alpha 0.8, status-bar/cutout geometry and shared backgrounds |
+| `TimerOverlay.kt` | Anchored Quiet pill / accessible block rendering, colour + shape usual feedback |
+| `MessageOverlay.kt` | Separate header/body window below status bar and timer, at most 88% screen width |
+| `OverlayPlacement.kt` | Pure: cutout-side slot eligibility, vertical centring and below-status-bar fallback |
+| `OverlayText.kt` | Pure: compact/clock durations, localized message headers, 7-real-day feedback floor |
+| `LiveUsage.kt` | Pure: stored daily totals plus unflushed app/launcher session for both timer and messages |
+| `UsualCache.kt` | Per-package/phone usual cache shared by timer and messages; invalidated on 04:00 day-key change |
+| `MessageDisplay.kt` | Pure: 6.5 s message lifetime and foreground-package cancellation |
+| `FeedbackEngine.kt` | Consumes shared live usage, asks MessageRules, schedules 6.5 s display; cadence persisted before display and retained on cancellation |
 | `MessageRules.kt` | Pure: three triggers (session ≥20 min, app past usual, phone past usual), each once a day, ≥90 min apart |
 | `UsualDaily.kt` | "Your usual" — mirror of `usual_daily.dart`, held equal by `test/fixtures/usual_daily.json` |
-| `AppConstants.kt` | LAUNCHERS, parseDisabledApps(), CHANNEL constant |
+| `AppConstants.kt` | Shared launcher resolution/classification, parseDisabledApps(), CHANNEL constant |
 | `DateUtils.kt` | today(), currentHour(), daysBefore(), safeGetCount() extension |
 | `PmMessages.kt` | Message text (PT/EN) per trigger |
 | `BootReceiver.kt` | Restarts MonitoringService after device reboot |
@@ -99,7 +108,14 @@ BootReceiver → starts MonitoringService on device reboot
 - Integer values stored as `Long` by the Flutter plugin on Android — Kotlin must use `getLong()`, not `getInt()`
 - SharedPreferences keys use `flutter.` prefix (Flutter plugin adds it); Kotlin reads them with that prefix
 
-**Overlay behavior (post-M18):** timer-only display, immediate show/hide. Hidden on unmonitored apps and (optionally) the launcher. No count phase, no fades, no delays.
+**Overlay behavior (phase 4A):** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Both styles use `FLAG_NOT_TOUCHABLE`, window alpha 0.8 and tabular figures; no drag or intensity modes.
+
+- `pill` (default): 12 sp, no border, rounded 71% black background (56% effective at window alpha 0.8). Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). On API 30+, a top cutout permits a slot at `boundingRectTop.right + 8dp`, vertically centred in the status-bar/cutout top inset, only if the complete pill including feedback cue fits within 44 dp and the bar height. Otherwise it moves just below the status bar at top-right; there it can use its natural width to preserve text at large system font scales. API <30 and no top cutout always use that fallback.
+- `block`: below the status bar, top-right; 17 sp bold, `h:mm`, 96% black background and 1 dp light rim.
+- Today's app total is compared with that app's 30-day usual; on the launcher the timer uses phone usage/usual. Before 7 real days feedback is calm. Calm is white; near is soft amber plus a hollow circle; past is amber plus a filled dot (and bold pill). Background preferences cannot remove the contrast floor.
+- Messages have a separate window, below the status bar and any fallback timer, right aligned and at most 88% screen width. This avoids overlapping non-touchable windows (whose combined obscuring opacity would exceed 0.8). The timer stays anchored. Header: `<app label> · 1h 18m hoje` / `today`; on the launcher `Celular` / `Phone` with the phone total. Language follows the saved override or system language (PT fallback).
+- A message ends after 6.5 s, on a detected package change (500 ms poll), overlay hiding/disabling, or screen off. Cancellation leaves the trigger recorded as shown. Trigger evaluation remains every ~2.5 s.
+- `MonitoringService` still writes `overlay_text`; its nonempty value/visibility gates the timer, including the existing launcher unlock-count / 5 s transition. Displayed timer text now comes from shared live totals rather than the legacy seconds/count string.
 
 ---
 
@@ -107,10 +123,15 @@ BootReceiver → starts MonitoringService on device reboot
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `overlay_text` | String | Text shown in overlay |
+| `overlay_text` | String | Legacy timer string from MonitoringService; nonempty value gates timer visibility |
+| `overlay_style` | String | `"pill"` (default; also fallback for unknown values) or `"block"` |
+| `overlay_enabled` | Boolean | Show timer/messages; monitoring continues (default true) |
+| `monitor_launcher` | Boolean | Show overlay on launcher (default true) |
 | `overlay_visible` | Boolean | Whether overlay should appear |
-| `overlay_font_size` | Float | Overlay text size (10–30 sp) |
-| `overlay_show_background` | Boolean | Whether to draw background behind overlay |
+| `overlay_font_size` | Long (legacy Float) | Legacy appearance setting; retained, ignored by fixed styles |
+| `overlay_show_background` | Boolean | Legacy appearance setting; retained, ignored by fixed styles |
+| `overlay_show_border` | Boolean | Legacy appearance setting; retained, ignored by fixed styles |
+| `overlay_top_dp` | Double | Legacy position setting; retained, ignored by anchored styles |
 | `daily_ms_{pkg}_{date}` | Long | Accumulated ms for app that calendar day |
 | `open_count_{pkg}_{date}` | Int | App opens that calendar day |
 | `unlock_count_{date}` | Int | Device unlocks that calendar day |
@@ -165,6 +186,12 @@ BootReceiver → starts MonitoringService on device reboot
 | `usual_daily_test.dart` | "Your usual" against the shared fixture cases |
 | `android/app/src/test/…/UsualDailyTest.kt` | Same fixture cases against the Kotlin mirror |
 | `android/app/src/test/…/MessageRulesTest.kt` | Floors (7 real days, 15 min), once a day per trigger, 90-min gap |
+| `android/app/src/test/…/OverlayTextTest.kt` | ≤4-character timer, clock format, PT/EN app/phone headers, feedback floor |
+| `android/app/src/test/…/OverlayPlacementTest.kt` | Cutout slot, width/height fit, API/no-cutout/block/screen-edge fallbacks |
+| `android/app/src/test/…/UsualCacheTest.kt` | Cache reuse, app/phone separation, missing-day seed and day rollover |
+| `android/app/src/test/…/LiveUsageTest.kt` | Live app/phone totals, launcher session, missing/future session start |
+| `android/app/src/test/…/MessageDisplayTest.kt` | Exact lifetime, app-switch cancellation, recorded trigger remains shown |
+| `overlay_style_test.dart` | Default/unknown style, PT/EN settings selector and persisted choices |
 | `widget_test.dart` | App smoke test — nav tabs render |
 
 ---

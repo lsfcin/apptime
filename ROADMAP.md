@@ -124,7 +124,7 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   (`ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`), and on Xiaomi autostart
   (`com.miui.securitycenter/com.miui.permcenter.autostart.AutoStartManagementActivity`, unofficial:
   resolve first, fall back to `ACTION_APPLICATION_DETAILS_SETTINGS`). MIUI cannot report autostart, so
-  that row is "confirm you did it". Seen on the Xiaomi: every reinstall resets the overlay to `ignore`.
+  that row is "confirm you did it". Autostart is mandatory for v1 (Lucas, 2026-11-01). Seen on the Xiaomi: every reinstall resets the overlay to `ignore`.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos).

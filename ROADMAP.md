@@ -123,12 +123,15 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   transport (Waze, Maps, Moovit, Uber, 99), audio (Spotify, Deezer, podcasts, Audible), calls,
   clock, calculator, camera, banking, Pix, authenticators, gov.br. YouTube Music stays monitored
   (it pulls to video). The user can switch any back on.
-- **Battery: next after the setup flow is seen on the phone** (Lucas, 2026-11-02). Measured 23 mAh in
+- **Battery: next** (setup flow seen on the phone 2026-11-02). Measured 23 mAh in
   5h38 (≈2–3%/day); the onboarding already says "cerca de 1% por dia". Done: live state written on change
   only (the 640 KB prefs file was rewritten every second). Next: stop the 1 s tick and the 30 s watchdog
   while the screen is off (resume on `SCREEN_ON`; the session is already flushed at `SCREEN_OFF`, so no
   data is lost), keep 1 s while on (2 s would lag the timer), re-measure with
   `dumpsys batterystats --reset`, and make the sentence true.
+- **Setup flow leftovers** (2026-11-02): Codex's copy suggestions, for Lucas to decide — banner without
+  "Toque para religar"; "o contador pode não voltar sozinho"; "Abrir configurações do Android". A
+  sentence does not scroll under a large font. The two overlay tests repeat one 4-line channel mock.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos). The bare
@@ -152,7 +155,7 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
 - **Three tabs: Hoje (landing) · Análise · Ajustes**, plus a per-app screen opened by tapping any
   app. Monit. and Insights stop being tabs. Today Ajustes is the landing tab, and `HomeScreen`,
   `GoalScreen`, `PerAppScreen` are reachable from nowhere.
-- **Hoje** reuses `HomeScreen` without its goal card: today vs "your usual by this hour", then the
+- **Hoje** reuses `HomeScreen` (deleted as dead code 2026-11-02; in git at `920b385`) without its goal card: today vs "your usual by this hour", then the
   most-used apps with real icons. **Per-app screen** reuses `PerAppScreen`: that app's usage vs its
   usual, and its overlay controls (on/off, position, light/dark hint, fullscreen/landscape).
 - **"Your usual" shows in three places**: Hoje, the per-app screen, the overlay preview in Ajustes.

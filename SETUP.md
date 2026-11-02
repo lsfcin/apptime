@@ -43,7 +43,9 @@ with `INSTALL_FAILED_UPDATE_INCOMPATIBLE`: uninstall wipes the usage history, so
 `run-as com.lsf.apptime cat shared_prefs/FlutterSharedPreferences.xml` out, then after the
 install push it back with `run-as ... cp` and `appops set <pkg> GET_USAGE_STATS allow` /
 `SYSTEM_ALERT_WINDOW allow`. MIUI asks on screen before each USB install and refuses
-`input tap`, so someone has to hold the phone.
+`input tap`, so someone has to hold the phone. When that prompt never shows, `adb install` hangs:
+`adb push` the APK to `/sdcard/Download/` and install it from the Files app (same key, data kept).
+Every update re-grants `SYSTEM_ALERT_WINDOW`: to test the "counter off" banner, deny it after installing.
 
 ## Kotlin
 

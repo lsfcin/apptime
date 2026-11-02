@@ -183,7 +183,8 @@ External panel calls that worked: `agy -p "<prompt>" --add-dir <dir>` (Gemini, r
 dir); `codex exec --skip-git-repo-check -s read-only -i a.png -i b.png - < prompt.md` — the prompt
 must come on stdin, because `-i` swallows a trailing positional prompt and the run exits 0 with "No
 prompt provided". The binary ships in the VS Code extension:
-`~/.vscode/extensions/openai.chatgpt-*/bin/linux-x86_64/codex`.
+`~/.vscode/extensions/openai.chatgpt-*/bin/linux-x86_64/codex`. Its stdout can end before the
+answer (it loads skills first); the answer is the last `"text"` in the newest `~/.codex/sessions/**/*.jsonl`.
 
 ## Workspace drift, refiled from the wos list 2026-08-16
 

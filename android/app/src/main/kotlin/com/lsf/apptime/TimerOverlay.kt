@@ -64,12 +64,13 @@ class TimerOverlay(context: Context) {
         bottom = if (visible) slot.y + view.measuredHeight else 0
     }
 
-    // Every style gets one blank character of air each side (the pill 1 dp more for its halo);
+    // Every style gets one digit's width of air each side (the pill 1 dp more for its halo): a space is
+    // ~3.5 dp, and the outline's rounded ends ate it;
     // the filling dot sits left of the text; the bar's bottom padding holds the bar plus twice its thickness
     // below it, so the bar sits right under the digits (their font descent is the only gap above it).
     private fun pad(block: Boolean, variant: String) {
         val outline = variant == "outline"
-        val air = view.paint.measureText(" ")
+        val air = view.paint.measureText("0")
         val side = window.dp(if (block) 8 else 1) + air
         val dot = if (variant == "fill") FeedbackDrawable.fillReserve(density, block) else 0f
         val vertical = window.dp(if (block) 5 else 2) + if (outline) window.dp(2) else 0

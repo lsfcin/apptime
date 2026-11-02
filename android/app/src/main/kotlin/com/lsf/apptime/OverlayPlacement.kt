@@ -10,12 +10,13 @@ object OverlayPlacement {
     fun timer(
         api: Int, cutoutRight: Int, statusBarHeight: Int, screenWidth: Int,
         width: Int, height: Int, maxWidth: Int, margin: Int, iconRowFromBottom: Int, block: Boolean,
+        cutoutGap: Int = margin,
     ): TimerPlacement {
         val fits = !block && api >= 30 && cutoutRight > 0 && width <= maxWidth &&
-            height <= statusBarHeight && cutoutRight + margin + width <= screenWidth - margin
+            height <= statusBarHeight && cutoutRight + cutoutGap + width <= screenWidth - margin
         if (!fits) return TimerPlacement(false, margin, statusBarHeight + margin)
         // Centre on the icon row, never leaving the bar.
         val y = (statusBarHeight - iconRowFromBottom - height / 2).coerceIn(0, statusBarHeight - height)
-        return TimerPlacement(true, cutoutRight + margin, y)
+        return TimerPlacement(true, cutoutRight + cutoutGap, y)
     }
 }

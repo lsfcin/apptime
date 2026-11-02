@@ -123,7 +123,7 @@ the app should stop counting after N minutes without a touch (no public API repo
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/v1-impl is 2 ahead of main
+- . — feature/v1-impl is 3 ahead of main
 
 ### Local branches already merged into their base
 

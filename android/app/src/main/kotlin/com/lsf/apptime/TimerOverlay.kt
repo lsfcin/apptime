@@ -56,20 +56,20 @@ class TimerOverlay(context: Context) {
         feedbackDrawable.textLeft = view.paddingLeft.toFloat()
         feedbackDrawable.textRight = (view.measuredWidth - view.paddingRight).toFloat()
         val slot = OverlayPlacement.timer(Build.VERSION.SDK_INT, bounds.cutoutRight, bounds.statusBarHeight,
-            bounds.width, view.measuredWidth, view.measuredHeight, window.dp(44), window.dp(8),
-            window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), block)
+            bounds.width, view.measuredWidth, view.measuredHeight, window.dp(52), window.dp(8),
+            window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), block, cutoutGap = 0)
         view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         val x = slot.x + if (slot.inStatusBar) 0 else bounds.rightInset
         window.place(view.measuredWidth, view.measuredHeight, x, slot.y, slot.inStatusBar)
         bottom = if (visible) slot.y + view.measuredHeight else 0
     }
 
-    // The block and the outline get one blank character of air each side (the bare pill 1 dp, so it fits 44 dp);
+    // Every style gets one blank character of air each side (the pill 1 dp more for its halo);
     // the filling dot sits left of the text; the bar's bottom padding holds the bar plus twice its thickness
     // below it, so the bar sits right under the digits (their font descent is the only gap above it).
     private fun pad(block: Boolean, variant: String) {
         val outline = variant == "outline"
-        val air = if (block || outline) view.paint.measureText(" ") else 0f
+        val air = view.paint.measureText(" ")
         val side = window.dp(if (block) 8 else 1) + air
         val dot = if (variant == "fill") FeedbackDrawable.fillReserve(density, block) else 0f
         val vertical = window.dp(if (block) 5 else 2) + if (outline) window.dp(2) else 0

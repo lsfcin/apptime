@@ -17,6 +17,12 @@ class OverlayPlacementTest {
     }
 
     @Test
+    fun cutoutGapMovesOnlyTheStatusBarSlot() {
+        val slot = OverlayPlacement.timer(30, 100, 30, 400, 44, 18, 44, 8, 12, false, cutoutGap = 0)
+        assertEquals(TimerPlacement(true, 100, 9), slot)
+    }
+
+    @Test
     fun iconRowNeverPushesThePillOutOfTheBar() {
         assertEquals(0, place(iconRow = 28).y)
         assertEquals(12, place(iconRow = 0).y)

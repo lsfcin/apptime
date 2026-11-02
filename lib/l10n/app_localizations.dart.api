@@ -30,6 +30,7 @@ abstract class AppLocalizations
   List<String> get setupBattery;
   List<String> get setupHibernation;
   String get setupAutostartTip;
+  String get setupReopen;
   String get setupRetryEnable;
   String get setupRetryAutostart;
   String get setupRetryHibernation;

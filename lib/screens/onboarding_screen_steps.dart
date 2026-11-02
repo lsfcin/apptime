@@ -79,17 +79,25 @@ class _SentenceViewState extends State<_SentenceView> {
         if (widget.progress != null)
           Text(widget.progress!,
               style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.outline)),
-        const Spacer(),
-        Text(widget.text, style: theme.textTheme.headlineMedium?.copyWith(height: 1.3)),
-        if (widget.image != null) ...[
-          const SizedBox(height: AppSpacing.lg),
-          Image.asset(widget.image!),
-        ],
-        if (widget.tip != null) ...[
-          const SizedBox(height: AppSpacing.md),
-          Text(widget.tip!, style: theme.textTheme.bodyLarge),
-        ],
-        const Spacer(),
+        // Scrolls only when a large system font makes the sentence taller than the screen.
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: SingleChildScrollView(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(widget.text, style: theme.textTheme.headlineMedium?.copyWith(height: 1.3)),
+                if (widget.image != null) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  Image.asset(widget.image!),
+                ],
+                if (widget.tip != null) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  Text(widget.tip!, style: theme.textTheme.bodyLarge),
+                ],
+              ]),
+            ),
+          ),
+        ),
         IgnorePointer(
           ignoring: !ready,
           child: AnimatedOpacity(

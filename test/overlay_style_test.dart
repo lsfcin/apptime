@@ -3,9 +3,10 @@ import 'package:apptime/l10n/app_localizations.dart';
 import 'package:apptime/screens/settings_screen.dart';
 import 'package:apptime/services/storage_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'service_channel_mock.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -21,16 +22,7 @@ void main() {
     testWidgets('Settings persists pill and block in $lang', (tester) async {
       SharedPreferences.setMockInitialValues({});
       final storage = await StorageService.init();
-      const channel = MethodChannel('apptime/service');
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(
-              channel, (call) async => call.method == 'getBackgroundStatus'
-                  ? const {'notificationsOn': true, 'batteryExempt': true, 'hibernationExempt': true}
-                  : call.method.startsWith('has'));
-      addTearDown(() {
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(channel, null);
-      });
+      mockServiceChannel();
       await tester.pumpWidget(MaterialApp(
         locale: Locale(lang),
         localizationsDelegates: AppLocalizations.localizationsDelegates,

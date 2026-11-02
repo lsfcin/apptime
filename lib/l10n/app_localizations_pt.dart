@@ -37,7 +37,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
       ['Sem isso, o AppTime não volta quando o celular reinicia.', 'Na lista, ache o AppTime e ligue a chave.'];
   @override List<String> get setupBattery => [
         'A economia de bateria pode fechar o AppTime.',
-        'Ele gasta pouco: cerca de 1% por dia.',
+        'Ele gasta pouco: menos de 1% por dia.',
         'Toque em Permitir.',
       ];
   @override List<String> get setupHibernation => [
@@ -45,6 +45,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
         'Na próxima tela de configuração que vai abrir, desligue “Pausar atividade do app”.',
       ];
   @override String get setupAutostartTip => 'Dica: toque na lupa e digite AppTime.';
+  @override String get setupReopen => 'Se cair na tela inicial, abra o AppTime de novo.';
   @override String get setupRetryEnable => 'De novo, na tela de configuração, habilite o AppTime.';
   @override String get setupRetryAutostart => 'De novo, na lista, ache o AppTime e ligue a chave.';
   @override String get setupRetryHibernation =>
@@ -54,14 +55,14 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get setupNotYet => 'Ainda não';
   @override String get setupDone => 'Pronto.';
   @override String get onboardStart => 'Começar';
-  @override String get setupConfigure => 'Configurar';
+  @override String get setupConfigure => 'Abrir configurações do Android';
   @override String get setupOpenList => 'Abrir lista';
   @override String get continueAction => 'Continuar';
   @override String get setupLater => 'Depois';
   @override String setupProgress(int step, int total) => '$step de $total';
-  @override String get setupBanner => 'O contador do AppTime está desligado. Toque para religar.';
+  @override String get setupBanner => 'O contador do AppTime está desligado.';
   @override String get setupRelaunch => 'Religar';
-  @override String get setupBannerAutostart => 'Se o celular reiniciar, o AppTime não volta sozinho.';
+  @override String get setupBannerAutostart => 'Se o celular reiniciar, o contador pode não voltar sozinho.';
   @override String get sectionSetup => 'Funcionamento';
   @override String get setupLabelNotifications => 'Notificações';
   @override String get setupLabelAutostart => 'Início automático';

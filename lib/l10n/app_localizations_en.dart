@@ -38,7 +38,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
       ['Without this, AppTime does not come back after a restart.', 'In the list, find AppTime and turn it on.'];
   @override List<String> get setupBattery => [
         'Battery saving can close AppTime.',
-        'It uses little: about 1% a day.',
+        'It uses little: under 1% a day.',
         'Tap Allow.',
       ];
   @override List<String> get setupHibernation => [
@@ -46,6 +46,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
         'On the settings screen that opens next, turn off “Pause app activity if unused”.',
       ];
   @override String get setupAutostartTip => 'Tip: tap the magnifier and type AppTime.';
+  @override String get setupReopen => 'If you land on the home screen, open AppTime again.';
   @override String get setupRetryEnable => 'Once more, on the settings screen, turn AppTime on.';
   @override String get setupRetryAutostart => 'Once more, in the list, find AppTime and turn it on.';
   @override String get setupRetryHibernation =>
@@ -55,14 +56,14 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get setupNotYet => 'Not yet';
   @override String get setupDone => 'Done.';
   @override String get onboardStart => 'Get started';
-  @override String get setupConfigure => 'Set up';
+  @override String get setupConfigure => 'Open Android settings';
   @override String get setupOpenList => 'Open list';
   @override String get continueAction => 'Continue';
   @override String get setupLater => 'Later';
   @override String setupProgress(int step, int total) => '$step of $total';
-  @override String get setupBanner => 'AppTime\'s counter is off. Tap to turn it back on.';
+  @override String get setupBanner => 'AppTime\'s counter is off.';
   @override String get setupRelaunch => 'Turn on';
-  @override String get setupBannerAutostart => 'If the phone restarts, AppTime will not come back on its own.';
+  @override String get setupBannerAutostart => 'If the phone restarts, the counter may not come back on its own.';
   @override String get sectionSetup => 'Running';
   @override String get setupLabelNotifications => 'Notifications';
   @override String get setupLabelAutostart => 'Autostart';

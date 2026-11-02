@@ -220,8 +220,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
   String? _image(SetupItem item) =>
       item == SetupItem.autostart && _miui ? 'assets/setup/autostart_miui.png' : null;
 
-  String? _tip(AppLocalizations l10n, SetupItem item) =>
-      item == SetupItem.autostart && _miui ? l10n.setupAutostartTip : null;
+  /// Under every screen that leaves for the system: some vendors close AppTime there (B3, MIUI autostart).
+  String? _tip(AppLocalizations l10n, SetupItem item) {
+    if (_opensDialog(item)) return null;
+    final reopen = l10n.setupReopen;
+    return item == SetupItem.autostart && _miui ? '${l10n.setupAutostartTip}\n$reopen' : reopen;
+  }
 
   static List<String> _sentences(AppLocalizations l10n, SetupItem item) => switch (item) {
         SetupItem.overlay => l10n.setupOverlay,

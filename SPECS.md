@@ -108,6 +108,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - Sessions tracked manually in `daily_ms_{pkg}_{date}` — never use `totalTimeInForeground` (excludes the active session, causing live lag)
 - Launchers treated as special mode, not regular apps
 - Screen off → `SCREEN_NON_INTERACTIVE` → immediately flush and close active session; both loops stop (no wake-ups). `SCREEN_ON` restarts MonitoringService's tick and, through `startService`, OverlayService's poll
+- System screens open inside AppTime's task, so back returns to it. Exception, MIUI 14: switching autostart **off** makes the security center force-stop AppTime (no activity, no services, no broadcasts until reopened); switching it on does not
 - OverlayService reads single keys, never `prefs.all` (a copy of the whole store, hundreds of KB, twice a second)
 - `disabledApps` stored as JSON string via `setString` (not `setStringList`) — required for cross-process read in Kotlin
 - Integer values stored as `Long` by the Flutter plugin on Android — Kotlin must use `getLong()`, not `getInt()`

@@ -119,9 +119,11 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   10 · 9 for real history over seeding everything; both warn the seed reads as an allowance.
 - **Unlocks show on a dashboard first, no message** (Lucas, 2026-11-01); the three message
   triggers are built (SPECS § `MessageRules.kt`).
-- **Battery: confirm "cerca de 1% por dia"** over a full day off the cable, night included
-  (`dumpsys batterystats --reset`). 2026-11-02 estimate: ~1.0 s CPU per screen-on minute, ~0 screen off
-  → ~0.5%/day at 4 h screen-on, ~0.8% at 6 h. What remains is the 1 s tick's `UsageEvents` query.
+- **Battery: confirm "menos de 1% por dia"** over a full day off the cable, night included, on a
+  release build (it cannot `run-as`, so start it at the end of a session). `stay_on_while_plugged_in`
+  0, `dumpsys batterystats --reset`, note the time; on replug read `--charged com.lsf.apptime` at once:
+  `%/day = 100 × mAh_uid / capacity × 24 / hours_on_battery`, with screen-on time. 2026-11-02
+  estimate: ~1.0 s CPU per screen-on minute, ~0 screen off → ~0.5%/day at 4 h, ~0.8% at 6 h.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos). The bare
@@ -141,6 +143,11 @@ rotation; app-switch latency of `UsageStatsManager` on Xiaomi (panel warns 2–5
 rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of vertical video).
 
 ### App screens (screen review, 2026-10-31; panel Codex · Gemini agreed unless noted)
+
+- 🔴 **Round 3 first, before the three tabs** (Lucas, 2026-11-02): only the overlay went through
+  Claude Design and Stitch. Send the current screens (Ajustes, Análise, per-app) plus the Obsidian
+  Mono brief and the decisions below to both, the panel compares, and the session leaves with a
+  screen plan the three tabs are then built on.
 
 - **Three tabs: Hoje (landing) · Análise · Ajustes**, plus a per-app screen opened by tapping any
   app. Monit. and Insights stop being tabs. Today Ajustes is the landing tab, and `HomeScreen`,

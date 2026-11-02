@@ -4,12 +4,11 @@
 
 ## B2 — a screen left on counts as use
 
-**Symptom:** 2026-11-01, Instagram 04:00–09:25 counted as ~4h30 while Lucas slept: the phone was
-charging with "stay awake" on (`stay_on_while_plugged_in=7`, set for adb) and Instagram in front.
-
-**Why it matters:** it inflates today and the 30-day usual. Any user who props the phone on a
-charger with a video open gets the same. Open: delete that block from Lucas's data, and whether
-the app should stop counting after N minutes without a touch (no public API reports touches).
+**Accepted limitation (Lucas 2026-11-02; Codex: no rule 9, cap while charging 6, cap always 3):**
+AppTime counts the app in front while the screen is on — attention cannot be seen without touches,
+and no public API reports them. Any cut-off undercounts a long video or read. The sighting
+(Instagram 04:00–09:25 while Lucas slept) came from `stay_on_while_plugged_in=7`, set for adb: that
+block was removed from his data and the setting is back to 0. Keep it 0 outside a screenshot run.
 
 <!-- entropy:start -->
 ## Entropy
@@ -82,7 +81,7 @@ the app should stop counting after N minutes without a touch (no public API repo
 
 *git is the history — cut it, or rewrite it as present-tense state*
 
-- ROADMAP.md:148: a dated completion report — prose describing finished work.
+- ROADMAP.md:155: a dated completion report — prose describing finished work.
 
 ### Unanswered placeholders
 
@@ -107,7 +106,7 @@ the app should stop counting after N minutes without a touch (no public API repo
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/v1-impl is 3 ahead of main
+- . — feature/v1-impl is 4 ahead of main
 
 ### Local branches already merged into their base
 

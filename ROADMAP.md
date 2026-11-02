@@ -123,12 +123,9 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   transport (Waze, Maps, Moovit, Uber, 99), audio (Spotify, Deezer, podcasts, Audible), calls,
   clock, calculator, camera, banking, Pix, authenticators, gov.br. YouTube Music stays monitored
   (it pulls to video). The user can switch any back on.
-- **Battery: next** (setup flow seen on the phone 2026-11-02). Measured 23 mAh in
-  5h38 (≈2–3%/day); the onboarding already says "cerca de 1% por dia". Done: live state written on change
-  only (the 640 KB prefs file was rewritten every second). Next: stop the 1 s tick and the 30 s watchdog
-  while the screen is off (resume on `SCREEN_ON`; the session is already flushed at `SCREEN_OFF`, so no
-  data is lost), keep 1 s while on (2 s would lag the timer), re-measure with
-  `dumpsys batterystats --reset`, and make the sentence true.
+- **Battery: confirm "cerca de 1% por dia"** over a full day off the cable, night included
+  (`dumpsys batterystats --reset`). 2026-11-02 estimate: ~1.0 s CPU per screen-on minute, ~0 screen off
+  → ~0.5%/day at 4 h screen-on, ~0.8% at 6 h. What remains is the 1 s tick's `UsageEvents` query.
 - **Setup flow leftovers** (2026-11-02): Codex's copy suggestions, for Lucas to decide — banner without
   "Toque para religar"; "o contador pode não voltar sozinho"; "Abrir configurações do Android". A
   sentence does not scroll under a large font. The two overlay tests repeat one 4-line channel mock.

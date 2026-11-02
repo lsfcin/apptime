@@ -96,8 +96,8 @@ lib/
 ## Architecture
 
 ```
-Flutter UI ↔ SharedPreferences ← MonitoringService (foreground, 1s tick)
-                                                  → OverlayService (500ms poll; 2000ms when screen off)
+Flutter UI ↔ SharedPreferences ← MonitoringService (foreground, 1s tick; stopped while the screen is off)
+                                                  → OverlayService (500ms poll; stopped while the screen is off)
 BootReceiver → MonitoringSwitch on reboot / reinstall
 ```
 
@@ -107,7 +107,8 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - Overlay uses `WindowManager.addView()` with `START_STICKY`; never `flutter_overlay_window`
 - Sessions tracked manually in `daily_ms_{pkg}_{date}` — never use `totalTimeInForeground` (excludes the active session, causing live lag)
 - Launchers treated as special mode, not regular apps
-- Screen off → `SCREEN_NON_INTERACTIVE` → immediately flush and close active session
+- Screen off → `SCREEN_NON_INTERACTIVE` → immediately flush and close active session; both loops stop (no wake-ups). `SCREEN_ON` restarts MonitoringService's tick and, through `startService`, OverlayService's poll
+- OverlayService reads single keys, never `prefs.all` (a copy of the whole store, hundreds of KB, twice a second)
 - `disabledApps` stored as JSON string via `setString` (not `setStringList`) — required for cross-process read in Kotlin
 - Integer values stored as `Long` by the Flutter plugin on Android — Kotlin must use `getLong()`, not `getInt()`
 - SharedPreferences keys use `flutter.` prefix (Flutter plugin adds it); Kotlin reads them with that prefix
@@ -186,7 +187,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - **"Your usual" parity**: Dart and Kotlin both run `test/fixtures/usual_daily.json`; a rule change edits both files and adds a case there.
 - **No goals** (rejected 2026-10-31): the four goal levels, per-app levels and `GoalScreen` are gone. Messages key off the user's own 30-day mean, never a target the user picked.
 - **Daily total == sum of hourly values**: `accumulateDailyMs` accumulates daily totals within the hourly walk loop.
-- **Heartbeat granularity**: written every 30s (not 1s) — sufficient for gap detection; reduces disk writes by 30×.
+- **Heartbeat granularity**: written every 30s (not 1s) and at the screen-off flush — the tick is stopped after it, so a restart overnight must not backfill seconds already counted.
 
 ---
 

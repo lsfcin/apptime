@@ -59,12 +59,21 @@ class MonitoringService : Service() {
                         accumulateDailyMs(lastPackage!!, sessionStartMs, System.currentTimeMillis())
                         lastPackage = null
                     }
+                    // The tick stops until SCREEN_ON, so the heartbeat marks the flush itself:
+                    // a restart overnight must not backfill the seconds counted just above.
                     prefs.edit()
                         .putString("flutter.overlay_text", "")
                         .putBoolean("flutter.overlay_visible", false)
                         .remove("flutter.current_pkg")
+                        .putLong(HistoryBackfill.HEARTBEAT_KEY, System.currentTimeMillis())
                         .apply()
                     published = null
+                    handler.removeCallbacks(pollRunnable)
+                }
+                Intent.ACTION_SCREEN_ON -> {
+                    handler.removeCallbacks(pollRunnable)
+                    handler.post(pollRunnable)
+                    startService(Intent(context, OverlayService::class.java))
                 }
                 Intent.ACTION_USER_PRESENT -> {
                     lastUnlockMs = System.currentTimeMillis()
@@ -82,7 +91,8 @@ class MonitoringService : Service() {
     private val pollRunnable = object : Runnable {
         override fun run() {
             tick()
-            handler.postDelayed(this, 1_000)
+            // Screen off: nothing to count, so no wake-ups; SCREEN_ON posts the tick again.
+            if (powerManager.isInteractive) handler.postDelayed(this, 1_000)
         }
     }
 
@@ -102,6 +112,7 @@ class MonitoringService : Service() {
         backfill = HistoryBackfill(usageStatsManager, prefs, ::accumulateDailyMs, ::epochToDateKey)
         val screenFilter = IntentFilter().apply {
             addAction(Intent.ACTION_SCREEN_OFF)
+            addAction(Intent.ACTION_SCREEN_ON)
             addAction(Intent.ACTION_USER_PRESENT)
         }
         registerReceiver(screenReceiver, screenFilter)

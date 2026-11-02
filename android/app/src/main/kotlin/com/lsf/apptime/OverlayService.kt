@@ -28,9 +28,10 @@ class OverlayService : Service() {
 
     private val pollRunnable = object : Runnable {
         override fun run() {
-            val screenOn = powerManager.isInteractive
-            if (screenOn) updateOverlay() else feedbackEngine?.cancel()
-            handler.postDelayed(this, if (screenOn) 500L else 2_000L)
+            // Screen off: stop polling; MonitoringService restarts this service on SCREEN_ON.
+            if (!powerManager.isInteractive) { feedbackEngine?.cancel(); return }
+            updateOverlay()
+            handler.postDelayed(this, 500L)
         }
     }
 
@@ -62,28 +63,27 @@ class OverlayService : Service() {
     }
 
     private fun updateOverlay() {
-        // One snapshot for timer, live totals and feedback eligibility on this poll.
-        val snap = prefs.all
+        // Read single keys, never prefs.all: that copies the whole store (hundreds of KB) every poll.
+        // MonitoringService writes on this same main looper, so the reads below cannot interleave a write.
         val now = System.currentTimeMillis()
         val today = DateUtils.today()
-        val pkg = snap["flutter.current_pkg"] as? String
+        val pkg = prefs.getString("flutter.current_pkg", null)
         val inApp = pkg != null && !AppConstants.isLauncher(pkg, launchers)
-        val usage = LiveUsage.read(pkg, inApp, today, now,
-            { key -> (snap[key] as? Long) ?: 0L }, usualCache)
+        val usage = LiveUsage.read(pkg, inApp, today, now, prefs::safeGetCount, usualCache)
         val total = if (inApp) usage.appMs else usage.phoneMs
         val usual = usage.appUsual ?: usage.phoneUsual
-        val enabled = snap["flutter.overlay_enabled"] as? Boolean ?: true
-        val visible = snap["flutter.overlay_visible"] as? Boolean ?: false
+        val enabled = prefs.getBoolean("flutter.overlay_enabled", true)
+        val visible = prefs.getBoolean("flutter.overlay_visible", false)
         val monitored = pkg != null && !AppConstants.parseDisabledApps(prefs).contains(pkg)
         val allowed = enabled && visible && monitored
-        val hasText = !(snap["flutter.overlay_text"] as? String).isNullOrEmpty()
-        val feedback = OverlayFeedback.frame(snap["flutter.overlay_feedback"] as? String, total, usual)
-        timer.render(snap["flutter.overlay_style"] == "block", total, feedback, allowed && hasText)
+        val hasText = !prefs.getString("flutter.overlay_text", null).isNullOrEmpty()
+        val feedback = OverlayFeedback.frame(prefs.getString("flutter.overlay_feedback", null), total, usual)
+        timer.render(prefs.getString("flutter.overlay_style", null) == "block", total, feedback, allowed && hasText)
         feedbackEngine?.refresh(pkg, now, allowed)
         if (++evalTick >= 5) {
             evalTick = 0
             if (allowed && timer.isAdded) {
-                val lang = snap["flutter.language_code"] as? String ?: Locale.getDefault().language
+                val lang = prefs.getString("flutter.language_code", null) ?: Locale.getDefault().language
                 val header = OverlayText.header(if (inApp) resolveAppLabel(pkg!!) else null, total, lang)
                 feedbackEngine?.evaluate(pkg, usage, today, now, lang, header)
             }

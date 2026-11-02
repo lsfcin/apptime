@@ -21,6 +21,17 @@ extension StorageServiceSettings on StorageService {
   set disabledApps(Set<String> apps) =>
       _prefs.setString('disabled_apps', jsonEncode(apps.toList()));
 
+  /// Switches off each installed app that starts unmonitored, once per package: an app installed
+  /// later is caught on the next start, and an app the user switched back on stays on.
+  void applyDefaultUnmonitored(Iterable<String> installed) {
+    final raw = _prefs.getString('default_unmonitored_seen');
+    final seen = raw == null ? <String>{} : (jsonDecode(raw) as List).cast<String>().toSet();
+    final fresh = installed.where((p) => isUnmonitoredByDefault(p) && !seen.contains(p)).toSet();
+    if (fresh.isEmpty) return;
+    disabledApps = {...disabledApps, ...fresh};
+    _prefs.setString('default_unmonitored_seen', jsonEncode([...seen, ...fresh]));
+  }
+
   void toggleApp(String packageName) {
     final apps = disabledApps;
     if (apps.contains(packageName)) {

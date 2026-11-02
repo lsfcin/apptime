@@ -7,6 +7,7 @@
 
 | File | Interface | Description |
 |------|-----------|-------------|
+| [`default_unmonitored_test.dart`](default_unmonitored_test.dart) | [`default_unmonitored_test.dart.api`](default_unmonitored_test.dart.api) | Verifies which apps start unmonitored, that each is switched off only once, and that the user's choice stands. |
 | [`fixtures/usual_daily.json`](fixtures/usual_daily.json) | — | Cases for "your usual" that the Dart test and the Kotlin JUnit test both run, so the two implementations stay equal. |
 | [`overlay_feedback_test.dart`](overlay_feedback_test.dart) | [`overlay_feedback_test.dart.api`](overlay_feedback_test.dart.api) | Verifies feedback defaults, bilingual settings choices and persistence beside the style selector. |
 | [`overlay_style_test.dart`](overlay_style_test.dart) | [`overlay_style_test.dart.api`](overlay_style_test.dart.api) | Verifies style preference defaults and the bilingual settings selector persists both choices. |

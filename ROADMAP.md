@@ -119,10 +119,6 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   10 · 9 for real history over seeding everything; both warn the seed reads as an allowance.
 - **Unlocks show on a dashboard first, no message** (Lucas, 2026-11-01); the three message
   triggers are built (SPECS § `MessageRules.kt`).
-- **Some apps start unmonitored** (Lucas, 2026-11-01; build with Ajustes): navigation and
-  transport (Waze, Maps, Moovit, Uber, 99), audio (Spotify, Deezer, podcasts, Audible), calls,
-  clock, calculator, camera, banking, Pix, authenticators, gov.br. YouTube Music stays monitored
-  (it pulls to video). The user can switch any back on.
 - **Battery: confirm "cerca de 1% por dia"** over a full day off the cable, night included
   (`dumpsys batterystats --reset`). 2026-11-02 estimate: ~1.0 s CPU per screen-on minute, ~0 screen off
   → ~0.5%/day at 4 h screen-on, ~0.8% at 6 h. What remains is the 1 s tick's `UsageEvents` query.

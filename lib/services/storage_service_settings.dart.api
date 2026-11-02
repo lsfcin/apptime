@@ -4,6 +4,7 @@ extension StorageServiceSettings on StorageService
   set monitorLauncher(bool v)
   Set<String> get disabledApps
   set disabledApps(Set<String> apps)
+  void applyDefaultUnmonitored(Iterable<String> installed)
   void toggleApp(String packageName)
   bool get onboardingDone
   set onboardingDone(bool v)

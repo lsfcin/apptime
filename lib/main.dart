@@ -24,6 +24,8 @@ void main() async {
 
   // Fire-and-forget: prune data older than 90 days in the background.
   storage.pruneOldData();
+  // Fire-and-forget: apps installed since the last start that begin unmonitored (maps, audio, banks…).
+  ServiceChannel.getInstalledAppLabels().then((apps) => storage.applyDefaultUnmonitored(apps.keys));
 
   final status = await ServiceChannel.getStartupStatus();
   final allGranted = status.overlayGranted && status.usageGranted;

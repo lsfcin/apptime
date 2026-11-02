@@ -155,7 +155,8 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `hourly_unlocks_{date}_{h}` | Int | Device unlocks in hour h |
 | `session_bucket_{i}_{date}` | Int | Session count for bucket i (0=<1m 1=1-5m 2=5-15m 3=>15m) |
 | `packages_index_{date}` | String (JSON) | Package names active on that date — avoids O(n_keys) scan |
-| `disabled_apps` | String (JSON) | Packages with overlay disabled |
+| `disabled_apps` | String (JSON) | Unmonitored packages: no overlay, never counted in any total |
+| `default_unmonitored_seen` | String (JSON) | Packages already switched off once by `applyDefaultUnmonitored`; the user's later choice stands |
 | `onboarding_done` | Boolean | Whether onboarding has been completed |
 | `monitoring_enabled` | Boolean | Kotlin writes on Iniciar/Parar; boot/reinstall resume only when true; app open resumes unless false |
 | `language_code` | String? | `null`=system · `"pt"` · `"en"` |

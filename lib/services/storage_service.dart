@@ -1,6 +1,7 @@
 // StorageService: typed SharedPreferences wrapper for screen time and settings
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/index.dart';
 
 part 'storage_service_queries.dart';
 part 'storage_service_settings.dart';

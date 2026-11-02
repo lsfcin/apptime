@@ -115,11 +115,15 @@ object SystemSettings {
 
     private fun packageUri(context: Context) = Uri.parse("package:${context.packageName}")
 
-    /** Tries each in order: a resolve check would need a <queries> entry per settings screen. */
+    /**
+     * Tries each in order: a resolve check would need a <queries> entry per settings screen.
+     * From an activity the screen stays in AppTime's task, so the system's back returns to AppTime.
+     */
     private fun openFirst(context: Context, vararg intents: Intent) {
         for (intent in intents) {
+            if (context !is Activity) intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
-                context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                context.startActivity(intent)
                 return
             } catch (_: ActivityNotFoundException) {
             } catch (_: SecurityException) {

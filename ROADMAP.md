@@ -119,13 +119,12 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   transport (Waze, Maps, Moovit, Uber, 99), audio (Spotify, Deezer, podcasts, Audible), calls,
   clock, calculator, camera, banking, Pix, authenticators, gov.br. YouTube Music stays monitored
   (it pulls to video). The user can switch any back on.
-- **Permission guide** (Lucas, 2026-11-01; studied, build with phase 5): one checklist screen like
-  AppBlock's Troubleshooting — each row live green/red, a "Fix" button opening the exact settings page,
-  re-checked on resume. Rows: overlay, usage access, battery optimization
-  (`ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`), and on Xiaomi autostart
-  (`com.miui.securitycenter/com.miui.permcenter.autostart.AutoStartManagementActivity`, unofficial:
-  resolve first, fall back to `ACTION_APPLICATION_DETAILS_SETTINGS`). MIUI cannot report autostart, so
-  that row is "confirm you did it". Autostart is mandatory for v1 (Lucas, 2026-11-01). Seen on the Xiaomi: every reinstall resets the overlay to `ignore`.
+- **Battery: next after the setup flow is seen on the phone** (Lucas, 2026-11-02). Measured 23 mAh in
+  5h38 (≈2–3%/day); the onboarding already says "cerca de 1% por dia". Done: live state written on change
+  only (the 640 KB prefs file was rewritten every second). Next: stop the 1 s tick and the 30 s watchdog
+  while the screen is off (resume on `SCREEN_ON`; the session is already flushed at `SCREEN_OFF`, so no
+  data is lost), keep 1 s while on (2 s would lag the timer), re-measure with
+  `dumpsys batterystats --reset`, and make the sentence true.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos). The bare

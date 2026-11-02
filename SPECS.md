@@ -87,7 +87,9 @@ lib/
 | `AppConstants.kt` | Shared launcher resolution/classification, parseDisabledApps(), CHANNEL constant |
 | `DateUtils.kt` | today(), currentHour(), daysBefore(), safeGetCount() extension |
 | `PmMessages.kt` | Message text (PT/EN) per trigger |
-| `BootReceiver.kt` | Restarts MonitoringService after device reboot |
+| `BootReceiver.kt` | Resumes monitoring after reboot or reinstall when `monitoring_enabled`; MIUI drops both broadcasts without autostart |
+| `MonitoringSwitch.kt` | Starts/stops both services and persists `monitoring_enabled` |
+| `SystemSettings.kt` | Opens each system screen on AppTime's own page (fallback: the list); reads battery exemption and MIUI autostart (appop 10008, hidden API) |
 
 ---
 
@@ -96,7 +98,7 @@ lib/
 ```
 Flutter UI ↔ SharedPreferences ← MonitoringService (foreground, 1s tick)
                                                   → OverlayService (500ms poll; 2000ms when screen off)
-BootReceiver → starts MonitoringService on device reboot
+BootReceiver → MonitoringSwitch on reboot / reinstall
 ```
 
 **Critical constraints — do not change without understanding the full chain:**
@@ -112,11 +114,11 @@ BootReceiver → starts MonitoringService on device reboot
 
 **Overlay behavior:** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Both styles use `FLAG_NOT_TOUCHABLE`, window alpha 0.8 and tabular figures; no drag or intensity modes.
 
-- `pill` (default): 14 sp, no background: text and cues carry a 2 dp dark halo (black 67%), because no app can read another app's status-bar icon colour. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). On API 30+, a top cutout permits a slot at `boundingRectTop.right + 8dp`, centred on the status icon row (12 dp above the bottom of the status-bar/cutout top inset, clamped inside it; no API reports where the icons are), only if the complete pill including feedback cue fits within 44 dp and the bar height. Otherwise it moves just below the status bar at top-right; there it can use its natural width to preserve text at large system font scales. API <30 and no top cutout always use that fallback.
+- `pill` (default): 14 sp, no background: text and cues carry a 2 dp dark halo (black 67%), because no app can read another app's status-bar icon colour. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). On API 30+, a top cutout permits a slot flush with `boundingRectTop.right` (the pill's air faces the camera), centred on the status icon row (12 dp above the bottom of the status-bar/cutout top inset, clamped inside it; no API reports where the icons are), only if the complete pill including feedback cue fits within 52 dp and the bar height. Otherwise it moves just below the status bar at top-right; there it can use its natural width to preserve text at large system font scales. API <30 and no top cutout always use that fallback.
 - `block`: below the status bar, top-right; 17 sp bold, the pill's letter format (`12m`, `1h44`), 96% black background, no rim. Uses the selected feedback variant with cues scaled 1.25×.
-- Padding: block and `outline` add one blank character's width each side of the time, the bare pill 1 dp for its halo (a 4-character time plus the dot then fits 44 dp); `fill` reserves the dot (6.9 dp, 1.25× on block) plus a fixed 3 dp gap left of the text, so the gap never varies with the state; `bar` takes a bottom padding of three bar thicknesses: the bar right under the digits, twice its thickness free below it.
+- Padding: every style adds one blank character's width each side of the time (Lucas, 2026-11-02), the pill 1 dp more for its halo; `fill` reserves the dot (6.9 dp, 1.25× on block) plus a fixed 3 dp gap left of the text, so the gap never varies with the state; `bar` takes a bottom padding of three bar thicknesses: the bar right under the digits, twice its thickness free below it.
 - Today's app total is compared with that app's 30-day `UsualDaily` mean; on the launcher the timer uses phone usage/usual. Before 7 real days feedback is calm and no cue is drawn. Calm is white; near is soft amber; past is amber (and bold pill). Background preferences cannot remove the contrast floor.
-- Settings exposes `overlay_feedback` beside the style selector in PT/EN, each choice and style with a one-line description. Missing/unknown values (including the retired `dots`, `underline`, `underline_delta`) use `bar`; it updates on the 500 ms poll without restarting monitoring. Drawing stays inside the measured timer, keeping the 44 dp status-bar cap and fallback.
+- Settings exposes `overlay_feedback` beside the style selector in PT/EN, each choice and style with a one-line description. Missing/unknown values (including the retired `dots`, `underline`, `underline_delta`) use `bar`; it updates on the 500 ms poll without restarting monitoring. Drawing stays inside the measured timer, keeping the 52 dp status-bar cap and fallback.
   - `fill`: a dot left of the time fills clockwise from 12 o'clock like a pie; full at the usual.
   - `bar` (default): 2 dp round-capped line under the time, ink spanning exactly the text width (caps included); fills left→right to the usual, then stays full.
   - `outline`: 1 dp border starts at top-centre and grows clockwise, closing at the usual.
@@ -125,7 +127,7 @@ BootReceiver → starts MonitoringService on device reboot
 - Every variant takes its state from `OverlayText.state` (the `UsualDaily` rule plus the 7-day floor), so shapes and messages never disagree. Progress is clamped to [0,1]; a zero usual draws a full line for any use (no division by zero).
 - Messages have a separate window, below the status bar and any fallback timer, right aligned and at most 88% screen width. This avoids overlapping non-touchable windows (whose combined obscuring opacity would exceed 0.8). The timer stays anchored. Header: `<app label> · 1h 18m hoje` / `today`; on the launcher `Celular` / `Phone` with the phone total. Language follows the saved override or system language (PT fallback).
 - A message ends after 6.5 s, on a detected package change (500 ms poll), overlay hiding/disabling, or screen off. Cancellation leaves the trigger recorded as shown. Trigger evaluation remains every ~2.5 s.
-- `MonitoringService` still writes `overlay_text`; its nonempty value/visibility gates the timer, including the existing launcher unlock-count / 5 s transition. Displayed timer text now comes from shared live totals rather than the legacy seconds/count string.
+- `MonitoringService` still writes `overlay_text`; its nonempty value/visibility gates the timer, including the launcher's `HOME_DELAY_MS` (2 s; Lucas, 2026-11-02): blank, or the unlock count right after an unlock. Displayed timer text now comes from shared live totals rather than the legacy seconds/count string.
 
 ---
 
@@ -139,10 +141,7 @@ BootReceiver → starts MonitoringService on device reboot
 | `overlay_enabled` | Boolean | Show timer/messages; monitoring continues (default true) |
 | `monitor_launcher` | Boolean | Show overlay on launcher (default true) |
 | `overlay_visible` | Boolean | Whether overlay should appear |
-| `overlay_font_size` | Long (legacy Float) | Legacy appearance setting; retained, ignored by fixed styles |
-| `overlay_show_background` | Boolean | Legacy appearance setting; retained, ignored by fixed styles |
-| `overlay_show_border` | Boolean | Legacy appearance setting; retained, ignored by fixed styles |
-| `overlay_top_dp` | Double | Legacy position setting; retained, ignored by anchored styles |
+| `overlay_font_size`, `overlay_show_background`, `overlay_show_border`, `overlay_top_dp`, `monitoring_ever_started` | — | Legacy; retained, ignored |
 | `daily_ms_{pkg}_{date}` | Long | Accumulated ms for app that calendar day |
 | `open_count_{pkg}_{date}` | Int | App opens that calendar day |
 | `unlock_count_{date}` | Int | Device unlocks that calendar day |
@@ -154,6 +153,7 @@ BootReceiver → starts MonitoringService on device reboot
 | `packages_index_{date}` | String (JSON) | Package names active on that date — avoids O(n_keys) scan |
 | `disabled_apps` | String (JSON) | Packages with overlay disabled |
 | `onboarding_done` | Boolean | Whether onboarding has been completed |
+| `monitoring_enabled` | Boolean | Kotlin writes on Iniciar/Parar; boot/reinstall resume only when true; app open resumes unless false |
 | `language_code` | String? | `null`=system · `"pt"` · `"en"` |
 | `pm_day` | String | Kotlin only — date key the shown set below belongs to |
 | `pm_shown` | String | Kotlin only — triggers shown on `pm_day`, comma-separated |
@@ -172,10 +172,10 @@ BootReceiver → starts MonitoringService on device reboot
 | `startMonitoring` | Dart→Kotlin | Starts MonitoringService + OverlayService |
 | `stopMonitoring` | Dart→Kotlin | Stops both services |
 | `isRunning` | Dart→Kotlin | Returns Boolean (uses MonitoringService.isRunning static flag) |
-| `requestOverlayPermission` | Dart→Kotlin | Opens system overlay permission screen |
-| `hasOverlayPermission` | Dart→Kotlin | Returns Boolean |
-| `requestUsagePermission` | Dart→Kotlin | Opens usage access settings |
-| `hasUsagePermission` | Dart→Kotlin | Returns Boolean |
+| `requestOverlayPermission`, `requestUsagePermission` | Dart→Kotlin | Open AppTime's own page (usage falls back to the list) |
+| `hasOverlayPermission`, `hasUsagePermission` | Dart→Kotlin | Return Boolean |
+| `openAutostartSettings`, `requestIgnoreBatteryOptimizations` | Dart→Kotlin | MIUI autostart list (fallback: app details); battery exemption dialog |
+| `getBackgroundStatus` | Dart→Kotlin | `{batteryExempt, hasAutostartScreen, autostartAllowed?}` |
 
 ---
 

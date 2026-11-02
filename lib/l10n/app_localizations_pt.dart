@@ -67,8 +67,8 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get setupLabelAutostart => 'Início automático';
   @override String get setupLabelBattery => 'Sem economia de bateria';
   @override String get setupLabelHibernation => 'Sem pausa por falta de uso';
-  @override String get setupOn => 'Ligado';
-  @override String get setupOff => 'Desligado';
+  @override String get setupOn => 'Concluído';
+  @override String get setupOff => 'Pendente';
   @override String get setupConfirmed => 'Você confirmou';
   @override String get setupAdjust => 'Ajustar';
 

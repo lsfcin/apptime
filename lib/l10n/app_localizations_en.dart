@@ -68,8 +68,8 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get setupLabelAutostart => 'Autostart';
   @override String get setupLabelBattery => 'No battery saving';
   @override String get setupLabelHibernation => 'No pause when unused';
-  @override String get setupOn => 'On';
-  @override String get setupOff => 'Off';
+  @override String get setupOn => 'Done';
+  @override String get setupOff => 'To do';
   @override String get setupConfirmed => 'You confirmed';
   @override String get setupAdjust => 'Adjust';
 

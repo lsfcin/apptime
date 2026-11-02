@@ -103,7 +103,8 @@ class _SettingsScreenState extends State<SettingsScreen>
           ],
           // ── Running: shown only while something is off ─────────────────
           if (_check != null && _check!.missing.isNotEmpty) ...[
-            _SectionHeader(l10n.sectionSetup),
+            _SectionHeader('${l10n.sectionSetup} · '
+                '${l10n.setupProgress(_check!.items.length - _check!.missing.length, _check!.items.length)}'),
             Card(
               child: Column(children: [
                 for (final item in _check!.items)

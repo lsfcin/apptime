@@ -29,13 +29,16 @@ class _SetupTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // A step still to do, not an error: an empty circle, and the whole row opens its screen.
+    final scheme = Theme.of(context).colorScheme;
     return ListTile(
       leading: Icon(
-        on ? Icons.check_circle : Icons.warning_amber_rounded,
-        color: on ? AppColors.success : Theme.of(context).colorScheme.error,
+        on ? Icons.check_circle : Icons.radio_button_unchecked,
+        color: on ? scheme.primary : scheme.onSurfaceVariant,
       ),
       title: Text(label),
       subtitle: Text(status),
+      onTap: on ? null : onAdjust,
       trailing: on ? null : TextButton(onPressed: onAdjust, child: Text(adjustLabel)),
     );
   }
@@ -48,7 +51,7 @@ class _SetupBanner extends StatelessWidget {
   final String action;
   final VoidCallback onTap;
 
-  // Neutral card, amber icon: something in the app to check, not an alarm about the phone.
+  // Neutral card, checklist icon: a step to finish, not an alarm about the phone.
   @override
   Widget build(BuildContext context) => Card(
         child: InkWell(
@@ -56,7 +59,7 @@ class _SetupBanner extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
             child: Row(children: [
-              const Icon(Icons.warning_amber_rounded, color: AppColors.warning),
+              Icon(Icons.checklist, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: AppSpacing.md),
               Expanded(child: Text(text, style: Theme.of(context).textTheme.bodyLarge)),
               const SizedBox(width: AppSpacing.sm),

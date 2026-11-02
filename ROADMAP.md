@@ -94,13 +94,17 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
 - **Typography**: one family, Inter, tabular figures (both panels, round 1).
 - **Window alpha**: set `LayoutParams.alpha` ≤ the system's maximum obscuring opacity (0.8), or
   Android 12+ blocks touches under the overlay (`OverlayService.kt:123`).
-- **Styles to build** (round 2, 2026-10-31): **Quiet pill** (default; status bar, right of the
-  camera; bare, no background, Lucas 2026-11-01) · **Bloco acessível** (low vision; 17sp bold, 96% black,
+- **Styles to build** (round 2, 2026-10-31): **Pílula** (default; status bar, right of the
+  camera; bare, no background, Lucas 2026-11-01) · **Bloco** (low vision; 17sp bold, 96% black,
   no rim) · **Side rail**,
   left or right edge, upper third, in round 1's *tick* shape (horizontal number, readable) rather
   than round 2's stacked 20dp one. *Selo de canto* is a stretch goal, offered only on gesture
   navigation: on 3-button navigation that corner belongs to the nav bar, whose window sits above
   ours. Cut: Notch, Floating capsule, Bottom strip, Ghost, Linha de borda, Anel (cutout fragmentation).
+- **Bloco: three positions, maybe hanging from the status bar** (idea, Lucas 2026-11-02, to think
+  through later): left · centre · right, no drag. Drawn as a tab that comes out of the status bar,
+  the way the side rail comes out of the screen edge. Open: whether it reads as attached on both
+  light and dark status bars, and whether centre collides with the camera.
 - **No goal in the overlay — the reference is your own average** (Lucas, 2026-10-31: nobody can
   name a meaningful goal in advance). Two independent switches in settings: **number** (today's time
   in this app; the calm state) and **average feedback** (today vs this app's usual by this hour; a
@@ -146,7 +150,7 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
 ### App screens (screen review, 2026-10-31; panel Codex · Gemini agreed unless noted)
 
 - **Three tabs: Hoje (landing) · Análise · Ajustes**, plus a per-app screen opened by tapping any
-  app. Monit. and Insights stop being tabs. Today Config. is the landing tab, and `HomeScreen`,
+  app. Monit. and Insights stop being tabs. Today Ajustes is the landing tab, and `HomeScreen`,
   `GoalScreen`, `PerAppScreen` are reachable from nowhere.
 - **Hoje** reuses `HomeScreen` without its goal card: today vs "your usual by this hour", then the
   most-used apps with real icons. **Per-app screen** reuses `PerAppScreen`: that app's usage vs its

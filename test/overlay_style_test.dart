@@ -38,8 +38,8 @@ void main() {
         home: SettingsScreen(storage: storage, onLocaleChange: (_) {}),
       ));
       await tester.pumpAndSettle();
-      final block = lang == 'pt' ? 'Bloco acessível' : 'Accessible block';
-      final pill = lang == 'pt' ? 'Pílula discreta' : 'Quiet pill';
+      final block = lang == 'pt' ? 'Bloco' : 'Block';
+      final pill = lang == 'pt' ? 'Pílula' : 'Pill';
       await tester.ensureVisible(find.text(block));
       await tester.pumpAndSettle();
       await tester.tap(find.text(block));

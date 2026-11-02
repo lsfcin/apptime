@@ -111,13 +111,13 @@ the app should stop counting after N minutes without a touch (no public API repo
 
 *the only enforced-read type — move the contract to a sibling SPECS.md*
 
-- CONTEXT.md: head is 762 tok carrying 1 constraint(s), over the warning
+- CONTEXT.md: head is 758 tok carrying 1 constraint(s), over the warning
 
 ### Local branches holding unpromoted work
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/v1-impl is 9 ahead of main
+- . — feature/v1-impl is 10 ahead of main
 
 ### Local branches already merged into their base
 

@@ -35,7 +35,8 @@ void main() async {
 
   runApp(AppTimeApp(
     storage: storage,
-    skipOnboarding: allGranted,
+    // After the first run a missing permission opens Ajustes and its banner, not the welcome again.
+    skipOnboarding: allGranted || storage.onboardingDone,
     initialLocale: initialLocale,
   ));
 }

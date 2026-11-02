@@ -79,8 +79,8 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get showOverlay => 'Show usage overlay';
   @override String get showOverlaySub => 'Display the floating counter while using apps. Monitoring (data collection) continues regardless.';
   @override String get overlayStyle => 'Overlay style';
-  @override String get overlayStylePill => 'Quiet pill';
-  @override String get overlayStyleBlock => 'Accessible block';
+  @override String get overlayStylePill => 'Pill';
+  @override String get overlayStyleBlock => 'Block';
   @override String get overlayFeedback => 'Usual feedback';
   @override String get overlayStylePillSub => 'In the status bar, beside the camera';
   @override String get overlayStyleBlockSub => 'Below the status bar, large text on a solid background';

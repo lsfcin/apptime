@@ -5,6 +5,25 @@ part of 'onboarding_screen.dart';
 /// Only the first time a sentence shows, and never under TalkBack.
 const kSentencePause = Duration(milliseconds: 800);
 
+/// What the primary button does, so each kind looks different:
+/// [next] only moves to the next screen (an unfilled ›), [opensSettings] leaves for a system
+/// screen (filled, ↗), [plain] stays here (filled: a system dialog, or an answer).
+enum _ButtonKind { next, opensSettings, plain }
+
+/// Slides each sentence in from the right like a card; a fade alone when the system reduces motion.
+/// Untouchable while it moves, so a double tap cannot skip the next sentence.
+Widget _sentenceTransition(BuildContext context, Widget child, Animation<double> animation) {
+  final still = AnimatedBuilder(
+    animation: animation,
+    builder: (_, c) => IgnorePointer(ignoring: animation.value < 1, child: c),
+    child: FadeTransition(opacity: animation, child: child),
+  );
+  if (MediaQuery.of(context).disableAnimations) return still;
+  final slide = Tween(begin: const Offset(0.3, 0), end: Offset.zero)
+      .chain(CurveTween(curve: Curves.easeOutCubic));
+  return SlideTransition(position: animation.drive(slide), child: still);
+}
+
 class _SentenceView extends StatefulWidget {
   const _SentenceView({
     super.key,
@@ -12,6 +31,7 @@ class _SentenceView extends StatefulWidget {
     required this.progress,
     required this.primaryLabel,
     required this.onPrimary,
+    required this.kind,
     required this.pause,
     this.secondaryLabel,
     this.onSecondary,
@@ -23,6 +43,7 @@ class _SentenceView extends StatefulWidget {
   final String? progress;
   final String primaryLabel;
   final VoidCallback onPrimary;
+  final _ButtonKind kind;
   final String? secondaryLabel;
   final VoidCallback? onSecondary;
   final bool pause;
@@ -74,21 +95,47 @@ class _SentenceViewState extends State<_SentenceView> {
           child: AnimatedOpacity(
             opacity: ready ? 1 : 0,
             duration: const Duration(milliseconds: 250),
-            child: Column(children: [
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(onPressed: widget.onPrimary, child: Text(widget.primaryLabel)),
-              ),
-              if (widget.secondaryLabel != null)
-                SizedBox(
-                  width: double.infinity,
-                  child: TextButton(onPressed: widget.onSecondary, child: Text(widget.secondaryLabel!)),
-                ),
-            ]),
+            child: widget.kind == _ButtonKind.next ? _nextRow() : _filledColumn(),
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
       ],
     );
+  }
+
+  /// "Depois" on the left, the round › on the right; its label is read by TalkBack and shown on long press.
+  Widget _nextRow() => Row(children: [
+        if (widget.secondaryLabel != null)
+          TextButton(onPressed: widget.onSecondary, child: Text(widget.secondaryLabel!)),
+        const Spacer(),
+        IconButton.outlined(
+          onPressed: widget.onPrimary,
+          tooltip: widget.primaryLabel,
+          iconSize: 32,
+          constraints: const BoxConstraints.tightFor(width: 64, height: 64),
+          icon: const Icon(Icons.chevron_right),
+        ),
+      ]);
+
+  Widget _filledColumn() {
+    final label = Text(widget.primaryLabel);
+    return Column(children: [
+      SizedBox(
+        width: double.infinity,
+        child: widget.kind == _ButtonKind.opensSettings
+            ? FilledButton.icon(
+                onPressed: widget.onPrimary,
+                icon: const Icon(Icons.open_in_new, size: 18),
+                iconAlignment: IconAlignment.end,
+                label: label,
+              )
+            : FilledButton(onPressed: widget.onPrimary, child: label),
+      ),
+      if (widget.secondaryLabel != null)
+        SizedBox(
+          width: double.infinity,
+          child: TextButton(onPressed: widget.onSecondary, child: Text(widget.secondaryLabel!)),
+        ),
+    ]);
   }
 }

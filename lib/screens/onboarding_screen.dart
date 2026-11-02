@@ -120,6 +120,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
               ? const SizedBox.shrink()
               : AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
+                  transitionBuilder: (child, animation) => _sentenceTransition(context, child, animation),
                   child: _index < 0 ? _welcome(l10n) : _itemView(l10n),
                 ),
         ),
@@ -154,13 +155,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
             primaryLabel: l10n.continueAction, onPrimary: _next, pause: false);
       case _Phase.ask:
         return _view(id: 'ask-$item', text: l10n.setupAskAutostart, progress: progress,
-            primaryLabel: l10n.setupYesDone,
+            primaryLabel: l10n.setupYesDone, kind: _ButtonKind.plain,
             onPrimary: () { widget.storage.autostartConfirmed = true; _next(); },
             secondaryLabel: l10n.setupNotYet,
             onSecondary: () => setState(() => _phase = _Phase.retry));
       case _Phase.retry:
         return _view(id: 'retry-$item', text: _retryText(l10n, item), progress: progress,
-            primaryLabel: action, onPrimary: _open, secondaryLabel: later, onSecondary: _next,
+            primaryLabel: action, kind: _actionKind(item), onPrimary: _open, secondaryLabel: later, onSecondary: _next,
             image: _image(item), tip: _tip(l10n, item));
       case _Phase.reading:
         final sentences = _sentences(l10n, item);
@@ -170,6 +171,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
           text: sentences[_sentence],
           progress: progress,
           primaryLabel: last ? action : l10n.continueAction,
+          kind: last ? _actionKind(item) : _ButtonKind.next,
           onPrimary: last ? _open : () => setState(() => _sentence++),
           secondaryLabel: last ? later : null,
           onSecondary: _next,
@@ -185,6 +187,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
     required String? progress,
     required String primaryLabel,
     required VoidCallback onPrimary,
+    _ButtonKind kind = _ButtonKind.next,
     String? secondaryLabel,
     VoidCallback? onSecondary,
     String? image,
@@ -197,12 +200,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
         progress: progress,
         primaryLabel: primaryLabel,
         onPrimary: onPrimary,
+        kind: kind,
         secondaryLabel: secondaryLabel,
         onSecondary: onSecondary,
         image: image,
         tip: tip,
         pause: pause && _seen.add(id),
       );
+
+  /// A system dialog keeps the user here; every other item leaves for a settings screen.
+  static _ButtonKind _actionKind(SetupItem item) =>
+      _opensDialog(item) ? _ButtonKind.plain : _ButtonKind.opensSettings;
 
   static bool _opensDialog(SetupItem item) =>
       item == SetupItem.notifications || item == SetupItem.battery;

@@ -48,27 +48,23 @@ class _SetupBanner extends StatelessWidget {
   final String action;
   final VoidCallback onTap;
 
+  // Neutral card, amber icon: something in the app to check, not an alarm about the phone.
   @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Card(
-      color: scheme.errorContainer,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Row(children: [
-            Expanded(
-              child: Text(text,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: scheme.onErrorContainer)),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            FilledButton(onPressed: onTap, child: Text(action)),
-          ]),
+  Widget build(BuildContext context) => Card(
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Row(children: [
+              const Icon(Icons.warning_amber_rounded, color: AppColors.warning),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(child: Text(text, style: Theme.of(context).textTheme.bodyLarge)),
+              const SizedBox(width: AppSpacing.sm),
+              FilledButton.tonal(onPressed: onTap, child: Text(action)),
+            ]),
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 // ── Section header ─────────────────────────────────────────────────────────────

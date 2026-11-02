@@ -59,7 +59,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get continueAction => 'Continuar';
   @override String get setupLater => 'Depois';
   @override String setupProgress(int step, int total) => '$step de $total';
-  @override String get setupBanner => 'O AppTime parou de funcionar. Toque para religar.';
+  @override String get setupBanner => 'O contador do AppTime está desligado. Toque para religar.';
   @override String get setupRelaunch => 'Religar';
   @override String get setupBannerAutostart => 'Se o celular reiniciar, o AppTime não volta sozinho.';
   @override String get sectionSetup => 'Funcionamento';

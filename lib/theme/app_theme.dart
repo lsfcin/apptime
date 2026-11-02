@@ -8,6 +8,7 @@ static const surfaceLight = Color(0xFFF7F8FC);
   static const cardDark = Color(0xFF242740);
   static const success = Color(0xFF34D399);
   static const error = Color(0xFFF87171);
+  static const warning = Color(0xFFFBBF24);
 }
 
 abstract final class AppSpacing {

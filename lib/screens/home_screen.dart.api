@@ -1,3 +1,0 @@
-// home_screen.dart
-class HomeScreen extends StatefulWidget
-  State<HomeScreen> createState()

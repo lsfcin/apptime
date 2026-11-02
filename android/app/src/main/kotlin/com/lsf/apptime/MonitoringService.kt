@@ -64,6 +64,7 @@ class MonitoringService : Service() {
                         .putBoolean("flutter.overlay_visible", false)
                         .remove("flutter.current_pkg")
                         .apply()
+                    published = null
                 }
                 Intent.ACTION_USER_PRESENT -> {
                     lastUnlockMs = System.currentTimeMillis()
@@ -88,8 +89,10 @@ class MonitoringService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        isRunning = true
         startForeground(NOTIF_ID, buildNotification())
+        // A second start (boot + app open, onboarding) must not double the tick or the receiver.
+        if (isRunning) return START_STICKY
+        isRunning = true
         usageStatsManager = getSystemService(USAGE_STATS_SERVICE) as UsageStatsManager
         prefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         powerManager = getSystemService(POWER_SERVICE) as PowerManager
@@ -160,11 +163,7 @@ class MonitoringService : Service() {
 
         if (current == null) {
             // Screen on but no app ever recorded yet — nothing to show.
-            prefs.edit()
-                .putString("flutter.overlay_text", "")
-                .putBoolean("flutter.overlay_visible", false)
-                .remove("flutter.current_pkg")
-                .apply()
+            publishLive(timer = false, visible = false, pkg = null)
             return
         }
 
@@ -191,46 +190,32 @@ class MonitoringService : Service() {
 
         if (overlayHidden) {
             // Still track time and session, but don't show overlay
-            prefs.edit()
-                .putString("flutter.overlay_text", "")
-                .putBoolean("flutter.overlay_visible", false)
-                .putString("flutter.current_pkg", current)
-                .putLong("flutter.current_session_start_ms", sessionStartMs)
-                .apply()
+            publishLive(timer = false, visible = false, pkg = current)
             return
         }
 
-        val overlayText = when {
-            isLauncher -> {
-                val unlocks = getUnlockCount()
-                // Add live launcher session so the counter updates every tick (not frozen)
-                val storedMs = getDeviceDailyMs()
-                val liveMs = storedMs + (System.currentTimeMillis() - sessionStartMs)
-                val elapsed = System.currentTimeMillis() - sessionStartMs
-                // Only show unlock count if user landed on launcher directly from an unlock
-                // (ACTION_USER_PRESENT fired within 5s before this session started).
-                // Home/back-button transitions skip the count and wait 5s before showing time.
-                val directUnlockToLauncher = lastUnlockMs > 0L &&
-                    (sessionStartMs - lastUnlockMs) < 5_000L
-                when {
-                    directUnlockToLauncher && elapsed < 5_000L -> "$unlocks×"
-                    elapsed < 5_000L -> ""   // suppress during 5s delay for home/back transitions
-                    else -> formatTime(liveMs)
-                }
-            }
-            else -> {
-                val ms = getDailyMs(current) + (System.currentTimeMillis() - sessionStartMs)
-                formatTime(ms)
-            }
-        }
+        // Only the launcher waits: passing through it to switch apps shows nothing,
+        // except right after an unlock (ACTION_USER_PRESENT within 5 s before the session).
+        val directUnlockToLauncher = lastUnlockMs > 0L && (sessionStartMs - lastUnlockMs) < 5_000L
+        val waiting = isLauncher && !directUnlockToLauncher &&
+            System.currentTimeMillis() - sessionStartMs < HOME_DELAY_MS
+        publishLive(timer = !waiting, visible = true, pkg = current)
+    }
 
-        prefs.edit()
-            .putString("flutter.overlay_text", overlayText)
-            .putBoolean("flutter.overlay_visible", true)
-            // Expose raw values for OverlayService feedback evaluation
-            .putString("flutter.current_pkg", current)
+    // overlay_text only gates the timer ("" hides it); OverlayService draws the live totals.
+    // The prefs file holds 90 days (~640 KB) and every apply() rewrites all of it: write on change only.
+    private var published: List<Any?>? = null
+
+    private fun publishLive(timer: Boolean, visible: Boolean, pkg: String?) {
+        val state = listOf(timer, visible, pkg, sessionStartMs)
+        if (state == published) return
+        published = state
+        val editor = prefs.edit()
+            .putString("flutter.overlay_text", if (timer) "on" else "")
+            .putBoolean("flutter.overlay_visible", visible)
             .putLong("flutter.current_session_start_ms", sessionStartMs)
-            .apply()
+        if (pkg == null) editor.remove("flutter.current_pkg") else editor.putString("flutter.current_pkg", pkg)
+        editor.apply()
     }
 
     private fun getCurrentApp(): String? {
@@ -361,29 +346,6 @@ class MonitoringService : Service() {
         prefs.edit().putLong(hourKey, prefs.safeGetCount(hourKey) + 1).apply()
     }
 
-    private fun getDailyMs(pkg: String): Long =
-        prefs.getLong("flutter.daily_ms_${pkg}_${today()}", 0L)
-
-    private fun getOpenCount(pkg: String): Int =
-        prefs.safeGetCount("flutter.open_count_${pkg}_${today()}").toInt()
-
-    private fun getUnlockCount(): Int =
-        prefs.safeGetCount("flutter.unlock_count_${today()}").toInt()
-
-    private fun getDeviceDailyMs(): Long =
-        prefs.getLong("flutter.device_daily_ms_${today()}", 0L)
-
-    // ── Formatação ────────────────────────────────────────────────────────────
-
-    private fun formatTime(ms: Long): String {
-        val totalSec = ms / 1000
-        val hours = totalSec / 3600
-        val mins = (totalSec % 3600) / 60
-        val secs = totalSec % 60
-        return if (hours > 0) "%d:%02d:%02d".format(hours, mins, secs)
-               else "%d:%02d".format(mins, secs)
-    }
-
     // ── Notificação ───────────────────────────────────────────────────────────
 
     private fun buildNotification(): Notification {
@@ -440,6 +402,8 @@ class MonitoringService : Service() {
 
     companion object {
         const val NOTIF_ID = 1002
+        // On the launcher: passing through it to switch apps shows nothing.
+        const val HOME_DELAY_MS = 2_000L
         var isRunning = false
     }
 }

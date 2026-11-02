@@ -29,14 +29,14 @@ the app should stop counting after N minutes without a touch (no public API repo
 
 ## B3 — back from a system settings screen lands on the home screen
 
-**Symptom:** 2026-11-02, Redmi (MIUI 14): from the setup flow, "Configurar ↗" opens the overlay
-permission screen; the system back there goes to the home screen, not AppTime, so the user has to
-reopen the app by hand. Dropping `FLAG_ACTIVITY_NEW_TASK` when called from an activity
-(`SystemSettings.openFirst`) did not change it.
+**Symptom:** 2026-11-02, Redmi (MIUI 14): back from a system screen opened by the setup flow went
+to the home screen, so the user had to reopen AppTime by hand.
 
-**Where to look:** which task the settings activity lands in (`dumpsys activity activities` while it
-is open); MIUI may redirect `ACTION_MANAGE_OVERLAY_PERMISSION` to its own security-center activity
-in another task. Try `startActivityForResult`, and check the other five screens too.
+**Cause (traced 2026-11-02, not ours):** the screens open inside AppTime's task and back returns to
+it, overlay granted or not. Switching autostart **off** makes `com.miui.securitycenter` force-stop
+AppTime (logcat `Force stopping com.lsf.apptime ... from process:com.miui.securitycenter`): activity,
+services and broadcasts gone until reopened. Switching it on keeps the app alive. No log of the first
+sighting on the overlay screen. Open: delete this once Lucas rules it vendor behaviour.
 
 <!-- entropy:start -->
 ## Entropy
@@ -134,7 +134,7 @@ in another task. Try `startActivityForResult`, and check the other five screens 
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/v1-impl is 1 ahead of main
+- . — feature/v1-impl is 2 ahead of main
 
 ### Local branches already merged into their base
 

@@ -22,6 +22,6 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();
-    expect(find.text('Configurações'), findsWidgets);
+    expect(find.text('Ajustes'), findsWidgets);
   });
 }

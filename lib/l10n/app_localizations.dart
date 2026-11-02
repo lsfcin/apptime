@@ -79,6 +79,7 @@ abstract class AppLocalizations {
   String setupProgress(int step, int total);
   String get setupBanner;
   String get setupRelaunch;
+  String get setupBannerAutostart;
   // Settings checklist
   String get sectionSetup;
   String get setupLabelNotifications;

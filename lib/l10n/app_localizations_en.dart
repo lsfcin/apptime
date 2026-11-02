@@ -62,6 +62,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String setupProgress(int step, int total) => '$step of $total';
   @override String get setupBanner => 'AppTime stopped working. Tap to turn it back on.';
   @override String get setupRelaunch => 'Turn on';
+  @override String get setupBannerAutostart => 'If the phone restarts, AppTime will not come back on its own.';
   @override String get sectionSetup => 'Running';
   @override String get setupLabelNotifications => 'Notifications';
   @override String get setupLabelAutostart => 'Autostart';

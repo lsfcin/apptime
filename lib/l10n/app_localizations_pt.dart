@@ -6,7 +6,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get navAnalysis => 'Análise';
   @override String get navInsights => 'Insights';
   @override String get navMonitoring => 'Monit.';
-  @override String get navSettings => 'Config.';
+  @override String get navSettings => 'Ajustes';
 
   @override String get cancel => 'Cancelar';
   @override String get save => 'Salvar';
@@ -61,6 +61,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String setupProgress(int step, int total) => '$step de $total';
   @override String get setupBanner => 'O AppTime parou de funcionar. Toque para religar.';
   @override String get setupRelaunch => 'Religar';
+  @override String get setupBannerAutostart => 'Se o celular reiniciar, o AppTime não volta sozinho.';
   @override String get sectionSetup => 'Funcionamento';
   @override String get setupLabelNotifications => 'Notificações';
   @override String get setupLabelAutostart => 'Início automático';
@@ -71,7 +72,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get setupConfirmed => 'Você confirmou';
   @override String get setupAdjust => 'Ajustar';
 
-  @override String get settingsTitle => 'Configurações';
+  @override String get settingsTitle => 'Ajustes';
   @override String get sectionMonitoring => 'Monitoramento';
   @override String get sectionOverlay => 'Visor flutuante';
   @override String get showOverlay => 'Exibir visor de uso';

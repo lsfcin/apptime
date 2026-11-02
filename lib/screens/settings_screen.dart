@@ -90,8 +90,15 @@ class _SettingsScreenState extends State<SettingsScreen>
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
-          if (_check?.broken ?? false) ...[
+          if (_check?.stopped ?? false) ...[
             _SetupBanner(text: l10n.setupBanner, action: l10n.setupRelaunch, onTap: _openSetupFlow),
+            const SizedBox(height: AppSpacing.md),
+          ] else if (_check?.autostartOff ?? false) ...[
+            _SetupBanner(
+              text: l10n.setupBannerAutostart,
+              action: l10n.setupAdjust,
+              onTap: () => SetupCheck.open(SetupItem.autostart),
+            ),
             const SizedBox(height: AppSpacing.md),
           ],
           // ── Running: shown only while something is off ─────────────────

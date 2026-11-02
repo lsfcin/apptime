@@ -39,10 +39,13 @@ void main() {
     expect(confirmed.isConfirmedOnly(SetupItem.autostart), isTrue);
   });
 
-  test('broken: a missing permission or autostart known off — not the optional items', () {
-    expect(_check(overlay: false, background: _allOn).broken, isTrue);
-    expect(_check(background: {..._allOn, 'autostartScreen': 'miui', 'autostartAllowed': false}).broken, isTrue);
-    expect(_check(background: {'autostartScreen': 'other'}).broken, isFalse);
+  test('stopped: only a missing permission — autostart off is its own warning', () {
+    expect(_check(overlay: false, background: _allOn).stopped, isTrue);
+    final autostartOff = _check(background: {..._allOn, 'autostartScreen': 'miui', 'autostartAllowed': false});
+    expect(autostartOff.stopped, isFalse);
+    expect(autostartOff.autostartOff, isTrue);
+    expect(_check(background: {'autostartScreen': 'other'}).stopped, isFalse);
+    expect(_check(background: {'autostartScreen': 'other'}).autostartOff, isFalse);
   });
 
   test('only overlay and usage are required', () {

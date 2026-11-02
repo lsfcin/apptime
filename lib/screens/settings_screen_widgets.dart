@@ -41,7 +41,7 @@ class _SetupTile extends StatelessWidget {
   }
 }
 
-/// Shown on top only when something that stops the timer turned off.
+/// Shown on top only while the timer is stopped, or will not survive a reboot.
 class _SetupBanner extends StatelessWidget {
   const _SetupBanner({required this.text, required this.action, required this.onTap});
   final String text;

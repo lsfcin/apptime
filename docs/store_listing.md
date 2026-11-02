@@ -66,7 +66,7 @@ Mais de 40 cards com base em pesquisas, organizados em Alertas e Soluções — 
 Ative ou desative o contador e defina metas independentes para cada app.
 
 **Privacidade**
-Todos os dados ficam no seu dispositivo. Sem internet. Sem contas. Sem SDKs de analytics. Sem servidores. Os registros são apagados automaticamente após 90 dias. Você pode apagar tudo a qualquer momento nas Configurações.
+Todos os dados ficam no seu dispositivo. Sem internet. Sem contas. Sem SDKs de analytics. Sem servidores. Os registros são apagados automaticamente após 90 dias. Você pode apagar tudo a qualquer momento em Ajustes.
 
 *Para fins informativos e de produtividade. Não é um dispositivo ou tratamento médico.*
 

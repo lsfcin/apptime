@@ -65,9 +65,11 @@ class SetupCheck {
 
   List<SetupItem> get missing => items.where((i) => !isOn(i)).toList();
 
-  /// What stops the timer: the two permissions, and autostart once known to be off.
-  bool get broken =>
-      !isOn(SetupItem.overlay) || !isOn(SetupItem.usage) || state[SetupItem.autostart] == false;
+  /// The timer is stopped now: one of the two permissions is off.
+  bool get stopped => !isOn(SetupItem.overlay) || !isOn(SetupItem.usage);
+
+  /// The timer runs now but will not come back after a reboot.
+  bool get autostartOff => state[SetupItem.autostart] == false;
 
   static Future<void> open(SetupItem item) => switch (item) {
         SetupItem.overlay => ServiceChannel.requestOverlayPermission(),

@@ -28,10 +28,9 @@ void main() async {
   final status = await ServiceChannel.getStartupStatus();
   final allGranted = status.overlayGranted && status.usageGranted;
 
-  // Auto-start monitoring on first use once permissions are granted.
-  if (allGranted && !storage.monitoringEverStarted) {
+  // Resume monitoring unless the user stopped it (a reinstall kills the services).
+  if (allGranted && !status.isRunning && storage.monitoringEnabled != false) {
     await ServiceChannel.startMonitoring();
-    storage.monitoringEverStarted = true;
   }
 
   runApp(AppTimeApp(

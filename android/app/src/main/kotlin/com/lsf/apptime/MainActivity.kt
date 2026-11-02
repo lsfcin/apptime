@@ -3,7 +3,6 @@ package com.lsf.apptime
 import android.app.AppOpsManager
 import android.content.Intent
 import android.content.pm.ApplicationInfo
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import io.flutter.embedding.android.FlutterActivity
@@ -21,34 +20,48 @@ class MainActivity : FlutterActivity() {
             .setMethodCallHandler { call, result ->
                 when (call.method) {
                     "startMonitoring" -> {
-                        startService(Intent(this, OverlayService::class.java))
-                        startService(Intent(this, MonitoringService::class.java))
+                        MonitoringSwitch.turnOn(this)
                         result.success(null)
                     }
                     "stopMonitoring" -> {
-                        stopService(Intent(this, OverlayService::class.java))
-                        stopService(Intent(this, MonitoringService::class.java))
+                        MonitoringSwitch.turnOff(this)
                         result.success(null)
                     }
                     "isRunning" -> result.success(isServiceRunning(MonitoringService::class.java))
                     "requestOverlayPermission" -> {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            startActivity(
-                                Intent(
-                                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                    Uri.parse("package:$packageName")
-                                )
-                            )
-                        }
+                        SystemSettings.openOverlay(this)
                         result.success(null)
                     }
+                    "openAutostartSettings" -> {
+                        SystemSettings.openAutostart(this)
+                        result.success(null)
+                    }
+                    "requestIgnoreBatteryOptimizations" -> {
+                        SystemSettings.requestIgnoreBatteryOptimizations(this)
+                        result.success(null)
+                    }
+                    "openHibernationSettings" -> {
+                        SystemSettings.openHibernation(this)
+                        result.success(null)
+                    }
+                    "requestNotifications" -> {
+                        SystemSettings.requestNotifications(this)
+                        result.success(null)
+                    }
+                    "getBackgroundStatus" -> result.success(mapOf(
+                        "notificationsOn" to SystemSettings.areNotificationsOn(this),
+                        "batteryExempt" to SystemSettings.isIgnoringBatteryOptimizations(this),
+                        "hibernationExempt" to SystemSettings.isHibernationExempt(this),
+                        "autostartScreen" to SystemSettings.autostartScreen(this),
+                        "autostartAllowed" to SystemSettings.isAutostartAllowed(this),
+                    ))
                     "hasOverlayPermission" -> {
                         val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                             Settings.canDrawOverlays(this) else true
                         result.success(granted)
                     }
                     "requestUsagePermission" -> {
-                        startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+                        SystemSettings.openUsageAccess(this)
                         result.success(null)
                     }
                     "hasUsagePermission" -> result.success(hasUsagePermission())

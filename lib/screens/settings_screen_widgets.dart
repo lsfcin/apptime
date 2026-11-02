@@ -1,39 +1,72 @@
 // SettingsScreen helper widgets and private action methods: permission tile, section header, dialogs
 part of 'settings_screen.dart';
 
-// ── Permission tile ────────────────────────────────────────────────────────────
+// ── Setup checklist ────────────────────────────────────────────────────────────
 
-class _PermissionTile extends StatelessWidget {
-  const _PermissionTile({
+String _setupLabel(AppLocalizations l10n, SetupItem item) => switch (item) {
+      SetupItem.overlay => l10n.permFloatingWindow,
+      SetupItem.usage => l10n.permUsageStats,
+      SetupItem.notifications => l10n.setupLabelNotifications,
+      SetupItem.autostart => l10n.setupLabelAutostart,
+      SetupItem.battery => l10n.setupLabelBattery,
+      SetupItem.hibernation => l10n.setupLabelHibernation,
+    };
+
+class _SetupTile extends StatelessWidget {
+  const _SetupTile({
     required this.label,
-    required this.granted,
-    required this.grantLabel,
-    required this.grantedLabel,
-    required this.requiredLabel,
-    required this.onRequest,
+    required this.on,
+    required this.status,
+    required this.adjustLabel,
+    required this.onAdjust,
   });
 
   final String label;
-  final bool granted;
-  final String grantLabel;
-  final String grantedLabel;
-  final String requiredLabel;
-  final VoidCallback onRequest;
+  final bool on;
+  final String status;
+  final String adjustLabel;
+  final VoidCallback onAdjust;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(
-        granted ? Icons.check_circle : Icons.warning_amber_rounded,
-        color: granted
-            ? AppColors.success
-            : Theme.of(context).colorScheme.error,
+        on ? Icons.check_circle : Icons.warning_amber_rounded,
+        color: on ? AppColors.success : Theme.of(context).colorScheme.error,
       ),
       title: Text(label),
-      subtitle: Text(granted ? grantedLabel : requiredLabel),
-      trailing: granted
-          ? null
-          : TextButton(onPressed: onRequest, child: Text(grantLabel)),
+      subtitle: Text(status),
+      trailing: on ? null : TextButton(onPressed: onAdjust, child: Text(adjustLabel)),
+    );
+  }
+}
+
+/// Shown on top only when something that stops the timer turned off.
+class _SetupBanner extends StatelessWidget {
+  const _SetupBanner({required this.text, required this.action, required this.onTap});
+  final String text;
+  final String action;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Card(
+      color: scheme.errorContainer,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Row(children: [
+            Expanded(
+              child: Text(text,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: scheme.onErrorContainer)),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            FilledButton(onPressed: onTap, child: Text(action)),
+          ]),
+        ),
+      ),
     );
   }
 }

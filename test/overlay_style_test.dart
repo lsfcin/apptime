@@ -23,7 +23,10 @@ void main() {
       final storage = await StorageService.init();
       const channel = MethodChannel('apptime/service');
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (_) async => false);
+          .setMockMethodCallHandler(
+              channel, (call) async => call.method == 'getBackgroundStatus'
+                  ? const {'notificationsOn': true, 'batteryExempt': true, 'hibernationExempt': true}
+                  : call.method.startsWith('has'));
       addTearDown(() {
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(channel, null);

@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../l10n/index.dart';
 import '../services/index.dart';
 import '../theme/index.dart';
+import 'onboarding_screen.dart';
 
 part 'settings_screen_widgets.dart';
 part 'settings_screen_sections.dart';
@@ -27,8 +28,7 @@ class _SettingsScreenState extends State<SettingsScreen>
   StorageService get _s => widget.storage;
 
   bool _isRunning = false;
-  bool _hasOverlayPermission = false;
-  bool _hasUsagePermission = false;
+  SetupCheck? _check;
 
   @override
   void initState() {
@@ -49,21 +49,26 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   Future<void> _refreshStatus() async {
-    final results = await Future.wait([
-      ServiceChannel.isRunning(),
-      ServiceChannel.hasOverlayPermission(),
-      ServiceChannel.hasUsagePermission(),
-    ]);
+    final running = await ServiceChannel.isRunning();
+    final check = await SetupCheck.load(_s);
     if (mounted) {
       setState(() {
-        _isRunning = results[0];
-        _hasOverlayPermission = results[1];
-        _hasUsagePermission = results[2];
+        _isRunning = running;
+        _check = check;
       });
     }
   }
 
-  bool get _allGranted => _hasOverlayPermission && _hasUsagePermission;
+  bool get _allGranted =>
+      _check != null && _check!.isOn(SetupItem.overlay) && _check!.isOn(SetupItem.usage);
+
+  Future<void> _openSetupFlow() async {
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) =>
+          OnboardingScreen(storage: _s, onLocaleChange: widget.onLocaleChange, firstRun: false),
+    ));
+    await _refreshStatus();
+  }
 
   Future<void> _toggleMonitoring() async {
     if (!_allGranted) return;
@@ -85,38 +90,29 @@ class _SettingsScreenState extends State<SettingsScreen>
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
-          // ── Permissions ────────────────────────────────────────────────
-          _SectionHeader(l10n.sectionPermissions),
-          Card(
-            child: Column(
-              children: [
-                _PermissionTile(
-                  label: l10n.permFloatingWindow,
-                  granted: _hasOverlayPermission,
-                  grantLabel: l10n.permGrant,
-                  grantedLabel: l10n.permGranted,
-                  requiredLabel: l10n.permRequired,
-                  onRequest: () async {
-                    await ServiceChannel.requestOverlayPermission();
-                    await _refreshStatus();
-                  },
-                ),
-                const Divider(height: 1, indent: 16),
-                _PermissionTile(
-                  label: l10n.permUsageStats,
-                  granted: _hasUsagePermission,
-                  grantLabel: l10n.permGrant,
-                  grantedLabel: l10n.permGranted,
-                  requiredLabel: l10n.permRequired,
-                  onRequest: () async {
-                    await ServiceChannel.requestUsagePermission();
-                    await _refreshStatus();
-                  },
-                ),
-              ],
+          if (_check?.broken ?? false) ...[
+            _SetupBanner(text: l10n.setupBanner, action: l10n.setupRelaunch, onTap: _openSetupFlow),
+            const SizedBox(height: AppSpacing.md),
+          ],
+          // ── Running: shown only while something is off ─────────────────
+          if (_check != null && _check!.missing.isNotEmpty) ...[
+            _SectionHeader(l10n.sectionSetup),
+            Card(
+              child: Column(children: [
+                for (final item in _check!.items)
+                  _SetupTile(
+                    label: _setupLabel(l10n, item),
+                    on: _check!.isOn(item),
+                    status: _check!.isConfirmedOnly(item) && _check!.isOn(item)
+                        ? l10n.setupConfirmed
+                        : _check!.isOn(item) ? l10n.setupOn : l10n.setupOff,
+                    adjustLabel: l10n.setupAdjust,
+                    onAdjust: () => SetupCheck.open(item),
+                  ),
+              ]),
             ),
-          ),
-          const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
+          ],
 
           // ── Monitoring start/stop ──────────────────────────────────────
           _SectionHeader(l10n.sectionMonitoring),

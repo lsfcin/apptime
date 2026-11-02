@@ -15,47 +15,63 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
 
   @override String get permFloatingWindow => 'Janela flutuante';
   @override String get permUsageStats => 'Estatísticas de uso';
-  @override String get permGranted => 'Concedida';
-  @override String get permRequired => 'Necessária';
-  @override String get permGrant => 'Conceder';
   @override String get insightOfDay => 'Insight do dia';
   @override String get insightViewSource => 'Ver fonte';
-  @override String get monitoringTitle => 'Contador';
   @override String get monitoringActive => 'Ativo — contador mostrando uso em tempo real.';
   @override String get monitoringInactive => 'Inativo. Toque em Iniciar.';
   @override String get monitoringNoPerms => 'Conceda as permissões acima para iniciar.';
   @override String get monitoringDesc =>
-      'O visor exibe quantas vezes você abriu o app (5s) e o tempo acumulado.';
+      'O visor exibe o tempo de hoje no app aberto.';
   @override String get actionStart => 'Iniciar';
   @override String get actionStop => 'Parar';
 
-  @override String get onboardWelcomeTitle => 'Bem-vindo ao AppTime';
-  @override String get onboardWelcomeBody =>
-      'Consciência sem bloqueio.\n\n'
-      'O AppTime mostra, em tempo real, quantas vezes você abriu cada app '
-      'e quanto tempo você passou nele — direto na sua tela, como um '
-      'relógio discreto.\n\n'
-      'Precisamos de 2 permissões para funcionar.';
+  static const _enable = 'Na próxima tela de configuração que vai abrir, habilite o AppTime.';
+  @override List<String> get setupWelcome =>
+      ['O AppTime mostra seu tempo de hoje em cada app.', 'Sem bloquear nada. Só para você ver.'];
+  @override List<String> get setupOverlay => ['O tempo aparece ao lado da câmera.', _enable];
+  @override List<String> get setupUsage =>
+      ['Para contar, o AppTime vê qual app está aberto.', 'Nada sai do seu celular.', _enable];
+  @override List<String> get setupNotifications =>
+      ['Uma notificação discreta mostra que o AppTime está ligado.', 'Toque em Permitir.'];
+  @override List<String> get setupAutostart =>
+      ['Sem isso, o AppTime não volta quando o celular reinicia.', 'Na lista, ache o AppTime e ligue a chave.'];
+  @override List<String> get setupBattery => [
+        'A economia de bateria pode fechar o AppTime.',
+        'Ele gasta pouco: cerca de 1% por dia.',
+        'Toque em Permitir.',
+      ];
+  @override List<String> get setupHibernation => [
+        'Sem uso, o Android pode tirar as permissões do AppTime.',
+        'Na próxima tela de configuração que vai abrir, desligue “Pausar atividade do app”.',
+      ];
+  @override String get setupAutostartTip => 'Dica: toque na lupa e digite AppTime.';
+  @override String get setupRetryEnable => 'De novo, na tela de configuração, habilite o AppTime.';
+  @override String get setupRetryAutostart => 'De novo, na lista, ache o AppTime e ligue a chave.';
+  @override String get setupRetryHibernation =>
+      'De novo, na tela de configuração, desligue “Pausar atividade do app”.';
+  @override String get setupAskAutostart => 'Você ligou o AppTime na lista?';
+  @override String get setupYesDone => 'Sim, liguei';
+  @override String get setupNotYet => 'Ainda não';
+  @override String get setupDone => 'Pronto.';
   @override String get onboardStart => 'Começar';
-  @override String get onboardPermOverlayTitle => 'Janela flutuante';
-  @override String get onboardPermOverlayDesc =>
-      'O AppTime precisa desta permissão para mostrar o '
-      'contador de uso em tempo real sobre outros apps, sem '
-      'interromper o que você está fazendo.';
-  @override String get onboardPermUsageTitle => 'Estatísticas de uso';
-  @override String get onboardPermUsageDesc =>
-      'Esta permissão permite que o AppTime acesse quais apps '
-      'estão em primeiro plano para contabilizar seu tempo de uso com '
-      'precisão.';
-  @override String get permGrantedLabel => 'Permissão concedida';
-  @override String get permSettingsHint =>
-      'Você será direcionado para as configurações do sistema. '
-      'Conceda a permissão e volte ao app.';
-  @override String get openSettings => 'Abrir configurações';
+  @override String get setupConfigure => 'Configurar';
+  @override String get setupOpenList => 'Abrir lista';
   @override String get continueAction => 'Continuar';
+  @override String get setupLater => 'Depois';
+  @override String setupProgress(int step, int total) => '$step de $total';
+  @override String get setupBanner => 'O AppTime parou de funcionar. Toque para religar.';
+  @override String get setupRelaunch => 'Religar';
+  @override String get sectionSetup => 'Funcionamento';
+  @override String get setupLabelNotifications => 'Notificações';
+  @override String get setupLabelAutostart => 'Início automático';
+  @override String get setupLabelBattery => 'Sem economia de bateria';
+  @override String get setupLabelHibernation => 'Sem pausa por falta de uso';
+  @override String get setupOn => 'Ligado';
+  @override String get setupOff => 'Desligado';
+  @override String get setupConfirmed => 'Você confirmou';
+  @override String get setupAdjust => 'Ajustar';
 
   @override String get settingsTitle => 'Configurações';
-  @override String get sectionPermissions => 'Permissões';
   @override String get sectionMonitoring => 'Monitoramento';
   @override String get sectionOverlay => 'Visor flutuante';
   @override String get showOverlay => 'Exibir visor de uso';

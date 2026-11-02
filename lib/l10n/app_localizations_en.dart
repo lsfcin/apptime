@@ -16,46 +16,63 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
 
   @override String get permFloatingWindow => 'Floating window';
   @override String get permUsageStats => 'Usage statistics';
-  @override String get permGranted => 'Granted';
-  @override String get permRequired => 'Required';
-  @override String get permGrant => 'Grant';
   @override String get insightOfDay => 'Insight of the day';
   @override String get insightViewSource => 'View source';
-  @override String get monitoringTitle => 'Counter';
   @override String get monitoringActive => 'Active — overlay showing real-time usage.';
   @override String get monitoringInactive => 'Inactive. Tap Start.';
   @override String get monitoringNoPerms => 'Grant the permissions above to start.';
   @override String get monitoringDesc =>
-      'The overlay shows how many times you opened the app (5s) and cumulative time.';
+      "The overlay shows today's time in the open app.";
   @override String get actionStart => 'Start';
   @override String get actionStop => 'Stop';
 
-  @override String get onboardWelcomeTitle => 'Welcome to AppTime';
-  @override String get onboardWelcomeBody =>
-      'Awareness without blocking.\n\n'
-      'AppTime shows, in real time, how many times you opened each app '
-      'and how long you spent on it — right on your screen, like a '
-      'discreet clock.\n\n'
-      'We need 2 permissions to work.';
+  static const _enable = 'On the settings screen that opens next, turn AppTime on.';
+  @override List<String> get setupWelcome =>
+      ["AppTime shows today's time in each app.", 'Nothing is blocked. It is just for you to see.'];
+  @override List<String> get setupOverlay => ['The time appears next to the camera.', _enable];
+  @override List<String> get setupUsage =>
+      ['To count, AppTime sees which app is open.', 'Nothing leaves your phone.', _enable];
+  @override List<String> get setupNotifications =>
+      ['A quiet notification shows AppTime is on.', 'Tap Allow.'];
+  @override List<String> get setupAutostart =>
+      ['Without this, AppTime does not come back after a restart.', 'In the list, find AppTime and turn it on.'];
+  @override List<String> get setupBattery => [
+        'Battery saving can close AppTime.',
+        'It uses little: about 1% a day.',
+        'Tap Allow.',
+      ];
+  @override List<String> get setupHibernation => [
+        "Unused, Android may take AppTime's permissions away.",
+        'On the settings screen that opens next, turn off “Pause app activity if unused”.',
+      ];
+  @override String get setupAutostartTip => 'Tip: tap the magnifier and type AppTime.';
+  @override String get setupRetryEnable => 'Once more, on the settings screen, turn AppTime on.';
+  @override String get setupRetryAutostart => 'Once more, in the list, find AppTime and turn it on.';
+  @override String get setupRetryHibernation =>
+      'Once more, on the settings screen, turn off “Pause app activity if unused”.';
+  @override String get setupAskAutostart => 'Did you turn AppTime on in the list?';
+  @override String get setupYesDone => 'Yes, I did';
+  @override String get setupNotYet => 'Not yet';
+  @override String get setupDone => 'Done.';
   @override String get onboardStart => 'Get started';
-  @override String get onboardPermOverlayTitle => 'Floating window';
-  @override String get onboardPermOverlayDesc =>
-      'AppTime needs this permission to show the '
-      'real-time usage counter over other apps, without '
-      'interrupting what you are doing.';
-  @override String get onboardPermUsageTitle => 'Usage statistics';
-  @override String get onboardPermUsageDesc =>
-      'This permission allows AppTime to access which apps '
-      'are in the foreground to accurately track your usage time.';
-  @override String get permGrantedLabel => 'Permission granted';
-  @override String get permSettingsHint =>
-      'You will be taken to the system settings. '
-      'Grant the permission and return to the app.';
-  @override String get openSettings => 'Open settings';
+  @override String get setupConfigure => 'Set up';
+  @override String get setupOpenList => 'Open list';
   @override String get continueAction => 'Continue';
+  @override String get setupLater => 'Later';
+  @override String setupProgress(int step, int total) => '$step of $total';
+  @override String get setupBanner => 'AppTime stopped working. Tap to turn it back on.';
+  @override String get setupRelaunch => 'Turn on';
+  @override String get sectionSetup => 'Running';
+  @override String get setupLabelNotifications => 'Notifications';
+  @override String get setupLabelAutostart => 'Autostart';
+  @override String get setupLabelBattery => 'No battery saving';
+  @override String get setupLabelHibernation => 'No pause when unused';
+  @override String get setupOn => 'On';
+  @override String get setupOff => 'Off';
+  @override String get setupConfirmed => 'You confirmed';
+  @override String get setupAdjust => 'Adjust';
 
   @override String get settingsTitle => 'Settings';
-  @override String get sectionPermissions => 'Permissions';
   @override String get sectionMonitoring => 'Monitoring';
   @override String get sectionOverlay => 'Overlay';
   @override String get showOverlay => 'Show usage overlay';

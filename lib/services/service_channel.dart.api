@@ -8,6 +8,11 @@ class ServiceChannel
   static Future<bool> hasOverlayPermission() async
   static Future<void> requestUsagePermission()
   static Future<bool> hasUsagePermission() async
+  static Future<void> openAutostartSettings()
+  static Future<void> requestIgnoreBatteryOptimizations()
+  static Future<void> openHibernationSettings()
+  static Future<void> requestNotifications()
+  static Future<Map<Object?, Object?>> getBackgroundStatus() async
   static Future<Map<String, String>> getInstalledAppLabels() async
   static Future<Set<String>> getLaunchers() async
   static Future<(

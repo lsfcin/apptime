@@ -36,8 +36,12 @@ extension StorageServiceSettings on StorageService {
   bool get onboardingDone => _prefs.getBool('onboarding_done') ?? false;
   set onboardingDone(bool v) => _prefs.setBool('onboarding_done', v);
 
-  bool get monitoringEverStarted => _prefs.getBool('monitoring_ever_started') ?? false;
-  set monitoringEverStarted(bool v) => _prefs.setBool('monitoring_ever_started', v);
+  /// Written by Kotlin (MonitoringSwitch) on Iniciar/Parar; null until the first start.
+  bool? get monitoringEnabled => _prefs.getBool('monitoring_enabled');
+
+  /// "Sim, liguei" on a device that hides its autostart state.
+  bool get autostartConfirmed => _prefs.getBool('autostart_confirmed') ?? false;
+  set autostartConfirmed(bool v) => _prefs.setBool('autostart_confirmed', v);
 
   // ── Language ──
 

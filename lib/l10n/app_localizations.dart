@@ -43,15 +43,11 @@ abstract class AppLocalizations {
   String get noData;
   String get collectingData;
 
-  // ── HomeScreen ───────────────────────────────────────────────────────────────
+  // ── Settings: checklist, monitoring ──────────────────────────────────────────
   String get permFloatingWindow;
   String get permUsageStats;
-  String get permGranted;
-  String get permRequired;
-  String get permGrant;
   String get insightOfDay;
   String get insightViewSource;
-  String get monitoringTitle;
   String get monitoringActive;
   String get monitoringInactive;
   String get monitoringNoPerms;
@@ -59,22 +55,43 @@ abstract class AppLocalizations {
   String get actionStart;
   String get actionStop;
 
-  // ── OnboardingScreen ─────────────────────────────────────────────────────────
-  String get onboardWelcomeTitle;
-  String get onboardWelcomeBody;
+  // ── Setup flow (OnboardingScreen) — one sentence per screen ─────────────────
+  List<String> get setupWelcome;
+  List<String> get setupOverlay;
+  List<String> get setupUsage;
+  List<String> get setupNotifications;
+  List<String> get setupAutostart;
+  List<String> get setupBattery;
+  List<String> get setupHibernation;
+  String get setupAutostartTip;
+  String get setupRetryEnable;
+  String get setupRetryAutostart;
+  String get setupRetryHibernation;
+  String get setupAskAutostart;
+  String get setupYesDone;
+  String get setupNotYet;
+  String get setupDone;
   String get onboardStart;
-  String get onboardPermOverlayTitle;
-  String get onboardPermOverlayDesc;
-  String get onboardPermUsageTitle;
-  String get onboardPermUsageDesc;
-  String get permGrantedLabel;
-  String get permSettingsHint;
-  String get openSettings;
+  String get setupConfigure;
+  String get setupOpenList;
   String get continueAction;
+  String get setupLater;
+  String setupProgress(int step, int total);
+  String get setupBanner;
+  String get setupRelaunch;
+  // Settings checklist
+  String get sectionSetup;
+  String get setupLabelNotifications;
+  String get setupLabelAutostart;
+  String get setupLabelBattery;
+  String get setupLabelHibernation;
+  String get setupOn;
+  String get setupOff;
+  String get setupConfirmed;
+  String get setupAdjust;
 
   // ── SettingsScreen ───────────────────────────────────────────────────────────
   String get settingsTitle;
-  String get sectionPermissions;
   String get sectionMonitoring;
   String get sectionOverlay;
   String get showOverlay;

@@ -7,7 +7,8 @@ extension StorageServiceSettings on StorageService
   void toggleApp(String packageName)
   bool get onboardingDone
   set onboardingDone(bool v)
-  bool get monitoringEverStarted
-  set monitoringEverStarted(bool v)
+  bool? get monitoringEnabled
+  bool get autostartConfirmed
+  set autostartConfirmed(bool v)
   String? get languageCode
   set languageCode(String? v)

@@ -13,10 +13,10 @@
 
 | File | Interface | Description |
 |------|-----------|-------------|
-| [`index.dart`](index.dart) | — | **facade** — Facade for lib/: root navigation shell |
-| [`theme/index.dart`](theme/index.dart) | — | **facade** — Facade for theme/: theme |
-| [`utils/index.dart`](utils/index.dart) | — | **facade** — Facade for utils/: date, duration and app-info helpers |
-| [`widgets/index.dart`](widgets/index.dart) | — | **facade** — Facade for widgets/: shared widgets |
+| [`index.dart`](index.dart) | [`index.dart.api`](index.dart.api) | **facade** — Facade for lib/: root navigation shell |
+| [`theme/index.dart`](theme/index.dart) | [`theme/index.dart.api`](theme/index.dart.api) | **facade** — Facade for theme/: theme |
+| [`utils/index.dart`](utils/index.dart) | [`utils/index.dart.api`](utils/index.dart.api) | **facade** — Facade for utils/: date, duration and app-info helpers |
+| [`widgets/index.dart`](widgets/index.dart) | [`widgets/index.dart.api`](widgets/index.dart.api) | **facade** — Facade for widgets/: shared widgets |
 | [`main.dart`](main.dart) | [`main.dart.api`](main.dart.api) | App entry point: initializes Flutter, requests usage permissions, and routes to onboarding or home |
 | [`main_screen.dart`](main_screen.dart) | [`main_screen.dart.api`](main_screen.dart.api) | Main scaffold: bottom navigation between Home, Monitoring, Analytics, Insights, and Settings tabs |
 | [`theme/app_theme.dart`](theme/app_theme.dart) | [`theme/app_theme.dart.api`](theme/app_theme.dart.api) | App theme: color palette, text styles, and ThemeData for light and dark mode |

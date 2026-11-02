@@ -22,6 +22,21 @@ class ServiceChannel {
   static Future<bool> hasUsagePermission() async =>
       await _channel.invokeMethod<bool>('hasUsagePermission') ?? false;
 
+  static Future<void> openAutostartSettings() =>
+      _channel.invokeMethod('openAutostartSettings');
+  static Future<void> requestIgnoreBatteryOptimizations() =>
+      _channel.invokeMethod('requestIgnoreBatteryOptimizations');
+
+  static Future<void> openHibernationSettings() =>
+      _channel.invokeMethod('openHibernationSettings');
+
+  static Future<void> requestNotifications() => _channel.invokeMethod('requestNotifications');
+
+  /// `{notificationsOn, batteryExempt, hibernationExempt, autostartScreen?, autostartAllowed?}` —
+  /// parsed by [SetupCheck.fromStatus].
+  static Future<Map<Object?, Object?>> getBackgroundStatus() async =>
+      await _channel.invokeMethod<Map<Object?, Object?>>('getBackgroundStatus') ?? {};
+
   /// Returns a map of packageName → display label for all app-drawer-visible apps.
   static Future<Map<String, String>> getInstalledAppLabels() async {
     final raw = await _channel.invokeMethod<Map<Object?, Object?>>('getInstalledApps');

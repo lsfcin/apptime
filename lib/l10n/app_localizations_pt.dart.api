@@ -1,2 +1,3 @@
 // app_localizations_pt.dart
 class AppLocalizationsPt extends AppLocalizationsPtBase
+  static const _enable = 'Na próxima tela de configuração que vai abrir, habilite o AppTime.';

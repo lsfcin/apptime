@@ -1,0 +1,12 @@
+// setup_check.dart
+enum SetupItem
+class SetupCheck
+  factory SetupCheck.fromStatus(
+  static Future<SetupCheck> load(StorageService storage) async
+  List<SetupItem> get items
+  bool isOn(SetupItem item)
+  bool isConfirmedOnly(SetupItem item)
+  List<SetupItem> get missing
+  bool get broken
+  static Future<void> open(SetupItem item)
+  static bool isRequired(SetupItem item)

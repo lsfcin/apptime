@@ -1,113 +1,92 @@
-// Step widgets for OnboardingScreen: welcome step and permission step
+// Step widget for OnboardingScreen: one large sentence, its buttons appearing after a short pause
 part of 'onboarding_screen.dart';
 
-class _WelcomeStep extends StatelessWidget {
-  const _WelcomeStep({
-    required this.onNext,
-    required this.title,
-    required this.body,
-    required this.startLabel,
+/// The pause before a sentence's buttons appear, so they are read rather than tapped on reflex.
+/// Only the first time a sentence shows, and never under TalkBack.
+const kSentencePause = Duration(milliseconds: 800);
+
+class _SentenceView extends StatefulWidget {
+  const _SentenceView({
+    super.key,
+    required this.text,
+    required this.progress,
+    required this.primaryLabel,
+    required this.onPrimary,
+    required this.pause,
+    this.secondaryLabel,
+    this.onSecondary,
+    this.image,
+    this.tip,
   });
-  final VoidCallback onNext;
-  final String title;
-  final String body;
-  final String startLabel;
+
+  final String text;
+  final String? progress;
+  final String primaryLabel;
+  final VoidCallback onPrimary;
+  final String? secondaryLabel;
+  final VoidCallback? onSecondary;
+  final bool pause;
+  final String? image;
+  final String? tip;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      key: const ValueKey(0),
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Spacer(),
-        Icon(Icons.timer_outlined, size: 64, color: AppColors.primary),
-        const SizedBox(height: AppSpacing.lg),
-        Text(title, style: Theme.of(context).textTheme.headlineMedium),
-        const SizedBox(height: AppSpacing.md),
-        Text(body, style: Theme.of(context).textTheme.bodyMedium),
-        const Spacer(),
-        SizedBox(
-          width: double.infinity,
-          child: FilledButton(onPressed: onNext, child: Text(startLabel)),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-      ],
-    );
-  }
+  State<_SentenceView> createState() => _SentenceViewState();
 }
 
-class _PermissionStep extends StatelessWidget {
-  const _PermissionStep({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.granted,
-    required this.grantedLabel,
-    required this.settingsHint,
-    required this.openSettingsLabel,
-    required this.continueLabel,
-    required this.onGrant,
-    required this.onNext,
-  });
+class _SentenceViewState extends State<_SentenceView> {
+  bool _ready = false;
 
-  final IconData icon;
-  final String title;
-  final String description;
-  final bool granted;
-  final String grantedLabel;
-  final String settingsHint;
-  final String openSettingsLabel;
-  final String continueLabel;
-  final Future<void> Function() onGrant;
-  final VoidCallback? onNext;
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.pause) {
+      _ready = true;
+    } else {
+      Future.delayed(kSentencePause, () {
+        if (mounted) setState(() => _ready = true);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final ready = _ready || MediaQuery.of(context).accessibleNavigation;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (widget.progress != null)
+          Text(widget.progress!,
+              style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.outline)),
         const Spacer(),
-        Row(children: [
-          Icon(icon, size: 40, color: AppColors.primary),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Text(title, style: Theme.of(context).textTheme.headlineSmall),
-          ),
-        ]),
-        const SizedBox(height: AppSpacing.md),
-        Text(description, style: Theme.of(context).textTheme.bodyMedium),
-        const SizedBox(height: AppSpacing.lg),
-        if (granted)
-          Row(children: [
-            const Icon(Icons.check_circle, color: AppColors.success),
-            const SizedBox(width: AppSpacing.sm),
-            Text(grantedLabel,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: AppColors.success)),
-          ])
-        else
-          Text(settingsHint,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
-                  )),
+        Text(widget.text, style: theme.textTheme.headlineMedium?.copyWith(height: 1.3)),
+        if (widget.image != null) ...[
+          const SizedBox(height: AppSpacing.lg),
+          Image.asset(widget.image!),
+        ],
+        if (widget.tip != null) ...[
+          const SizedBox(height: AppSpacing.md),
+          Text(widget.tip!, style: theme.textTheme.bodyLarge),
+        ],
         const Spacer(),
-        if (!granted)
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton.icon(
-              onPressed: onGrant,
-              icon: const Icon(Icons.open_in_new, size: 18),
-              label: Text(openSettingsLabel),
-            ),
+        IgnorePointer(
+          ignoring: !ready,
+          child: AnimatedOpacity(
+            opacity: ready ? 1 : 0,
+            duration: const Duration(milliseconds: 250),
+            child: Column(children: [
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(onPressed: widget.onPrimary, child: Text(widget.primaryLabel)),
+              ),
+              if (widget.secondaryLabel != null)
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(onPressed: widget.onSecondary, child: Text(widget.secondaryLabel!)),
+                ),
+            ]),
           ),
-        if (granted && onNext != null)
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(onPressed: onNext, child: Text(continueLabel)),
-          ),
+        ),
         const SizedBox(height: AppSpacing.sm),
       ],
     );

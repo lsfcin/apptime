@@ -69,7 +69,8 @@ class OverlayService : Service() {
         val today = DateUtils.today()
         val pkg = prefs.getString("flutter.current_pkg", null)
         val inApp = pkg != null && !AppConstants.isLauncher(pkg, launchers)
-        val usage = LiveUsage.read(pkg, inApp, today, now, prefs::safeGetCount, usualCache)
+        val disabled = AppConstants.parseDisabledApps(prefs)
+        val usage = LiveUsage.read(pkg, inApp, today, now, prefs::safeGetCount, usualCache, disabled)
         val total = if (inApp) usage.appMs else usage.phoneMs
         val usual = usage.appUsual ?: usage.phoneUsual
         val enabled = prefs.getBoolean("flutter.overlay_enabled", true)

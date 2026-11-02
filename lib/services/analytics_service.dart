@@ -69,8 +69,8 @@ class AnalyticsService {
       summaries.add(DaySummary(
         date: i == 0 ? 'today' : dateStr,
         totalMs: i == 0
-            ? _storage.getDeviceTodayMs()
-            : _storage.getDeviceDailyMs(date: dateStr),
+            ? _storage.getDeviceDailyMs(disabled: disabled)
+            : _storage.getDeviceDailyMs(date: dateStr, disabled: disabled),
         unlockCount: i == 0
             ? _storage.getUnlockToday()
             : _storage.getUnlockCount(date: dateStr),

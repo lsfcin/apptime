@@ -22,12 +22,15 @@ extension StorageServiceQueries on StorageService {
   }
 
   /// Average device hourly ms (24 values) across [dates].
-  List<int> avgDeviceHourlyMs(List<String> dates) => List.generate(24, (h) {
-        if (dates.isEmpty) return 0;
-        final total =
-            dates.fold<int>(0, (s, d) => s + getDeviceHourlyMs(date: d, hour: h));
-        return total ~/ dates.length;
-      });
+  List<int> avgDeviceHourlyMs(List<String> dates) {
+    final disabled = disabledApps;
+    return List.generate(24, (h) {
+      if (dates.isEmpty) return 0;
+      final total = dates.fold<int>(
+          0, (s, d) => s + getDeviceHourlyMs(date: d, hour: h, disabled: disabled));
+      return total ~/ dates.length;
+    });
+  }
 
   /// For [dates], returns pkg → 24-element list of average hourly ms.
   /// Only packages that have any non-zero data in those dates are included.

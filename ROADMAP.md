@@ -126,9 +126,6 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
 - **Battery: confirm "cerca de 1% por dia"** over a full day off the cable, night included
   (`dumpsys batterystats --reset`). 2026-11-02 estimate: ~1.0 s CPU per screen-on minute, ~0 screen off
   → ~0.5%/day at 4 h screen-on, ~0.8% at 6 h. What remains is the 1 s tick's `UsageEvents` query.
-- **Setup flow leftovers** (2026-11-02): Codex's copy suggestions, for Lucas to decide — banner without
-  "Toque para religar"; "o contador pode não voltar sozinho"; "Abrir configurações do Android". A
-  sentence does not scroll under a large font. The two overlay tests repeat one 4-line channel mock.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos). The bare
@@ -184,18 +181,6 @@ dir); `codex exec --skip-git-repo-check -s read-only -i a.png -i b.png - < promp
 must come on stdin, because `-i` swallows a trailing positional prompt and the run exits 0 with "No
 prompt provided". The binary ships in the VS Code extension:
 `~/.vscode/extensions/openai.chatgpt-*/bin/linux-x86_64/codex`.
-
-## Lucas, INBOX 2026-09-19
-
-- 🟡 **a disabled app should stop counting toward the phone's total screen time.** Today disabling
-  an app only removes it from the overlay and the per-app lists; the total keeps carrying it, so the
-  number the app shows disagrees with what the user believes they asked for. Decide first WHICH
-  total: the 04:00-boundary day key that every analytics window reads is also the series behind the
-  1d/7d/30d tabs and the 30-day trend, so excluding a package changes history, not just today's
-  figure. Excluding it at read time keeps the stored series honest and lets a re-enable restore the
-  past; excluding it at write time loses the data for good. Pick one before touching
-  `analytics_service.dart` — `disabledApps` is already stored as a JSON string via `setString`, so
-  the list is readable from both sides.
 
 ## Workspace drift, refiled from the wos list 2026-08-16
 

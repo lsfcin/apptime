@@ -79,7 +79,8 @@ lib/
 | `OverlayPlacement.kt` | Pure: cutout-side slot eligibility, icon-row centring and below-status-bar fallback |
 | `OverlayText.kt` | Pure: compact durations (pill and block), localized message headers, 7-real-day feedback floor |
 | `LiveUsage.kt` | Pure: stored daily totals plus unflushed app/launcher session for both timer and messages |
-| `UsualCache.kt` | Per-package/phone usual cache shared by timer and messages; invalidated on 04:00 day-key change |
+| `UsualCache.kt` | Per-package/phone usual cache shared by timer and messages; invalidated on 04:00 day-key change or a new unmonitored set |
+| `PhoneTotal.kt` | Pure: a day's phone total minus unmonitored apps, mirrored by `getDeviceDailyMs`/`getDeviceHourlyMs` in Dart |
 | `MessageDisplay.kt` | Pure: 6.5 s message lifetime and foreground-package cancellation |
 | `FeedbackEngine.kt` | Consumes shared live usage, asks MessageRules, schedules 6.5 s display; cadence persisted before display and retained on cancellation |
 | `MessageRules.kt` | Pure: three triggers (session ≥20 min, app past usual, phone past usual), each once a day, ≥90 min apart |
@@ -111,6 +112,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - System screens open inside AppTime's task, so back returns to it. Exception, MIUI 14: switching autostart **off** makes the security center force-stop AppTime (no activity, no services, no broadcasts until reopened); switching it on does not
 - OverlayService reads single keys, never `prefs.all` (a copy of the whole store, hundreds of KB, twice a second)
 - `disabledApps` stored as JSON string via `setString` (not `setStringList`) — required for cross-process read in Kotlin
+- An unmonitored app never counts in the phone's total, history included: excluded at read time, so the stored series stays whole and switching the app back on restores its past. A day spent only in unmonitored apps still counts as measured for the usual
 - Integer values stored as `Long` by the Flutter plugin on Android — Kotlin must use `getLong()`, not `getInt()`
 - SharedPreferences keys use `flutter.` prefix (Flutter plugin adds it); Kotlin reads them with that prefix
 
@@ -203,6 +205,9 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `android/app/src/test/…/OverlayPlacementTest.kt` | Cutout slot on the icon row, clamping inside the bar, width/height fit, API/no-cutout/block/screen-edge fallbacks |
 | `android/app/src/test/…/UsualCacheTest.kt` | Cache reuse, app/phone separation, missing-day seed and day rollover |
 | `android/app/src/test/…/LiveUsageTest.kt` | Live app/phone totals, launcher session, missing/future session start |
+| `android/app/src/test/…/PhoneTotalTest.kt` | Live phone total and phone usual without unmonitored apps; their days stay measured |
+| `unmonitored_total_b1_test.dart` | Daily/hourly phone totals without unmonitored apps, restored on re-enable, floored at zero |
+| `setup_reopen_b3_test.dart` | Every system-screen setup step says to reopen AppTime, PT/EN |
 | `android/app/src/test/…/MessageDisplayTest.kt` | Exact lifetime, app-switch cancellation, recorded trigger remains shown |
 | `android/app/src/test/…/OverlayFeedbackTest.kt` | Variant fallback (retired values included), 80/100% boundaries, every variant on the shared rule, history floor, clamping/zero usual, bar span with round caps |
 | `overlay_feedback_test.dart` | Default/unknown/retired feedback, all four choices persisted through PT/EN settings, style independence and disabled selector |

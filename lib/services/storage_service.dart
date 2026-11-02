@@ -86,13 +86,24 @@ class StorageService {
   int getUnlockCount({String? date}) =>
       _prefs.getInt('unlock_count_${date ?? _todayKey()}') ?? 0;
 
-  int getDeviceDailyMs({String? date}) =>
-      _prefs.getInt('device_daily_ms_${date ?? _todayKey()}') ?? 0;
+  /// The phone's total without unmonitored apps — they never count, history included (mirrors
+  /// PhoneTotal.kt). Pass [disabled] when reading many days: the getter JSON-decodes each time.
+  int getDeviceDailyMs({String? date, Set<String>? disabled}) {
+    final day = date ?? _todayKey();
+    final off = (disabled ?? disabledApps).fold(0, (sum, pkg) => sum + getDailyMs(pkg, date: day));
+    final ms = (_prefs.getInt('device_daily_ms_$day') ?? 0) - off;
+    return ms < 0 ? 0 : ms;
+  }
 
   // ── Hourly breakdown ──
 
-  int getDeviceHourlyMs({required String date, required int hour}) =>
-      _prefs.getInt('device_hourly_ms_${date}_$hour') ?? 0;
+  /// Same exclusion as [getDeviceDailyMs], one hour at a time.
+  int getDeviceHourlyMs({required String date, required int hour, Set<String>? disabled}) {
+    final off = (disabled ?? disabledApps)
+        .fold(0, (sum, pkg) => sum + getHourlyMs(pkg, date: date, hour: hour));
+    final ms = (_prefs.getInt('device_hourly_ms_${date}_$hour') ?? 0) - off;
+    return ms < 0 ? 0 : ms;
+  }
 
   int getHourlyUnlocks({required String date, required int hour}) =>
       _prefs.getInt('hourly_unlocks_${date}_$hour') ?? 0;
@@ -104,8 +115,10 @@ class StorageService {
       _prefs.getInt('hourly_ms_${packageName}_${date}_$hour') ?? 0;
 
   /// 24-element list — index = hour of day (0–23), value = device ms in that hour.
-  List<int> getDeviceHourlyBreakdown(String date) =>
-      List.generate(24, (h) => getDeviceHourlyMs(date: date, hour: h));
+  List<int> getDeviceHourlyBreakdown(String date) {
+    final disabled = disabledApps;
+    return List.generate(24, (h) => getDeviceHourlyMs(date: date, hour: h, disabled: disabled));
+  }
 
   /// 24-element list — index = hour of day (0–23), value = unlock count.
   List<int> getHourlyUnlockBreakdown(String date) =>

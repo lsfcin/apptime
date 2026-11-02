@@ -27,6 +27,17 @@ charging with "stay awake" on (`stay_on_while_plugged_in=7`, set for adb) and In
 charger with a video open gets the same. Open: delete that block from Lucas's data, and whether
 the app should stop counting after N minutes without a touch (no public API reports touches).
 
+## B3 — back from a system settings screen lands on the home screen
+
+**Symptom:** 2026-11-02, Redmi (MIUI 14): from the setup flow, "Configurar ↗" opens the overlay
+permission screen; the system back there goes to the home screen, not AppTime, so the user has to
+reopen the app by hand. Dropping `FLAG_ACTIVITY_NEW_TASK` when called from an activity
+(`SystemSettings.openFirst`) did not change it.
+
+**Where to look:** which task the settings activity lands in (`dumpsys activity activities` while it
+is open); MIUI may redirect `ACTION_MANAGE_OVERLAY_PERMISSION` to its own security-center activity
+in another task. Try `startActivityForResult`, and check the other five screens too.
+
 <!-- entropy:start -->
 ## Entropy
 
@@ -117,7 +128,7 @@ the app should stop counting after N minutes without a touch (no public API repo
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/v1-impl is 11 ahead of main
+- . — feature/v1-impl is 12 ahead of main
 
 ### Local branches already merged into their base
 

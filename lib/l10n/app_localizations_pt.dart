@@ -45,7 +45,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
         'Na próxima tela de configuração que vai abrir, desligue “Pausar atividade do app”.',
       ];
   @override String get setupAutostartTip => 'Dica: toque na lupa e digite AppTime.';
-  @override String get setupReopen => 'Se cair na tela inicial, abra o AppTime de novo.';
+  @override String get setupReopen => 'Depois, abra o AppTime de novo.';
   @override String get setupRetryEnable => 'De novo, na tela de configuração, habilite o AppTime.';
   @override String get setupRetryAutostart => 'De novo, na lista, ache o AppTime e ligue a chave.';
   @override String get setupRetryHibernation =>

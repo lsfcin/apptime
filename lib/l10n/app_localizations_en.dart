@@ -46,7 +46,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
         'On the settings screen that opens next, turn off “Pause app activity if unused”.',
       ];
   @override String get setupAutostartTip => 'Tip: tap the magnifier and type AppTime.';
-  @override String get setupReopen => 'If you land on the home screen, open AppTime again.';
+  @override String get setupReopen => 'Then, open AppTime again.';
   @override String get setupRetryEnable => 'Once more, on the settings screen, turn AppTime on.';
   @override String get setupRetryAutostart => 'Once more, in the list, find AppTime and turn it on.';
   @override String get setupRetryHibernation =>

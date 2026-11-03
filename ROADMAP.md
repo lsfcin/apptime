@@ -214,3 +214,4 @@ components that its own milestones had deliberately unwired and planned to reuse
 ## Rejected
 
 - Thermometer: extrapolating the current hour (`60/m ×` its minutes) — up to 60× noise at the start of each hour (Lucas 2026-11-03).
+- Thermometer: slicing only the front of each window (23 h + m min) — both windows drop their oldest hour at the turn, up to 34 pp on real data (2026-11-03).

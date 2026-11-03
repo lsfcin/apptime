@@ -133,7 +133,12 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   visor e fora do total, inclusive dos dias passados. Religar devolve." Out: avatar, "metas",
   "pickups", unlocks on Hoje, battery claims, session "aviso" markers, CSV export.
 - 🔴 **Thermometer look first**: Stitch and Claude Design draw variations over crops of our pill,
-  Bloco and Aba. No more panels for now (Lucas 2026-11-03): choices reach Lucas on an HTML page,
+  Bloco and Aba (Aba is unbuilt: describe it in words). Lucas's seeds for the overlay (2026-11-03,
+  afraid it gets confusing): **colour** (ok vs bad; the brief bans red and neon green, colour never
+  alone) · **one-way symbol**: ▼ "use less" or a calm "ok" mark, never ▲, since we only ever want
+  less · **vertical thermometer**: a taller vertical line with a thin short horizontal tick riding
+  it, on a log scale whose midpoint sits low · **noise**: a flat line when calm that starts to
+  oscillate as it worsens, ECG-like when very bad. No more panels for now (Lucas 2026-11-03): choices reach Lucas on an HTML page,
   options + recommendation + an open text field.
 
 - **Three tabs: Hoje (landing) · Análise · Ajustes**, plus a per-app screen opened by tapping any

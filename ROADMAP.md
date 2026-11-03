@@ -118,6 +118,11 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   "hoje até agora". Open: how pill, Bloco and Aba carry both without confusion; colour never
   alone, and the brief bans red and neon green. Codex 2026-11-03, on the window alone: a 24 h
   window drags in yesterday and can fall while you use the phone; label it "Uso nas últimas 24 horas".
+  🔴 **No jump at the hour turn** (Lucas 2026-11-03, next session's focus), same storage. Candidate
+  to check: at minute m of hour h, window = the current hour's live minutes + the 23 full hours
+  before + (1 − m/60) × the bucket 24 h ago; the 24 h before them slide the same way. At m = 60 it
+  equals the m = 0 value of the next hour, so it is continuous; the only guess is spreading one
+  old hour evenly, never amplifying the current one.
   The near/past states and every `52/60m`-style text in the round-2 boards become "vs average".
   Colour never alone; calm is white / auto ink, not lavender; amber/orange differ in luminance too.
 - **"Your usual" = mean daily total over the 30 days before today** (Lucas, 2026-10-31, replacing
@@ -237,3 +242,7 @@ a new subdirectory turns a flat import into a module boundary, so the facade gat
 imports that were legal the day before — re-export from the new facade rather than importing past
 it. And **grep this ROADMAP for a filename before calling it dead**: `flows` nearly lost five
 components that its own milestones had deliberately unwired and planned to reuse.
+
+## Rejected
+
+- Thermometer: extrapolating the current hour (`60/m ×` its minutes) — up to 60× noise at the start of each hour (Lucas 2026-11-03).

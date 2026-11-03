@@ -81,11 +81,16 @@ segurar o dedo lá"*
 Session 1 decides design, session 2 implements and tests on the phone, session 3 publishes.
 References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas, Stitch).
 
-- **Touch passes through every style but the side rail.** `FLAG_NOT_TOUCHABLE` stays on pill and
-  block: Android hands the whole gesture to whichever window gets the DOWN, so "hold to drag, tap
-  passes" cannot be built. The side rail is the one touchable window: a touch on it is consumed,
-  never passed. Dragging moves it along the edge; crossing the screen's midline moves it to the
-  other edge at the same relative height. Side + relative height are stored per app.
+- **Touch passes through the pill only.** Android hands the whole gesture to whichever window gets
+  the DOWN, so "hold to drag, tap passes" cannot be built. Lucas 2026-11-03: Bloco and Aba may
+  consume the touch, since dragging them is worth it; the drop is saved per app.
+- **Aba vs Bloco** (Lucas 2026-11-03, to the panel): an **Aba** is always attached to a screen edge,
+  like a browser tab turned around: hanging from the status bar (bottom corners rounded, top ones
+  joined to the bar), or from a side (the side rail: corners on the screen side rounded, the edge
+  side straight). Dragged, it slides along the edge it is on and jumps to another edge when pulled
+  far across; all four edges allowed. A **Bloco** is free: dragged anywhere. Open: whether the Aba
+  reads as attached on light and dark status bars; centre vs the camera; an animated move between
+  per-app positions on app switch (prettiest, but animations ran janky before).
 - **Position per app, optional**: a global default plus "position in this app" on the per-app
   screen, with "back to default" (the rail also learns it from the drag).
 - **Intensity is a user setting**: none · colour/weight · contrast · grow slowly (capped, smooth
@@ -101,14 +106,18 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   than round 2's stacked 20dp one. *Selo de canto* is a stretch goal, offered only on gesture
   navigation: on 3-button navigation that corner belongs to the nav bar, whose window sits above
   ours. Cut: Notch, Floating capsule, Bottom strip, Ghost, Linha de borda, Anel (cutout fragmentation).
-- **Bloco: three positions, maybe hanging from the status bar** (idea, Lucas 2026-11-02, to think
-  through later): left · centre · right, no drag. Drawn as a tab that comes out of the status bar,
-  the way the side rail comes out of the screen edge. Open: whether it reads as attached on both
-  light and dark status bars, and whether centre collides with the camera.
 - **No goal in the overlay — the reference is your own average** (Lucas, 2026-10-31: nobody can
-  name a meaningful goal in advance). Two independent switches in settings: **number** (today's time
-  in this app; the calm state) and **average feedback** (today vs this app's usual by this hour; a
-  bar on the rail, in another form on pill and block). Average feedback on by default, to be tested.
+  name a meaningful goal in advance). One switch per feedback in settings, each hideable, the number
+  too (Lucas 2026-11-03: a timer with only the feedbacks must work on pill, Bloco and Aba):
+  **number** (today's time in this app), **progress** (the day since 04:00 vs the daily usual: bar,
+  fill or outline; works well as is) and the **thermometer** below. Progress on by default.
+- **Thermometer** (Lucas 2026-11-03, to the panel): the last 24 h vs the 24 h before them, on the
+  hour buckets (Lucas chose them over 5-min slices). It rises and falls all day, so it answers "am
+  I doing better or worse right now", where progress only warns when the bar bursts (e.g. after
+  work). Shown as a signal or a thermometer next to the timer, an extra, and on Hoje beside
+  "hoje até agora". Open: how pill, Bloco and Aba carry both without confusion; colour never
+  alone, and the brief bans red and neon green. Codex 2026-11-03, on the window alone: a 24 h
+  window drags in yesterday and can fall while you use the phone; label it "Uso nas últimas 24 horas".
   The near/past states and every `52/60m`-style text in the round-2 boards become "vs average".
   Colour never alone; calm is white / auto ink, not lavender; amber/orange differ in luminance too.
 - **"Your usual" = mean daily total over the 30 days before today** (Lucas, 2026-10-31, replacing
@@ -144,16 +153,26 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
 
 ### App screens (screen review, 2026-10-31; panel Codex · Gemini agreed unless noted)
 
-- 🔴 **Round 3 first, before the three tabs** (Lucas, 2026-11-02): only the overlay went through
-  Claude Design and Stitch. Send the current screens (Ajustes, Análise, per-app) plus the Obsidian
-  Mono brief and the decisions below to both, the panel compares, and the session leaves with a
-  screen plan the three tabs are then built on.
+- **Round 3 screen plan** (2026-11-03; Codex only, Gemini out of quota; refs in REFS.md): the
+  Claude Design strict canvas is the base (Codex 9 · Stitch strict 7 · CD free 6 · Stitch free 4),
+  with every state it drew. Lucas: Hoje · Análise · Ajustes; app rows in Hoje = icon, name, time;
+  first days quiet, "Dia 3 de 7 · sem comparação ainda"; tracking stopped = banner + the gap
+  drawn dashed in charts and days ("sem registro das 11:42 às 19:10"), vendor steps behind "Por que
+  isso acontece?"; Ajustes opens on the live overlay preview (boxed, Stitch strict); Inter tnum
+  Light, graphite, amber with ▲ + a word; app screen adds a 24-hour "quando você costuma usar"
+  map under its controls, with the position previewed on a status-bar mock (Stitch strict).
+  Also in: welcome "O AppTime não bloqueia nada. Ele só mostra."; one switch per message
+  trigger; light theme bg `#F1F2F4`, white surfaces, amber `#8A5A00`; switch copy "Desligado: sem
+  visor e fora do total, inclusive dos dias passados. Religar devolve." Out: avatar, "metas",
+  "pickups", unlocks on Hoje, battery claims, session "aviso" markers, CSV export.
+- 🔴 **Before building: the panel on the 2026-11-03 overlay ideas** (Aba vs Bloco, thermometer,
+  hideable feedbacks; Gemini's quota is back on 2026-11-07), then fold the answers here.
 
 - **Three tabs: Hoje (landing) · Análise · Ajustes**, plus a per-app screen opened by tapping any
   app. Monit. and Insights stop being tabs. Today Ajustes is the landing tab, and `HomeScreen`,
   `GoalScreen`, `PerAppScreen` are reachable from nowhere.
-- **Hoje** reuses `HomeScreen` (deleted as dead code 2026-11-02; in git at `920b385`) without its goal card: today vs "your usual by this hour", then the
-  most-used apps with real icons. **Per-app screen** reuses `PerAppScreen`: that app's usage vs its
+- **Hoje** reuses `HomeScreen` (deleted as dead code 2026-11-02; in git at `920b385`) without its goal card: "hoje até agora" (since 04:00) vs the daily usual, and the thermometer
+  (last 24 h vs the 24 h before), then the most-used apps with real icons. **Per-app screen** reuses `PerAppScreen`: that app's usage vs its
   usual, and its overlay controls (on/off, position, light/dark hint, fullscreen/landscape).
 - **"Your usual" shows in three places**: Hoje, the per-app screen, the overlay preview in Ajustes.
 - **Análise: 7d · 30d** (the day lives in Hoje). Cut: Custo de oportunidade, Alerta de phubbing,
@@ -162,7 +181,7 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   desbloqueios"; Dreno de dopamina → "Apps mais abertos" (no thresholds). 30-day trend: total + average only.
 - **Insights goes.** At most a one-line note inside the matching Análise card; audit the claims
   first (QI drop, 23 min per interruption, 21-day habit, a card that promotes One Sec).
-- **Ajustes order**: overlay (gallery, number, average feedback, size) · per-app exceptions ·
+- **Ajustes order**: live preview · overlay (gallery, one switch per feedback, size) · per-app exceptions ·
   messages · collection · language (one row) · privacy. Permissions only when one is missing. Cut
   the separate Parar button, Mostrar borda / Mostrar fundo, and the stale "(5s)" text.
 - **Visual: Obsidian Mono** (Lucas, over Codex's light editorial): carbon `#0B0C0E`, borderless
@@ -184,7 +203,12 @@ dir); `codex exec --skip-git-repo-check -s read-only -i a.png -i b.png - < promp
 must come on stdin, because `-i` swallows a trailing positional prompt and the run exits 0 with "No
 prompt provided". The binary ships in the VS Code extension:
 `~/.vscode/extensions/openai.chatgpt-*/bin/linux-x86_64/codex`. Its stdout can end before the
-answer (it loads skills first); the answer is the last `"text"` in the newest `~/.codex/sessions/**/*.jsonl`.
+answer (it loads skills first); the answer is the last `"text"` in the `~/.codex/sessions/**/*.jsonl` that contains the prompt's
+title — not the newest one, which can belong to another Codex session (2026-11-03). Gemini via
+`agy` hit its individual quota on 2026-11-03 (reset ~11-07).
+
+- 🟡 **More apps start unmonitored** (Lucas 2026-11-03, to the panel first): delivery (iFood and
+  similar), rides (Uber and similar), travel (Airbnb, Booking, Skyscanner and others).
 
 ## Workspace drift, refiled from the wos list 2026-08-16
 

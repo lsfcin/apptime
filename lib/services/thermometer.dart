@@ -1,19 +1,20 @@
-// Thermometer: the last 24 hours against the 24 before them, sliding minute by minute over hour buckets
+// Thermometer: today since 04:00 against yesterday up to the same time, over hour buckets
 import '../utils/index.dart';
 
 const _kHourMs = 60 * 60 * 1000;
+const _kDayStartHour = 4;
 
-/// Use in the last 24 hours and in the 24 hours before them.
+/// Use today since 04:00 (recent) and yesterday from 04:00 to the same time (previous).
 typedef Thermometer = ({int recentMs, int previousMs});
 
 /// Bucket key of the hour starting at [hourStart]: `<4am-anchored date>_<clock hour>`, as in
 /// `device_hourly_ms_{date}_{h}` and `hourly_ms_{pkg}_{date}_{h}`.
 String hourKey(DateTime hourStart) => '${fmtDate(dayAnchor(hourStart))}_${hourStart.hour}';
 
-/// At minute m of hour h, with f = m/60: recent = this hour so far + the 23 full hours before it
-/// + (1 − f) of the hour 24 h back; previous = f of that same hour + the 23 hours before it
-/// + (1 − f) of the hour 48 h back. Both windows stay 24 h long and slide at both ends, so the
-/// value never jumps when the clock turns the hour; only the hour 24 h back is split evenly.
+/// Today since 04:00 against yesterday from 04:00 to the same time. At minute m of hour h, with
+/// f = m/60: recent = this hour so far + today's full hours since 04:00; previous = f of the hour
+/// 24 h back + yesterday's full hours from 04:00 up to it. Both sides start over at 04:00, and
+/// nothing jumps when the clock turns any other hour.
 /// [hourMs] reads a stored bucket by its hour start. Buckets fill only when a session ends, so
 /// pass [sessionStart] while one is open and its share of each hour is added; leave it null when
 /// the open session's app does not count (an unmonitored app, or another app's thermometer).
@@ -24,6 +25,8 @@ Thermometer thermometer({
 }) {
   final hour = DateTime(now.year, now.month, now.day, now.hour);
   final elapsedMs = now.difference(hour).inMilliseconds;
+  // Full hours since 04:00 before this one; hours 00-03 still belong to the day before.
+  final sinceAnchor = (now.hour + 24 - _kDayStartHour) % 24;
   int bucket(int back) {
     final start = hour.subtract(Duration(hours: back));
     return hourMs(start) + _openShare(sessionStart, now, start);
@@ -37,12 +40,9 @@ Thermometer thermometer({
     return total;
   }
 
-  final split = bucket(24);
-  final splitPassed = split * elapsedMs ~/ _kHourMs;
-  final oldest = bucket(48);
   return (
-    recentMs: bucket(0) + sum(1, 23) + split - splitPassed,
-    previousMs: splitPassed + sum(25, 47) + oldest - oldest * elapsedMs ~/ _kHourMs,
+    recentMs: sum(0, sinceAnchor),
+    previousMs: bucket(24) * elapsedMs ~/ _kHourMs + sum(25, 24 + sinceAnchor),
   );
 }
 

@@ -12,6 +12,10 @@ class StorageService
   static String _feedbackVariant(String? value)
   String get overlayFeedback
   set overlayFeedback(String v)
+  static const overlayThermometerLooks = ['vertical', 'ecg', 'mao', 'none'];
+  static String _thermometerLook(String? value)
+  String get overlayThermometer
+  set overlayThermometer(String v)
   double get overlayFontSize
   set overlayFontSize(double v)
   double get overlayTopDp

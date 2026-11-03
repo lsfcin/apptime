@@ -112,6 +112,15 @@ abstract class AppLocalizations {
   String get overlayFeedbackOutlineSub;
   String get overlayFeedbackNone;
   String get overlayFeedbackNoneSub;
+  String get overlayThermometer;
+  String get overlayThermometerVertical;
+  String get overlayThermometerVerticalSub;
+  String get overlayThermometerEcg;
+  String get overlayThermometerEcgSub;
+  String get overlayThermometerMao;
+  String get overlayThermometerMaoSub;
+  String get overlayThermometerNone;
+  String get overlayThermometerNoneSub;
   String get showBorder;
   String get showBackground;
   String fontSize(int size);

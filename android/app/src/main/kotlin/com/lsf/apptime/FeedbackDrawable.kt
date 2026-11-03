@@ -10,6 +10,7 @@ import android.graphics.PathMeasure
 import android.graphics.PixelFormat
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
+import android.os.SystemClock
 
 class FeedbackDrawable(
     private val background: Drawable,
@@ -20,6 +21,9 @@ class FeedbackDrawable(
 ) : Drawable() {
     var frame: OverlayFeedback.Frame? = null
         set(value) { field = value; invalidateSelf() }
+    // Thermometer look and intensity, drawn right of the text; "none" draws nothing.
+    var thermometerLook = "none"
+    var thermometerLevel = 0f
     // Horizontal span of the time text inside the view; the bar matches it like an underline.
     var textLeft = 0f
     var textRight = 0f
@@ -32,6 +36,9 @@ class FeedbackDrawable(
     override fun draw(canvas: Canvas) {
         background.bounds = bounds
         background.draw(canvas)
+        // Before the usual is ready the thermometer still shows, so it draws first.
+        ThermometerGlyph.draw(canvas, paint, thermometerLook, block, thermometerLevel, SystemClock.uptimeMillis(), ink,
+            bounds.left + textRight + thermometerGap(thermometerLook, density, block), bounds.exactCenterY(), density * scale(block))
         val feedback = frame ?: return
         if (!feedback.hasUsual) return
         when (feedback.variant) {
@@ -114,5 +121,11 @@ class FeedbackDrawable(
         // Room the filling dot takes left of the text: its diameter plus the gap.
         fun fillReserve(density: Float, block: Boolean) =
             2 * dotRadius(density, block) + FILL_GAP_DP * density * scale(block)
+        fun thermometerGap(look: String, density: Float, block: Boolean) = ThermometerGlyph.gap(look) * density * scale(block)
+        // Room the thermometer takes right of the text: the gap plus its glyph.
+        fun thermometerReserve(look: String, density: Float, block: Boolean): Float {
+            val width = ThermometerGlyph.width(look, block)
+            return if (width == 0f) 0f else thermometerGap(look, density, block) + width * density * scale(block)
+        }
     }
 }

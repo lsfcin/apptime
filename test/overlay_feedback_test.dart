@@ -51,7 +51,7 @@ void main() {
         expect(storage.overlayFeedback, variant);
         expect((await SharedPreferences.getInstance()).getString('overlay_feedback'), variant);
         expect(storage.overlayStyle, 'pill');
-        final radio = tester.widget<RadioGroup<String>>(find.byType(RadioGroup<String>).last);
+        final radio = tester.widget<RadioGroup<String>>(find.byType(RadioGroup<String>).at(1));
         expect(radio.groupValue, variant);
       }
       // Disabling the overlay also disables feedback changes.

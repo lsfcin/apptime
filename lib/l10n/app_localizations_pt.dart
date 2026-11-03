@@ -92,6 +92,15 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get overlayFeedbackOutlineSub => 'A borda se desenha em volta do tempo e fecha no seu habitual';
   @override String get overlayFeedbackNone => 'Nenhuma';
   @override String get overlayFeedbackNoneSub => 'Só o tempo, sem comparar com o seu habitual';
+  @override String get overlayThermometer => 'Termômetro: hoje vs ontem até esta hora';
+  @override String get overlayThermometerVertical => 'Termômetro vertical';
+  @override String get overlayThermometerVerticalSub => 'O líquido sobe e ferve quando hoje passa de ontem até esta hora';
+  @override String get overlayThermometerEcg => 'ECG';
+  @override String get overlayThermometerEcgSub => 'Uma linha que corre mais rápido e mais alta quando você usa mais';
+  @override String get overlayThermometerMao => 'Mão única';
+  @override String get overlayThermometerMaoSub => 'Um ▼ que sobe e desce: use menos';
+  @override String get overlayThermometerNone => 'Desligado';
+  @override String get overlayThermometerNoneSub => 'Sem termômetro';
   @override String get showBorder => 'Mostrar borda';
   @override String get showBackground => 'Mostrar fundo';
   @override String fontSize(int size) => 'Tamanho da fonte: ${size}sp';

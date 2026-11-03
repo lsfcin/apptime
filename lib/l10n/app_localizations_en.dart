@@ -93,6 +93,15 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get overlayFeedbackOutlineSub => 'The border draws itself around the time and closes at your usual';
   @override String get overlayFeedbackNone => 'None';
   @override String get overlayFeedbackNoneSub => 'Just the time, no comparison with your usual';
+  @override String get overlayThermometer => 'Thermometer: today vs yesterday by this hour';
+  @override String get overlayThermometerVertical => 'Vertical thermometer';
+  @override String get overlayThermometerVerticalSub => 'The liquid rises and boils when today passes yesterday by this hour';
+  @override String get overlayThermometerEcg => 'ECG';
+  @override String get overlayThermometerEcgSub => 'A line that runs faster and higher when you use more';
+  @override String get overlayThermometerMao => 'One way';
+  @override String get overlayThermometerMaoSub => 'A ▼ that bobs up and down: use less';
+  @override String get overlayThermometerNone => 'Off';
+  @override String get overlayThermometerNoneSub => 'No thermometer';
   @override String get showBorder => 'Show border';
   @override String get showBackground => 'Show background';
   @override String fontSize(int size) => 'Font size: ${size}sp';

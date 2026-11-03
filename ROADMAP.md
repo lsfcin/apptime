@@ -47,7 +47,7 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
 - **Touch passes through the pill only.** Android hands the whole gesture to whichever window gets
   the DOWN, so "hold to drag, tap passes" cannot be built. Lucas 2026-11-03: Bloco and Aba may
   consume the touch, since dragging them is worth it; the drop is saved per app.
-- **Aba & Bloco**, both built (Lucas 2026-11-03): an **Aba** is always attached to a screen edge,
+- **Aba & Bloco**, both kept (Lucas 2026-11-03; Bloco is built, Aba not yet): an **Aba** is always attached to a screen edge,
   like a browser tab turned around: hanging from the status bar (bottom corners rounded, top ones
   joined to the bar), or from a side (the side rail: corners on the screen side rounded, the edge
   side straight). Dragged, it slides along the edge it is on and jumps to another edge when pulled
@@ -74,19 +74,12 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   too (Lucas 2026-11-03: a timer with only the feedbacks must work on pill, Bloco and Aba):
   **number** (today's time in this app), **progress** (the day since 04:00 vs the daily usual: bar,
   fill or outline; works well as is) and the **thermometer** below. Progress on by default.
-- **Thermometer** (Lucas 2026-11-03): the last 24 h vs the 24 h before them, on the
-  hour buckets (Lucas chose them over 5-min slices). It rises and falls all day, so it answers "am
-  I doing better or worse right now", where progress only warns when the bar bursts (e.g. after
-  work). Shown as a signal or a thermometer next to the timer, an extra, and on Hoje beside
-  "hoje até agora". Open: how pill, Bloco and Aba carry both without confusion; colour never
-  alone, and the brief bans red and neon green. Codex 2026-11-03, on the window alone: a 24 h
-  window drags in yesterday and can fall while you use the phone; label it "Uso nas últimas 24 horas".
-  **No jump at the hour turn**: built (`thermometer.dart` · `Thermometer.kt`), Lucas's slice at
-  both ends, picked on a plot of 3 real days (max jump 0.8 pp vs 34 for his front-only slice).
-  Next: wire it into Hoje and the overlay once its look is chosen. Holes: none left in real data
-  (`HistoryBackfill` covers stops); if one shows up, borrow the same hour from an earlier day.
-  The near/past states and every `52/60m`-style text in the round-2 boards become "vs average".
-  Colour never alone; calm is white / auto ink, not lavender; amber/orange differ in luminance too.
+- **Thermometer** (Lucas 2026-11-03): **today since 04:00 vs yesterday from 04:00 to the same
+  time**, on the hour buckets, the hour 24 h back split by the minute so no hour turn jumps; both
+  sides start over at 04:00. It answers "am I doing better or worse right now", where progress
+  only warns when the bar bursts. Built in `thermometer.dart` · `Thermometer.kt`, held equal by
+  `test/fixtures/thermometer.json`. Next: Hoje, beside "hoje até agora" (phone-wide). Holes: none
+  in real data (`HistoryBackfill` covers stops); if one shows up, borrow the hour from an earlier day.
 - **"Your usual" = mean daily total over the 30 days before today** (Lucas, 2026-10-31, replacing
   "by this hour"): measured zero days count, since not opening an app can be a choice; days
   nothing was measured count as 60 min, so the window drifts to reality. Calm below 80% of the
@@ -103,7 +96,9 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos). The bare
-  pill has no floor, only a dark halo: check it on light status bars before the per-app hint ships.
+  pill has no floor, only a dark halo. Checked 2026-11-03 over Chrome light: white text vanishes
+  on white, and Lucas rejects the halo itself. Replace both: ink that follows the bar (the
+  per-app hint, or a light/dark guess), and an amber dark enough for AA contrast on white too.
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style; per-app
   light/dark hint `Automático · Sempre escuro · Sempre claro` (the overlay cannot see pixels);
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
@@ -132,14 +127,18 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   trigger; light theme bg `#F1F2F4`, white surfaces, amber `#8A5A00`; switch copy "Desligado: sem
   visor e fora do total, inclusive dos dias passados. Religar devolve." Out: avatar, "metas",
   "pickups", unlocks on Hoje, battery claims, session "aviso" markers, CSV export.
-- 🔴 **Thermometer look first**: Stitch and Claude Design draw variations over crops of our pill,
-  Bloco and Aba (Aba is unbuilt: describe it in words). Lucas's seeds for the overlay (2026-11-03,
-  afraid it gets confusing): **colour** (ok vs bad; the brief bans red and neon green, colour never
-  alone) · **one-way symbol**: ▼ "use less" or a calm "ok" mark, never ▲, since we only ever want
-  less · **vertical thermometer**: a taller vertical line with a thin short horizontal tick riding
-  it, on a log scale whose midpoint sits low · **noise**: a flat line when calm that starts to
-  oscillate as it worsens, ECG-like when very bad. No more panels for now (Lucas 2026-11-03): choices reach Lucas on an HTML page,
-  options + recommendation + an open text field.
+- 🔴 **Thermometer in the overlay: three looks, all kept** (Lucas 2026-11-03, from the
+  [Claude Design canvas](https://claude.ai/artifact/Rwo9Q55GG55rHqUT5NUSYY), `project/Visor.dc.html`
+  holds the geometry). No colour of its own: it takes the text's ink, amber only with the number.
+  Built on the pill and Bloco (`ThermometerLevel` · `ThermometerMotion` · `ThermometerGlyph` ·
+  `ThermometerSource`), selector in Ajustes, default vertical. Sizes Lucas set on the phone
+  2026-11-03: vertical 10.7 × 4.3 dp redrawn from its box (circles stay circles), ▼ at 80% closer to
+  the number, ECG as the canvas but half as wide on the pill (it ends cut at the edge: keep), unit
+  letters h/m condensed at 72%, pill number 1.5 dp nearer its edges, 2 dp after the glyph.
+  **Next, on the phone** (built, not yet seen: the phone died mid-check): "1h22" + glyph stays in the
+  status bar; outline no longer touches the glyph; the morning starts calm; then
+  `screenrecord` + `dumpsys gfxinfo` for janky frames and the battery method above (~0.5%/day).
+  Open: Bloco keeps its 8 dp margin (only the pill's was trimmed); the Aba is still unbuilt.
 
 - **Three tabs: Hoje (landing) · Análise · Ajustes**, plus a per-app screen opened by tapping any
   app. Monit. and Insights stop being tabs. Today Ajustes is the landing tab, and `HomeScreen`,
@@ -214,4 +213,6 @@ components that its own milestones had deliberately unwired and planned to reuse
 ## Rejected
 
 - Thermometer: extrapolating the current hour (`60/m ×` its minutes) — up to 60× noise at the start of each hour (Lucas 2026-11-03).
+- Thermometer: the last 24 h vs the 24 h before — at the first unlock it compares yesterday with the day before, agitated before any use today (Lucas 2026-11-03).
+- Pill hugging the camera cutout to save width — every phone's cutout differs and sits off the text's line (Lucas 2026-11-03).
 - Thermometer: slicing only the front of each window (23 h + m min) — both windows drop their oldest hour at the turn, up to 34 pp on real data (2026-11-03).

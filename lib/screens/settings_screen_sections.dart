@@ -53,31 +53,30 @@ class _OverlaySection extends StatelessWidget {
                 ),
               ),
               const Divider(height: 1, indent: 16),
-              ListTile(title: Text(l10n.overlayFeedback)),
-              RadioGroup<String>(
-                groupValue: s.overlayFeedback,
-                onChanged: (value) {
-                  if (s.overlayEnabled && value != null) {
-                    s.overlayFeedback = value;
-                    onChanged();
-                  }
-                },
-                child: Column(
-                  children: [
-                    for (final (value, label, sub) in [
-                      ('fill', l10n.overlayFeedbackFill, l10n.overlayFeedbackFillSub),
-                      ('bar', l10n.overlayFeedbackBar, l10n.overlayFeedbackBarSub),
-                      ('outline', l10n.overlayFeedbackOutline, l10n.overlayFeedbackOutlineSub),
-                      ('none', l10n.overlayFeedbackNone, l10n.overlayFeedbackNoneSub),
-                    ])
-                      RadioListTile<String>(
-                        title: Text(label),
-                        subtitle: Text(sub),
-                        value: value,
-                        enabled: s.overlayEnabled,
-                      ),
-                  ],
-                ),
+              ..._radioChoices(
+                title: l10n.overlayFeedback,
+                value: s.overlayFeedback,
+                enabled: s.overlayEnabled,
+                onSelect: (v) { s.overlayFeedback = v; onChanged(); },
+                choices: [
+                  ('fill', l10n.overlayFeedbackFill, l10n.overlayFeedbackFillSub),
+                  ('bar', l10n.overlayFeedbackBar, l10n.overlayFeedbackBarSub),
+                  ('outline', l10n.overlayFeedbackOutline, l10n.overlayFeedbackOutlineSub),
+                  ('none', l10n.overlayFeedbackNone, l10n.overlayFeedbackNoneSub),
+                ],
+              ),
+              const Divider(height: 1, indent: 16),
+              ..._radioChoices(
+                title: l10n.overlayThermometer,
+                value: s.overlayThermometer,
+                enabled: s.overlayEnabled,
+                onSelect: (v) { s.overlayThermometer = v; onChanged(); },
+                choices: [
+                  ('vertical', l10n.overlayThermometerVertical, l10n.overlayThermometerVerticalSub),
+                  ('ecg', l10n.overlayThermometerEcg, l10n.overlayThermometerEcgSub),
+                  ('mao', l10n.overlayThermometerMao, l10n.overlayThermometerMaoSub),
+                  ('none', l10n.overlayThermometerNone, l10n.overlayThermometerNoneSub),
+                ],
               ),
             ],
           ),
@@ -181,3 +180,26 @@ class _LanguageSection extends StatelessWidget {
     );
   }
 }
+
+/// A titled radio list for one overlay setting; disabled choices ignore taps.
+List<Widget> _radioChoices({
+  required String title,
+  required String value,
+  required bool enabled,
+  required void Function(String) onSelect,
+  required List<(String, String, String)> choices,
+}) => [
+      ListTile(title: Text(title)),
+      RadioGroup<String>(
+        groupValue: value,
+        onChanged: (v) {
+          if (enabled && v != null) onSelect(v);
+        },
+        child: Column(
+          children: [
+            for (final (v, label, sub) in choices)
+              RadioListTile<String>(title: Text(label), subtitle: Text(sub), value: v, enabled: enabled),
+          ],
+        ),
+      ),
+    ];

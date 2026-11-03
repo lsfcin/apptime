@@ -1,6 +1,6 @@
 # AppTime — Code Structure & Reference
 
-Last updated: 2026-11-01 (overlay feedback narrowed to fill · bar · outline; pill on the icon row)
+Last updated: 2026-11-03
 
 ---
 
@@ -46,7 +46,7 @@ lib/
 │   ├── app_info_service.dart        # AppInfoService — loads labels + launchers once
 │   ├── service_channel.dart         # ServiceChannel — MethodChannel bridge to Kotlin
 │   ├── storage_service.dart         # StorageService — SharedPreferences wrapper
-│   ├── thermometer.dart             # thermometer(), hourKey() — last 24 h vs the 24 h before, no jump at the hour turn
+│   ├── thermometer.dart             # thermometer(), hourKey() — today since 04:00 vs yesterday to the same time, no jump at the hour turn
 │   └── usual_daily.dart             # usualDaily(), usualState() — "your usual" (30-day mean)
 │
 ├── theme/
@@ -86,6 +86,7 @@ lib/
 | `FeedbackEngine.kt` | Consumes shared live usage, asks MessageRules, schedules 6.5 s display; cadence persisted before display and retained on cancellation |
 | `MessageRules.kt` | Pure: three triggers (session ≥20 min, app past usual, phone past usual), each once a day, ≥90 min apart |
 | `Thermometer.kt` | Thermometer — mirror of `thermometer.dart`, held equal by `test/fixtures/thermometer.json` |
+| `Thermometer{Level,Motion,Glyph,Source}.kt` | Intensity and look · clock-based motion · drawing · cached hour buckets |
 | `UsualDaily.kt` | "Your usual" — mirror of `usual_daily.dart`, held equal by `test/fixtures/usual_daily.json` |
 | `AppConstants.kt` | Shared launcher resolution/classification, parseDisabledApps(), CHANNEL constant |
 | `DateUtils.kt` | today(), dateKey(epochMs), currentHour(), daysBefore(), safeGetCount() extension |
@@ -144,6 +145,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `overlay_text` | String | Legacy timer string from MonitoringService; nonempty value gates timer visibility |
 | `overlay_style` | String | `"pill"` (default; also fallback for unknown values) or `"block"` |
 | `overlay_feedback` | String | `"fill"`, `"bar"` (default; also fallback for unknown values), `"outline"`, `"none"`; Kotlin reads `flutter.overlay_feedback` |
+| `overlay_thermometer` | String | `"vertical"` (default; also fallback for unknown values), `"ecg"`, `"mao"`, `"none"`; Kotlin reads `flutter.overlay_thermometer` |
 | `overlay_enabled` | Boolean | Show timer/messages; monitoring continues (default true) |
 | `monitor_launcher` | Boolean | Show overlay on launcher (default true) |
 | `overlay_visible` | Boolean | Whether overlay should appear |
@@ -192,7 +194,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - **Single source of truth**: `kAppMeta` is the sole source for app labels and colors.
 - **"Your usual" parity**: Dart and Kotlin both run `test/fixtures/usual_daily.json`; a rule change edits both files and adds a case there.
 - **No goals** (rejected 2026-10-31): the four goal levels, per-app levels and `GoalScreen` are gone. Messages key off the user's own 30-day mean, never a target the user picked.
-- **Thermometer parity and continuity**: both windows stay 24 h, sliding at both ends (the hour 24 h back splits by the minute), so the value never jumps at the hour turn; `test/fixtures/thermometer.json` checks it on both sides. The open session is added hour by hour, since buckets fill only when it ends.
+- **Thermometer parity and continuity**: today since 04:00 against yesterday from 04:00 to the same time; the hour 24 h back splits by the minute, so the value never jumps at an hour turn and both sides start over at 04:00; `test/fixtures/thermometer.json` checks it on both sides. The open session is added hour by hour, since buckets fill only when it ends.
 - **Daily total == sum of hourly values**: `accumulateDailyMs` accumulates daily totals within the hourly walk loop.
 - **Heartbeat granularity**: written every 30s (not 1s) and at the screen-off flush — the tick is stopped after it, so a restart overnight must not backfill seconds already counted.
 

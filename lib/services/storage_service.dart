@@ -42,6 +42,15 @@ class StorageService {
   set overlayFeedback(String v) =>
       _prefs.setString('overlay_feedback', _feedbackVariant(v));
 
+  // Kotlin reads `flutter.overlay_thermometer`; unknown values fall back to 'vertical' on both sides.
+  static const overlayThermometerLooks = ['vertical', 'ecg', 'mao', 'none'];
+  static String _thermometerLook(String? value) =>
+      overlayThermometerLooks.contains(value) ? value! : 'vertical';
+  String get overlayThermometer =>
+      _thermometerLook(_prefs.getString('overlay_thermometer'));
+  set overlayThermometer(String v) =>
+      _prefs.setString('overlay_thermometer', _thermometerLook(v));
+
   // Legacy appearance prefs are retained for compatibility; styles now define appearance.
   // Handles legacy double values that may be stored from older builds.
   double get overlayFontSize {

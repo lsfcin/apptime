@@ -19,6 +19,7 @@ class OverlayService : Service() {
     private lateinit var prefs: SharedPreferences
     private lateinit var powerManager: PowerManager
     private lateinit var usualCache: UsualCache
+    private lateinit var thermometerSource: ThermometerSource
     private lateinit var timer: TimerOverlay
     private lateinit var message: MessageOverlay
     private var feedbackEngine: FeedbackEngine? = null
@@ -45,6 +46,7 @@ class OverlayService : Service() {
         // MonitoringService's watchdog calls this every 30 s; retain message cadence and cache.
         if (feedbackEngine == null) {
             usualCache = UsualCache { key -> prefs.getLong(key, 0L) }
+            thermometerSource = ThermometerSource(prefs::safeGetCount)
             timer = TimerOverlay(this)
             message = MessageOverlay(this)
             feedbackEngine = FeedbackEngine({ prefs }, message::show, message::hide)
@@ -79,7 +81,11 @@ class OverlayService : Service() {
         val allowed = enabled && visible && monitored
         val hasText = !prefs.getString("flutter.overlay_text", null).isNullOrEmpty()
         val feedback = OverlayFeedback.frame(prefs.getString("flutter.overlay_feedback", null), total, usual)
-        timer.render(prefs.getString("flutter.overlay_style", null) == "block", total, feedback, allowed && hasText)
+        val look = ThermometerLevel.look(prefs.getString("flutter.overlay_thermometer", null))
+        val level = if (look == "none") 0f else ThermometerLevel.intensity(
+            thermometerSource.read(pkg, inApp, now, prefs.safeGetCount("flutter.current_session_start_ms")), usual.realDays)
+        timer.render(prefs.getString("flutter.overlay_style", null) == "block", total, feedback, look, level,
+            allowed && hasText)
         feedbackEngine?.refresh(pkg, now, allowed)
         if (++evalTick >= 5) {
             evalTick = 0

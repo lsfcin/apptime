@@ -109,7 +109,7 @@ class MonitoringService : Service() {
         effectiveLaunchers = AppConstants.resolveLaunchers(packageManager)
         lastDate = today()
         migrateCorruptedDeviceDaily()
-        backfill = HistoryBackfill(usageStatsManager, prefs, ::accumulateDailyMs, ::epochToDateKey)
+        backfill = HistoryBackfill(usageStatsManager, prefs, ::accumulateDailyMs, DateUtils::dateKey)
         val screenFilter = IntentFilter().apply {
             addAction(Intent.ACTION_SCREEN_OFF)
             addAction(Intent.ACTION_SCREEN_ON)
@@ -262,17 +262,6 @@ class MonitoringService : Service() {
 
     private fun currentHour(): Int = DateUtils.currentHour()
 
-    /** Returns the 4am-anchored date key (YYYY-MM-DD) for the given epoch ms. */
-    private fun epochToDateKey(epochMs: Long): String {
-        val c = java.util.Calendar.getInstance().apply { timeInMillis = epochMs }
-        if (c.get(java.util.Calendar.HOUR_OF_DAY) < 4) c.add(java.util.Calendar.DATE, -1)
-        return "%04d-%02d-%02d".format(
-            c.get(java.util.Calendar.YEAR),
-            c.get(java.util.Calendar.MONTH) + 1,
-            c.get(java.util.Calendar.DAY_OF_MONTH)
-        )
-    }
-
     /**
      * Splits the session [startMs, endMs) across hour (and 4am-day) boundaries so that
      * each hourly_ms bucket only receives the milliseconds that actually fell within it.
@@ -287,7 +276,7 @@ class MonitoringService : Service() {
         // addMs() reads the current stored value on first access per key; subsequent
         // calls for the same key use the already-accumulated value, correctly handling
         // multi-hour sessions where the same daily/device key receives multiple chunks.
-        val endDate = epochToDateKey(endMs)
+        val endDate = DateUtils.dateKey(endMs)
         val acc = mutableMapOf<String, Long>()
         fun addMs(key: String, ms: Long) {
             acc[key] = (acc[key] ?: prefs.getLong(key, 0L)) + ms
@@ -301,7 +290,7 @@ class MonitoringService : Service() {
         while (cursor < endMs) {
             val cal = java.util.Calendar.getInstance().apply { timeInMillis = cursor }
             val hour = cal.get(java.util.Calendar.HOUR_OF_DAY)
-            val date = epochToDateKey(cursor)
+            val date = DateUtils.dateKey(cursor)
 
             val nextHourCal = java.util.Calendar.getInstance().apply {
                 timeInMillis = cursor

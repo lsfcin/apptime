@@ -46,6 +46,7 @@ lib/
 │   ├── app_info_service.dart        # AppInfoService — loads labels + launchers once
 │   ├── service_channel.dart         # ServiceChannel — MethodChannel bridge to Kotlin
 │   ├── storage_service.dart         # StorageService — SharedPreferences wrapper
+│   ├── thermometer.dart             # thermometer(), hourKey() — last 24 h vs the 24 h before, no jump at the hour turn
 │   └── usual_daily.dart             # usualDaily(), usualState() — "your usual" (30-day mean)
 │
 ├── theme/
@@ -84,9 +85,10 @@ lib/
 | `MessageDisplay.kt` | Pure: 6.5 s message lifetime and foreground-package cancellation |
 | `FeedbackEngine.kt` | Consumes shared live usage, asks MessageRules, schedules 6.5 s display; cadence persisted before display and retained on cancellation |
 | `MessageRules.kt` | Pure: three triggers (session ≥20 min, app past usual, phone past usual), each once a day, ≥90 min apart |
+| `Thermometer.kt` | Thermometer — mirror of `thermometer.dart`, held equal by `test/fixtures/thermometer.json` |
 | `UsualDaily.kt` | "Your usual" — mirror of `usual_daily.dart`, held equal by `test/fixtures/usual_daily.json` |
 | `AppConstants.kt` | Shared launcher resolution/classification, parseDisabledApps(), CHANNEL constant |
-| `DateUtils.kt` | today(), currentHour(), daysBefore(), safeGetCount() extension |
+| `DateUtils.kt` | today(), dateKey(epochMs), currentHour(), daysBefore(), safeGetCount() extension |
 | `PmMessages.kt` | Message text (PT/EN) per trigger |
 | `BootReceiver.kt` | Resumes monitoring after reboot or reinstall when `monitoring_enabled`; MIUI drops both broadcasts without autostart |
 | `MonitoringSwitch.kt` | Starts/stops both services and persists `monitoring_enabled` |
@@ -190,6 +192,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - **Single source of truth**: `kAppMeta` is the sole source for app labels and colors.
 - **"Your usual" parity**: Dart and Kotlin both run `test/fixtures/usual_daily.json`; a rule change edits both files and adds a case there.
 - **No goals** (rejected 2026-10-31): the four goal levels, per-app levels and `GoalScreen` are gone. Messages key off the user's own 30-day mean, never a target the user picked.
+- **Thermometer parity and continuity**: both windows stay 24 h, sliding at both ends (the hour 24 h back splits by the minute), so the value never jumps at the hour turn; `test/fixtures/thermometer.json` checks it on both sides. The open session is added hour by hour, since buckets fill only when it ends.
 - **Daily total == sum of hourly values**: `accumulateDailyMs` accumulates daily totals within the hourly walk loop.
 - **Heartbeat granularity**: written every 30s (not 1s) and at the screen-off flush — the tick is stopped after it, so a restart overnight must not backfill seconds already counted.
 
@@ -199,6 +202,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 
 | File | What it tests |
 |------|--------------|
+| `thermometer_test.dart` | Thermometer windows, hour-turn continuity and bucket keys against the shared fixture cases |
 | `usual_daily_test.dart` | "Your usual" against the shared fixture cases |
 | `android/app/src/test/…/UsualDailyTest.kt` | Same fixture cases against the Kotlin mirror |
 | `android/app/src/test/…/MessageRulesTest.kt` | Floors (7 real days, 15 min), once a day per trigger, 90-min gap |

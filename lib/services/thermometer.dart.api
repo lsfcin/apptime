@@ -1,0 +1,8 @@
+// thermometer.dart
+typedef Thermometer = (
+  required DateTime now,
+  required int Function(DateTime hourStart) hourMs,
+  DateTime? sessionStart,
+  int bucket(int back)
+  int sum(int from, int to)
+  return (

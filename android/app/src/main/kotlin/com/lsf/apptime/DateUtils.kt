@@ -6,8 +6,11 @@ import java.util.Calendar
 object DateUtils {
 
     /** 4 AM-anchored today key — hours 00–03 belong to the previous calendar day. */
-    fun today(): String {
-        val c = Calendar.getInstance()
+    fun today(): String = dateKey(System.currentTimeMillis())
+
+    /** 4 AM-anchored date key (YYYY-MM-DD) of [epochMs]. */
+    fun dateKey(epochMs: Long): String {
+        val c = Calendar.getInstance().apply { timeInMillis = epochMs }
         if (c.get(Calendar.HOUR_OF_DAY) < 4) c.add(Calendar.DATE, -1)
         return "%04d-%02d-%02d".format(
             c.get(Calendar.YEAR),

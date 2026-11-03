@@ -81,12 +81,10 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   "hoje até agora". Open: how pill, Bloco and Aba carry both without confusion; colour never
   alone, and the brief bans red and neon green. Codex 2026-11-03, on the window alone: a 24 h
   window drags in yesterday and can fall while you use the phone; label it "Uso nas últimas 24 horas".
-  🔴 **No jump at the hour turn**, same storage, for the phone and per app. Lucas picks on a plot
-  of real data among: full 24 h · his (the last 23 full hours + this hour's m minutes vs the 23
-  full hours a day earlier + m/60 of yesterday's same hour) · his + a tail (the hour 24 h back fades
-  as 1 − m/60 on both sides, so both windows stay 24 h and nothing jumps). Buckets fill only when
-  a session ends: split the open one by hour first. An hour lost to a stopped service borrows the
-  same hour from an earlier day, else 0; phone off is real non-use, 0.
+  **No jump at the hour turn**: built (`thermometer.dart` · `Thermometer.kt`), Lucas's slice at
+  both ends, picked on a plot of 3 real days (max jump 0.8 pp vs 34 for his front-only slice).
+  Next: wire it into Hoje and the overlay once its look is chosen. Holes: none left in real data
+  (`HistoryBackfill` covers stops); if one shows up, borrow the same hour from an earlier day.
   The near/past states and every `52/60m`-style text in the round-2 boards become "vs average".
   Colour never alone; calm is white / auto ink, not lavender; amber/orange differ in luminance too.
 - **"Your usual" = mean daily total over the 30 days before today** (Lucas, 2026-10-31, replacing

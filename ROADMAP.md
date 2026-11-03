@@ -1,68 +1,31 @@
 # AppTime — Roadmap
 
-Read the next milestone, implement it bullet by bullet. After a bullet is done, change the dash - to an x, and commit.
+Read the next milestone, implement it bullet by bullet. Delete a bullet once it is done, and commit.
 
 ## Milestone — Prepare to PlayStore submission
 
-### Checklist
+Ready: privacy policy at https://lsfcin.github.io/apptime/privacy_policy.html; store copy in
+`docs/store_listing.md`; `applicationId` `com.lsf.apptime` is final. Data Safety form: "no data
+collected", "no account required" (no INTERNET permission, so reviewers can check it).
 
-#### 0. Check legal concerns
-x Once launched we'll expose the app to everyone, first review what issues may imply in legal concerns
-x Consider a launch route that protects us, if there is not, it is fine
-x Define protection strategy
-x Build all materials/documents, manifests, don't know, what you can so we avoid being sued, I have no money or energy to handle that
-
-**Strategy:** local-only architecture means LGPD exposure is minimal (no data leaves device). Key protections implemented:
-- Privacy policy live at https://lsfcin.github.io/apptime/privacy_policy.html
-- Disclaimer tile in Settings (not medical advice, not a medical device)
-- Scientific claims softened from definitive to hedged ("may impair", "may spike")
-- Play Console Data Safety form: mark "no data collected", "no account required"
-- No INTERNET permission in manifest — reviewers can verify network-free claim instantly
-
-#### 1. App identity & metadata
-x Set a real `applicationId` (e.g. `com.lsf.apptime`) and confirm it is final — it cannot change after publish
-  - Using `com.lsf.apptime` — confirmed final (changed from com.lucasf.apptime to bypass a MIUI install block)
-x Bump `versionName` to `1.0.0` and `versionCode` to `1` in `build.gradle`
-  - Set via pubspec.yaml `version: 1.0.0+1`
-x Replace placeholder app name in `strings.xml` / `AndroidManifest.xml` (`AppTime`)
-x Replace `ic_launcher` placeholder icon with final adaptive icon (foreground + background layers, 108dp safe zone)
-x Add a short app description in PT-BR and EN (30 chars) and a long description (4 000 chars max) for the store listing
-  - Written in docs/store_listing.md — ready to paste into Play Console
-
-#### 2. Signing
+#### Signing
 - Create a release keystore (`keytool -genkey ...`) and store it outside the repo
 - Configure `signingConfigs.release` in `build.gradle` (read credentials from `local.properties` or env vars — never commit the keystore)
 - Build a signed AAB: `flutter build appbundle --release`
 
-#### 3. Permissions audit
-x Confirm every permission in `AndroidManifest.xml` has a visible rationale shown to the user (onboarding covers `SYSTEM_ALERT_WINDOW` + `PACKAGE_USAGE_STATS`)
-x `FOREGROUND_SERVICE` + `FOREGROUND_SERVICE_SPECIAL_USE` — foregroundServiceType="specialUse" declared on both services with subtype properties
-x Remove any unused permissions — `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` removed
-
-#### 4. Privacy policy
-x PlayStore requires a privacy policy URL for apps that request sensitive permissions (`PACKAGE_USAGE_STATS`, `SYSTEM_ALERT_WINDOW`)
-x Draft a minimal policy (data stays on-device, no network calls, no analytics); host it (GitHub Pages or similar)
-x Add the URL to the store listing and optionally link it from the app's Settings screen
-  - Live at https://lsfcin.github.io/apptime/privacy_policy.html
-
-#### 5. Store listing assets
+#### Store listing assets
 - Feature graphic: 1024 × 500 px
 - Phone screenshots: minimum 2, recommended 4–8 (use emulator or device)
 - Short and full descriptions translated to both PT-BR and EN
 - Content rating questionnaire (IARC) — likely "Everyone"
 
-#### 6. Target API & compliance
-x `targetSdkVersion` must be ≥ 34 (current Play requirement for new apps) — uses `flutter.targetSdkVersion` (Flutter 3.x defaults to 35)
-x Verify `compileSdkVersion` ≥ 35 — uses `flutter.compileSdkVersion`
-x Declare `android:exported` on every `<activity>`, `<service>`, and `<receiver>` in the manifest — all declared
-
-#### 7. Release track
+#### Release track
 - Create a Google Play Developer account (one-time $25 fee)
 - Upload the AAB to the **Internal testing** track first and install via Play to verify signing + permissions
 - Promote to **Closed testing** (beta) before production if desired
 - Production review typically takes 1–3 days for a new app
 
-#### 8. Post-launch minimum
+#### Post-launch minimum
 - Set up crash reporting (Firebase Crashlytics free plan, or just monitor Play's built-in ANR/crash dashboard)
 - Prepare a `1.0.1` patch plan for any day-one issues
 
@@ -84,7 +47,7 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
 - **Touch passes through the pill only.** Android hands the whole gesture to whichever window gets
   the DOWN, so "hold to drag, tap passes" cannot be built. Lucas 2026-11-03: Bloco and Aba may
   consume the touch, since dragging them is worth it; the drop is saved per app.
-- **Aba vs Bloco** (Lucas 2026-11-03, to the panel): an **Aba** is always attached to a screen edge,
+- **Aba & Bloco**, both built (Lucas 2026-11-03): an **Aba** is always attached to a screen edge,
   like a browser tab turned around: hanging from the status bar (bottom corners rounded, top ones
   joined to the bar), or from a side (the side rail: corners on the screen side rounded, the edge
   side straight). Dragged, it slides along the edge it is on and jumps to another edge when pulled
@@ -111,18 +74,19 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   too (Lucas 2026-11-03: a timer with only the feedbacks must work on pill, Bloco and Aba):
   **number** (today's time in this app), **progress** (the day since 04:00 vs the daily usual: bar,
   fill or outline; works well as is) and the **thermometer** below. Progress on by default.
-- **Thermometer** (Lucas 2026-11-03, to the panel): the last 24 h vs the 24 h before them, on the
+- **Thermometer** (Lucas 2026-11-03): the last 24 h vs the 24 h before them, on the
   hour buckets (Lucas chose them over 5-min slices). It rises and falls all day, so it answers "am
   I doing better or worse right now", where progress only warns when the bar bursts (e.g. after
   work). Shown as a signal or a thermometer next to the timer, an extra, and on Hoje beside
   "hoje até agora". Open: how pill, Bloco and Aba carry both without confusion; colour never
   alone, and the brief bans red and neon green. Codex 2026-11-03, on the window alone: a 24 h
   window drags in yesterday and can fall while you use the phone; label it "Uso nas últimas 24 horas".
-  🔴 **No jump at the hour turn** (Lucas 2026-11-03, next session's focus), same storage. Candidate
-  to check: at minute m of hour h, window = the current hour's live minutes + the 23 full hours
-  before + (1 − m/60) × the bucket 24 h ago; the 24 h before them slide the same way. At m = 60 it
-  equals the m = 0 value of the next hour, so it is continuous; the only guess is spreading one
-  old hour evenly, never amplifying the current one.
+  🔴 **No jump at the hour turn**, same storage, for the phone and per app. Lucas picks on a plot
+  of real data among: full 24 h · his (the last 23 full hours + this hour's m minutes vs the 23
+  full hours a day earlier + m/60 of yesterday's same hour) · his + a tail (the hour 24 h back fades
+  as 1 − m/60 on both sides, so both windows stay 24 h and nothing jumps). Buckets fill only when
+  a session ends: split the open one by hour first. An hour lost to a stopped service borrows the
+  same hour from an earlier day, else 0; phone off is real non-use, 0.
   The near/past states and every `52/60m`-style text in the round-2 boards become "vs average".
   Colour never alone; calm is white / auto ink, not lavender; amber/orange differ in luminance too.
 - **"Your usual" = mean daily total over the 30 days before today** (Lucas, 2026-10-31, replacing
@@ -170,8 +134,9 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   trigger; light theme bg `#F1F2F4`, white surfaces, amber `#8A5A00`; switch copy "Desligado: sem
   visor e fora do total, inclusive dos dias passados. Religar devolve." Out: avatar, "metas",
   "pickups", unlocks on Hoje, battery claims, session "aviso" markers, CSV export.
-- 🔴 **Before building: the panel on the 2026-11-03 overlay ideas** (Aba vs Bloco, thermometer,
-  hideable feedbacks; Gemini's quota is back on 2026-11-07), then fold the answers here.
+- 🔴 **Thermometer look first**: Stitch and Claude Design draw variations over crops of our pill,
+  Bloco and Aba. No more panels for now (Lucas 2026-11-03): choices reach Lucas on an HTML page,
+  options + recommendation + an open text field.
 
 - **Three tabs: Hoje (landing) · Análise · Ajustes**, plus a per-app screen opened by tapping any
   app. Monit. and Insights stop being tabs. Today Ajustes is the landing tab, and `HomeScreen`,
@@ -212,7 +177,7 @@ answer (it loads skills first); the answer is the last `"text"` in the `~/.codex
 title — not the newest one, which can belong to another Codex session (2026-11-03). Gemini via
 `agy` hit its individual quota on 2026-11-03 (reset ~11-07).
 
-- 🟡 **More apps start unmonitored** (Lucas 2026-11-03, to the panel first): delivery (iFood and
+- 🟡 **More apps start unmonitored** (Lucas 2026-11-03): delivery (iFood and
   similar), rides (Uber and similar), travel (Airbnb, Booking, Skyscanner and others).
 
 ## Workspace drift, refiled from the wos list 2026-08-16

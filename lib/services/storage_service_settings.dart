@@ -32,6 +32,27 @@ extension StorageServiceSettings on StorageService {
     _prefs.setString('default_unmonitored_seen', jsonEncode([...seen, ...fresh]));
   }
 
+  /// The pill's chip per app: 'auto' (the theme guess), 'light' or 'dark'. Kotlin reads `flutter.chip_shades`.
+  String chipShade(String pkg) {
+    final v = _chipShades[pkg];
+    return v == 'light' || v == 'dark' ? v as String : 'auto';
+  }
+
+  void setChipShade(String pkg, String shade) {
+    final map = _chipShades;
+    shade == 'auto' ? map.remove(pkg) : map[pkg] = shade;
+    _prefs.setString('chip_shades', jsonEncode(map));
+  }
+
+  Map<String, dynamic> get _chipShades {
+    try { return jsonDecode(_prefs.getString('chip_shades') ?? '{}') as Map<String, dynamic>; }
+    catch (_) { return {}; }
+  }
+
+  /// Amber state ink on the overlay; off keeps the calm ink, the shapes stay. Kotlin: `flutter.overlay_amber`.
+  bool get overlayAmber => _prefs.getBool('overlay_amber') ?? true;
+  set overlayAmber(bool v) => _prefs.setBool('overlay_amber', v);
+
   void toggleApp(String packageName) {
     final apps = disabledApps;
     if (apps.contains(packageName)) {

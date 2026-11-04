@@ -65,6 +65,12 @@ class _OverlaySection extends StatelessWidget {
                   ('none', l10n.overlayFeedbackNone, l10n.overlayFeedbackNoneSub),
                 ],
               ),
+              SwitchListTile(
+                title: Text(l10n.overlayAmber),
+                subtitle: Text(l10n.overlayAmberSub),
+                value: s.overlayAmber,
+                onChanged: s.overlayEnabled ? (v) { s.overlayAmber = v; onChanged(); } : null,
+              ),
               const Divider(height: 1, indent: 16),
               ..._radioChoices(
                 title: l10n.overlayThermometer,

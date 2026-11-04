@@ -93,6 +93,11 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get overlayFeedbackOutlineSub => 'The border draws itself around the time and closes at your usual';
   @override String get overlayFeedbackNone => 'None';
   @override String get overlayFeedbackNoneSub => 'Just the time, no comparison with your usual';
+  @override String get overlayAmber => 'Amber near your usual';
+  @override String get overlayAmberSub => 'Off: the time keeps one colour; the shapes still show';
+  @override String get chipAuto => 'Pill background: automatic';
+  @override String get chipLight => 'Pill background: light';
+  @override String get chipDark => 'Pill background: dark';
   @override String get overlayThermometer => 'Thermometer: today vs yesterday by this hour';
   @override String get overlayThermometerVertical => 'Vertical thermometer';
   @override String get overlayThermometerVerticalSub => 'The liquid rises and boils when today passes yesterday by this hour';

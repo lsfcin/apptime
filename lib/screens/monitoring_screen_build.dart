@@ -170,6 +170,8 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
       appColor: colorForApp(pkg),
       monitored: _isMonitored(pkg),
       onMonitoredChanged: (v) => _setMonitored(pkg, v),
+      chipShade: _s.chipShade(pkg),
+      onChipShadeChanged: (v) => setState(() => _s.setChipShade(pkg, v)),
     );
   }
 }

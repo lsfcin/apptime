@@ -75,6 +75,11 @@ abstract class AppLocalizations
   String get overlayFeedbackOutlineSub;
   String get overlayFeedbackNone;
   String get overlayFeedbackNoneSub;
+  String get overlayAmber;
+  String get overlayAmberSub;
+  String get chipAuto;
+  String get chipLight;
+  String get chipDark;
   String get overlayThermometer;
   String get overlayThermometerVertical;
   String get overlayThermometerVerticalSub;

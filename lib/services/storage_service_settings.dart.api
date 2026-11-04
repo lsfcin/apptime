@@ -5,6 +5,11 @@ extension StorageServiceSettings on StorageService
   Set<String> get disabledApps
   set disabledApps(Set<String> apps)
   void applyDefaultUnmonitored(Iterable<String> installed)
+  String chipShade(String pkg)
+  void setChipShade(String pkg, String shade)
+  Map<String, dynamic> get _chipShades
+  bool get overlayAmber
+  set overlayAmber(bool v)
   void toggleApp(String packageName)
   bool get onboardingDone
   set onboardingDone(bool v)

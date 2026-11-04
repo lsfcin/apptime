@@ -92,6 +92,11 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get overlayFeedbackOutlineSub => 'A borda se desenha em volta do tempo e fecha no seu habitual';
   @override String get overlayFeedbackNone => 'Nenhuma';
   @override String get overlayFeedbackNoneSub => 'Só o tempo, sem comparar com o seu habitual';
+  @override String get overlayAmber => 'Âmbar perto do habitual';
+  @override String get overlayAmberSub => 'Desligado: o tempo fica numa cor só; as formas continuam';
+  @override String get chipAuto => 'Fundo da pílula: automático';
+  @override String get chipLight => 'Fundo da pílula: claro';
+  @override String get chipDark => 'Fundo da pílula: escuro';
   @override String get overlayThermometer => 'Termômetro: hoje vs ontem até esta hora';
   @override String get overlayThermometerVertical => 'Termômetro vertical';
   @override String get overlayThermometerVerticalSub => 'O líquido sobe e ferve quando hoje passa de ontem até esta hora';

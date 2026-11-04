@@ -31,13 +31,8 @@ collected", "no account required" (no INTERNET permission, so reviewers can chec
 
 ---
 
-## Lucas, INBOX 2026-08-17
-
-*"lançar o apptime, seguir as mudanças no timer/hover, permitir o dragndrop do hover se o usuário
-segurar o dedo lá"*
-
-- 🔴 **launch** — that is the milestone above; the ask is to finish it, not a new item.
-- 🟡 **follow through on the timer/hover changes** already in flight.
+Lucas, INBOX 2026-08-17: *"lançar o apptime, seguir as mudanças no timer/hover, permitir o dragndrop
+do hover se o usuário segurar o dedo lá"* — the launch is the milestone above; drag is decided below.
 
 ## v1 — design decisions (session 1 of 3, 2026-10-30)
 
@@ -118,8 +113,7 @@ Panels: round 1 (Codex · Gemini) Notch 7 · 8.5, Quiet pill 8 · 6.5, Side rail
 Round 2 (Claude version): Quiet pill 8 · 9, Bloco 7 · 8.5, Selo 7 · 8, Side rail 5 · 6.5 — the
 rail's weak point is glanceability. Both judged Claude's round far more buildable than Stitch's.
 
-**Session 2 tests first, on the phone**: the pill renders under the status bar icons (the
-`StatusBar` window is above ours but transparent); WindowInsets for 3-button nav, keyboard and
+**Still to test on the phone**: WindowInsets for 3-button nav, keyboard and
 rotation; app-switch latency of `UsageStatsManager` on Xiaomi (panel warns 2–5 s); the touchable
 rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of vertical video).
 
@@ -180,18 +174,7 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
 
 Screens via adb: `core/run tools/phone/adb shoot|prefs|sheet` (debug build only, for `prefs`). MIUI blocks `input tap` until "Depuração USB (configurações de segurança)" is on
 **and the phone is rebooted**. Shots and panel answers stay in the session scratchpad (usage data).
-
-Session 2 starts by installing Flutter SDK + JDK 17 in the background: this machine has neither
-(adb is already in `~/Android/platform-tools`).
-
-External panel calls that worked: `agy -p "<prompt>" --add-dir <dir>` (Gemini, reads images in the
-dir); `codex exec --skip-git-repo-check -s read-only -i a.png -i b.png - < prompt.md` — the prompt
-must come on stdin, because `-i` swallows a trailing positional prompt and the run exits 0 with "No
-prompt provided". The binary ships in the VS Code extension:
-`~/.vscode/extensions/openai.chatgpt-*/bin/linux-x86_64/codex`. Its stdout can end before the
-answer (it loads skills first); the answer is the last `"text"` in the `~/.codex/sessions/**/*.jsonl` that contains the prompt's
-title — not the newest one, which can belong to another Codex session (2026-11-03). Gemini via
-`agy` hit its individual quota on 2026-11-03 (reset ~11-07).
+Outside panel: `core/run tools/panel/ask` (calls and traps in `core/agents/SPECS.md`).
 
 - 🟡 **More apps start unmonitored** (Lucas 2026-11-03): delivery (iFood and
   similar), rides (Uber and similar), travel (Airbnb, Booking, Skyscanner and others).
@@ -202,21 +185,12 @@ These were tracked in `/ROADMAP.md`, which was the wrong home: the files live he
 workspace-level commit can touch them. The wos list's own rule is that a pointer to another
 ROADMAP is a duplicate by definition. Counts regenerate in `/ISSUES.md` § Entropy; never copy them here.
 
-- 🟡 **directories over the crowding cap** — `lib/screens/analytics` (18), `lib/screens` (15),
-  `lib/data` (14). Limits are `WARN_FILES=7` / `BLOCK_FILES=10` in `core/hooks/limits.env`.
+- 🟡 **directories over the crowding cap** — `lib/screens/analytics`, `lib/screens`, `lib/data`
+  (limits in `core/hooks/limits.env`).
   **A split only pays once each new directory declares itself with a `CONTEXT.md`**: the routing
   generator folds any directory under the warn back into its parent, so moving files without
   writing that file leaves the parent's table exactly as long. A split that does not shrink the
   parent table is the check being gamed, not answered.
-- 🟢 **`CONTEXT.md` hand-lists 40 files under `## File Map`.** The routing block below it is
-  generated from first-line comments and already owns inventory; the hand-written half is a second
-  copy that goes stale silently. Delete it — but read it first, because a hand list sometimes
-  exists to name files the generator cannot reach, and those need a generator fix rather than a
-  deletion.
-- 🟢 **no gate has ever been exercised on this repo.** The routing generator and the facade gate
-  both know `index.dart`, but Dart/Flutter has never run through them here, and `flutter` is an
-  undeclared dependency — `verify:fast` cannot run at all on a fresh clone. Expect the first pass
-  to find generator bugs rather than file problems; that has been true in every repo so far.
 
 Two hazards worth expecting, both learned the expensive way in `aiwbot` and `flows`:
 a new subdirectory turns a flat import into a module boundary, so the facade gate starts firing on

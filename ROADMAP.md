@@ -90,21 +90,24 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   estimate: ~1.0 s CPU per screen-on minute, ~0 screen off → ~0.5%/day at 4 h, ~0.8% at 6 h.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
-- **Contrast chip** (built 2026-11-04, SPECS § Overlay behavior; panel
-  `outputs/apptime-panel-contrast-answer.md`). Seen on the phone: black chip + amber on a dark bar,
-  white chip + dark ink, the per-app selector in Monit. Right: Settings light, Telegram and Chrome
-  dark; padding at 13 dp OK (Lucas 2026-11-04). Wrong but legible, left to the per-app override
-  (both theme in code): Telegram in system light (its own dark theme), Maps with its light map at
-  system night. MIUI Settings at night fixed: miuix's root theme declares a light bar that
-  `Theme.Dark` keeps, so the light-bar flag counts only when the theme does not resolve dark
-  (Codex 8/10; risk: a dark AppCompat theme over a pale transparent header, none known). Asymmetry: the chip selector lives in Monit., the tab that goes
-  away (Three tabs below) — it moves with the per-app exceptions into Ajustes. The pill stays untouchable (tap-to-invert: Codex 2/10; Bloco 9, Aba 8 if wanted).
+- **Contrast ink** (built 2026-11-04 as a chip; Lucas 2026-11-04: the bar follows the app, so the pill
+  has no fill and only its ink follows the guess; SPECS § Overlay behavior; panel
+  `outputs/apptime-panel-contrast-answer.md`). Right: Settings light, Telegram and Chrome dark. Wrong
+  but legible, left to the per-app override (both theme in code): Telegram in system light (its own
+  dark theme), Maps with its light map at system night. MIUI Settings at night fixed: miuix's root
+  theme declares a light bar that `Theme.Dark` keeps, so the light-bar flag counts only when the theme
+  does not resolve dark (Codex 8/10). **To check**: Recents gave the light shade, Home the dark one.
+  Asymmetries: the selector lives in Monit., the tab that goes away — it moves with the per-app
+  exceptions into Ajustes; `ChipShade` and `chip_shades` still name a chip that is gone. The pill
+  stays untouchable (tap-to-invert: Codex 2/10; Bloco 9, Aba 8 if wanted).
 - **Pill fit** (2026-11-04, built): never leaves the bar; text 13 dp (= the HyperOS clock, which
-  ignores font_scale); `FitLadder` tightens padding, then the pie, then text to 11 dp, past a 44 dp slot (was 52:
-  Maps' location arrow touched it; now ~11 dp clear of the fixed icons, so one transient icon
-  may still touch: **Lucas checks** in Maps). Still to
-  design: condensed font, half-width ECG, squarer rounded outline, outline → bar and ECG → vertical
-  as last steps; reserve `getPrivacyIndicatorBounds` (API 31+).
+  ignores font_scale); `FitLadder` tightens padding, then the pie, then text to 11 dp, past a 46 dp
+  slot (Lucas: 1 dp into the cutout's margin, 1 dp right) less 15 dp per icon `TransientIcons`
+  guesses — alarm, silent, DND, and a navigation, ride or delivery app in front for the location
+  arrow, which no public API reports (panel `outputs/apptime-panel-icon-detect.md`, 8/10). With an
+  icon likely, the thermometer goes, then pie or outline becomes the bar, before the text shrinks.
+  **Calibrate on the phone**: which states HyperOS shows, each icon's width. Still to design:
+  condensed font, half-width ECG, squarer rounded outline.
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style;
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
   "Grande").
@@ -206,6 +209,6 @@ components that its own milestones had deliberately unwired and planned to reuse
 - Thermometer: slicing only the front of each window (23 h + m min) — both windows drop their oldest hour at the turn, up to 34 pp on real data (2026-11-03).
 - Reading the pixels behind the overlay (AccessibilityService `takeScreenshot`, MediaProjection) — Play restricts the first, the second asks consent each session; both read as spying (Lucas 2026-11-04).
 - Tap-to-invert on the pill — the pill is untouchable and a 45×22 dp target misses 48 dp; a per-app row replaced it (Codex 2/10, Lucas 2026-11-04).
-- A dark halo around the bare pill — still lost on light bars; a solid chip replaced it (Lucas 2026-11-04).
-- Pill vs the system icons: a reserved right-hand zone per icon (Codex 7/10), detecting transient icons (3/10: other apps' location is unreadable without `WATCH_APPOPS`), the pill left of the cutout (5/10) — Lucas chose the lower slot (2026-11-04).
+- A dark halo, then a solid chip, behind the pill — the halo was lost on light bars, the chip redundant once the ink follows the bar (Lucas 2026-11-04).
+- Pill vs the system icons: a reserved zone per icon (Codex 7/10), the pill left of the cutout (5/10), a fixed 29 or 40 dp slot (4 · 2/10), accepting the overlap (8/10, Lucas prefers cutting), drawing above the bar via accessibility (1/10, Play policy), a per-app "shows an icon" switch (nobody marks it) — state probes plus a location-app guess won (2026-11-04).
 - Chip: `isLightTheme` above the light-bar flag (Codex 4/10, beats specific bar evidence); a MIUI vendor check (5/10) — the conflict guard won (2026-11-04).

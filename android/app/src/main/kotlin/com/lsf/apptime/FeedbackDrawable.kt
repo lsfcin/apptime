@@ -1,4 +1,4 @@
-// Paints the pill's chip, then the usual-progress cue (filling dot, bar under the text, or outline).
+// Paints the usual-progress cue (filling dot, bar under the text, or outline).
 package com.lsf.apptime
 
 import android.graphics.Canvas
@@ -16,8 +16,6 @@ class FeedbackDrawable(
     private val density: Float,
     private val block: Boolean,
     private val ink: Int,
-    // The pill's solid chip colour (white or black, from the theme guess); null for the Bloco, which has its own.
-    private val chip: Int? = null,
 ) : Drawable() {
     var frame: OverlayFeedback.Frame? = null
         set(value) { field = value; invalidateSelf() }
@@ -38,7 +36,6 @@ class FeedbackDrawable(
     override fun draw(canvas: Canvas) {
         background.bounds = bounds
         background.draw(canvas)
-        chip?.let { drawChip(canvas, it) }
         // Before the usual is ready the thermometer still shows, so it draws first.
         thermometerPhase.advance(thermometerLook, thermometerLevel, SystemClock.uptimeMillis())
         ThermometerGlyph.draw(canvas, paint, thermometerLook, block, thermometerLevel, thermometerPhase, ink,
@@ -54,15 +51,6 @@ class FeedbackDrawable(
 
     private fun stroke(color: Int, width: Float) = paint.apply {
         this.color = color; style = Paint.Style.STROKE; strokeWidth = width; strokeCap = Paint.Cap.ROUND
-    }
-
-    // Same corners as the outline, one half stroke out, so the outline traces the chip's edge.
-    private fun drawChip(canvas: Canvas, color: Int) {
-        val half = dp(1f) / 2
-        val radius = minOf(outlineRadius(bounds.height() - 2 * half, density, block) + half, bounds.height() / 2f)
-        paint.style = Paint.Style.FILL
-        paint.color = color
-        canvas.drawRoundRect(RectF(bounds), radius, radius, paint)
     }
 
     private fun drawBar(canvas: Canvas, progress: Float) {

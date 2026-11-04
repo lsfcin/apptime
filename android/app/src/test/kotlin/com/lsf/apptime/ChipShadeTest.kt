@@ -62,10 +62,11 @@ class ChipShadeTest {
 
     @Test
     fun everyInkKeepsSmallTextContrastAfterTheWindowAlpha() {
-        for (chip in Shade.values()) for (bar in listOf(white, black)) for (state in UsualState.values()) {
-            val ink = OverlayInk.ink(state, chip, amber = true)
-            val ratio = contrast(over(ink, bar), over(OverlayInk.chip(chip), bar))
-            assertTrue("$chip chip, $state, bar ${Integer.toHexString(bar)}: $ratio", ratio >= 4.5)
+        // The pill has no fill (Lucas 2026-11-04): each ink is read straight against the bar it was picked for.
+        for ((shade, bar) in listOf(Shade.LIGHT to white, Shade.DARK to black)) for (state in UsualState.values()) {
+            val ink = OverlayInk.ink(state, shade, amber = true)
+            val ratio = contrast(over(ink, bar), bar)
+            assertTrue("$shade bar, $state: $ratio", ratio >= 4.5)
         }
     }
 

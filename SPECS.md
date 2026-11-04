@@ -68,12 +68,12 @@ lib/
 | `OverlayWindow.kt` | Non-touchable window lifecycle, alpha 0.8, status-bar/cutout geometry and shared rimless backgrounds |
 | `TimerOverlay.kt` | Anchored Quiet pill / accessible block text, padding per variant, measured placement; hands the text span to the feedback drawable |
 | `OverlayFeedback.kt` | Pure: variant normalization, progress over the shared `OverlayText.state`, the bar's round-cap span |
-| `FeedbackDrawable.kt` | Draws the pill's chip, then the dot, bar or clockwise outline over a 32% track of the ink; cues 1.25× on block |
+| `FeedbackDrawable.kt` | Draws the dot, bar or clockwise outline over a 32% track of the ink; cues 1.25× on block |
 | `ChipShade.kt` · `StatusBarTheme.kt` | Pure: shade cascade, per-app override · reads the front activity's theme |
-| `OverlayInk.kt` | Pure: ink per state and chip, ≥ 4.5:1 after alpha 0.8 |
+| `OverlayInk.kt` | Pure: ink per state and bar shade, ≥ 4.5:1 after alpha 0.8 |
 | `MessageOverlay.kt` | Separate header/body window below status bar and timer, at most 88% screen width |
 | `OverlayPlacement.kt` | Pure: the pill's status-bar spot (right of the cutout, or right of centre), icon-row centring, and whether it fits |
-| `FitLadder.kt` | Pure: the steps that tighten a pill that does not fit — padding, then the pie, then text to 11 dp; none drops an element |
+| `FitLadder.kt` · `TransientIcons.kt` | Pure: the steps that tighten a pill that does not fit (padding, pie, text to 11 dp; with an icon likely, thermometer off, then the bar) · counts likely icons |
 | `OverlayText.kt` | Pure: compact durations (pill and block), localized message headers, 7-real-day feedback floor |
 | `LiveUsage.kt` | Pure: stored daily totals plus unflushed app/launcher session for both timer and messages |
 | `UsualCache.kt` | Per-package/phone usual cache shared by timer and messages; invalidated on 04:00 day-key change or a new unmonitored set |
@@ -117,7 +117,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 
 **Overlay behavior:** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Both styles use `FLAG_NOT_TOUCHABLE`, window alpha 0.8 and tabular figures; no drag or intensity modes.
 
-- `pill` (default): 13 dp (as tall as the status bar clock, which ignores font_scale), on a solid white or black chip, ink opposite, chosen by `ChipShade` (per-app override first), because no app can read another app's status bar. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). It never leaves the status bar: on API 30+ with a top cutout it sits flush with `boundingRectTop.right`, otherwise just right of the bar's centre; centred on the icon row (12 dp above the bar's bottom; no API reports it), never past the right margin. Wider than `PILL_SLOT_DP` (44 dp) or taller than the bar, `FitLadder` tightens it.
+- `pill` (default): 13 dp (as tall as the status bar clock, which ignores font_scale), no fill; light or dark ink by `ChipShade` (per-app override first), as no app can read another's status bar. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). It never leaves the status bar: on API 30+ with a top cutout it sits 1 dp into `boundingRectTop.right`, otherwise just right of the bar's centre; centred on the icon row (12 dp above the bar's bottom; no API reports it), never past the right margin. Wider than `PILL_SLOT_DP` (46 dp, 15 dp less per icon `TransientIcons` guesses: alarm, silent, DND, a location app in front) or taller than the bar, `FitLadder` tightens it.
 - `block`: below the status bar, top-right; 17 sp bold, the pill's letter format (`12m`, `1h44`), 96% black background, no rim. Uses the selected feedback variant with cues scaled 1.25×.
 - Padding: every style adds one blank character's width each side of the time (Lucas, 2026-11-02); `fill` reserves the dot (6.9 dp, 1.25× on block) plus a fixed 3 dp gap left of the text, so the gap never varies with the state; `bar` takes a bottom padding of three bar thicknesses: the bar right under the digits, twice its thickness free below it.
 - Today's app total is compared with that app's 30-day `UsualDaily` mean; on the launcher the timer uses phone usage/usual. Before 7 real days feedback is calm and no cue is drawn. Calm, near (soft amber), past (amber, bold pill) per `OverlayInk`; `overlay_amber` off keeps calm.
@@ -130,7 +130,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - Every variant takes its state from `OverlayText.state` (the `UsualDaily` rule plus the 7-day floor), so shapes and messages never disagree. Progress is clamped to [0,1]; a zero usual draws a full line for any use (no division by zero).
 - Messages have a separate window, below the status bar and the Bloco, right aligned and at most 88% screen width. This avoids overlapping non-touchable windows (whose combined obscuring opacity would exceed 0.8). The timer stays anchored. Header: `<app label> · 1h 18m hoje` / `today`; on the launcher `Celular` / `Phone` with the phone total. Language follows the saved override or system language (PT fallback).
 - A message ends after 6.5 s, on a detected package change (500 ms poll), overlay hiding/disabling, or screen off. Cancellation leaves the trigger recorded as shown. Trigger evaluation remains every ~2.5 s.
-- `MonitoringService` still writes `overlay_text`; its nonempty value/visibility gates the timer, including the launcher's `HOME_DELAY_MS` (2 s; Lucas, 2026-11-02): blank, or the unlock count right after an unlock. Displayed timer text now comes from shared live totals rather than the legacy seconds/count string.
+- `MonitoringService` still writes `overlay_text`; its nonempty value/visibility gates the timer, including the launcher's `HOME_DELAY_MS` (2 s; Lucas, 2026-11-02): blank, or the unlock count right after an unlock.
 
 ---
 
@@ -196,29 +196,6 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - **Thermometer parity and continuity**: today since 04:00 against yesterday from 04:00 to the same time; the hour 24 h back splits by the minute, so the value never jumps at an hour turn and both sides start over at 04:00; `test/fixtures/thermometer.json` checks it on both sides. The open session is added hour by hour, since buckets fill only when it ends.
 - **Daily total == sum of hourly values**: `accumulateDailyMs` accumulates daily totals within the hourly walk loop.
 - **Heartbeat granularity**: written every 30s (not 1s) and at the screen-off flush — the tick is stopped after it, so a restart overnight must not backfill seconds already counted.
-
----
-
-## Test files — `test/`
-
-| File | What it tests |
-|------|--------------|
-| `thermometer_test.dart` | Thermometer windows, hour-turn continuity and bucket keys against the shared fixture cases |
-| `usual_daily_test.dart` | "Your usual" against the shared fixture cases |
-| `android/app/src/test/…/UsualDailyTest.kt` | Same fixture cases against the Kotlin mirror |
-| `android/app/src/test/…/MessageRulesTest.kt` | Floors (7 real days, 15 min), once a day per trigger, 90-min gap |
-| `android/app/src/test/…/OverlayTextTest.kt` | ≤4-character timer, PT/EN app/phone headers, feedback floor |
-| `android/app/src/test/…/OverlayPlacementTest.kt` | Cutout slot on the icon row, clamping inside the bar, width/height fit, API/no-cutout/block/screen-edge fallbacks |
-| `android/app/src/test/…/UsualCacheTest.kt` | Cache reuse, app/phone separation, missing-day seed and day rollover |
-| `android/app/src/test/…/LiveUsageTest.kt` | Live app/phone totals, launcher session, missing/future session start |
-| `android/app/src/test/…/PhoneTotalTest.kt` | Live phone total and phone usual without unmonitored apps; their days stay measured |
-| `unmonitored_total_b1_test.dart` | Daily/hourly phone totals without unmonitored apps, restored on re-enable, floored at zero |
-| `setup_reopen_b3_test.dart` | Every system-screen setup step says to reopen AppTime, PT/EN |
-| `android/app/src/test/…/MessageDisplayTest.kt` | Exact lifetime, app-switch cancellation, recorded trigger remains shown |
-| `android/app/src/test/…/OverlayFeedbackTest.kt` | Variant fallback (retired values included), 80/100% boundaries, every variant on the shared rule, history floor, clamping/zero usual, bar span with round caps |
-| `overlay_feedback_test.dart` | Default/unknown/retired feedback, all four choices persisted through PT/EN settings, style independence and disabled selector |
-| `overlay_style_test.dart` | Default/unknown style, PT/EN settings selector and persisted choices |
-| `widget_test.dart` | App smoke test — nav tabs render |
 
 ---
 

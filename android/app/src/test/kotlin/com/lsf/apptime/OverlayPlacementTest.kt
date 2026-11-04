@@ -1,8 +1,9 @@
-// Checks cutout placement on the icon row and every fallback that keeps the complete timer readable.
+// Checks the pill never leaves the status bar, sits right of the camera on the icon row, and flags when it does not fit.
 package com.lsf.apptime
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class OverlayPlacementTest {
@@ -29,13 +30,27 @@ class OverlayPlacementTest {
     }
 
     @Test
-    fun overflowMissingCutoutOldApiAndBlockGoBelowStatusBar() {
-        val fallback = TimerPlacement(false, 8, 38)
-        assertEquals(fallback, place(width = 45))
-        assertEquals(fallback, place(height = 31))
-        assertEquals(fallback, place(cutout = 0))
-        assertEquals(fallback, place(api = 29))
-        assertEquals(fallback, place(block = true))
-        assertFalse(place(cutout = 350).inStatusBar)
+    fun aPillTooWideOrTooTallStaysInTheBarAndSaysItDoesNotFit() {
+        for (slot in listOf(place(width = 45), place(height = 31), place(cutout = 350))) {
+            assertTrue(slot.inStatusBar)
+            assertFalse(slot.fits)
+        }
+        assertEquals(0, place(height = 31).y)
+    }
+
+    @Test
+    fun aPillNeverPassesTheScreensRightMargin() {
+        assertEquals(400 - 8 - 44, place(cutout = 350).x)
+    }
+
+    @Test
+    fun noCutoutOrOldApiTakesTheFixedSpotRightOfCentre() {
+        assertEquals(TimerPlacement(true, 208, 9), place(cutout = 0))
+        assertEquals(TimerPlacement(true, 208, 9), place(api = 29))
+    }
+
+    @Test
+    fun theBlocoStaysBelowTheBar() {
+        assertEquals(TimerPlacement(false, 8, 38), place(block = true))
     }
 }

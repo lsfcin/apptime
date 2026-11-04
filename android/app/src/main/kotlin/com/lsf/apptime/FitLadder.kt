@@ -1,0 +1,22 @@
+// The pill's fit ladder: how far it tightens, one step at a time, while it does not fit its status-bar slot.
+package com.lsf.apptime
+
+/**
+ * No step drops an element the user chose (Lucas 2026-11-04). Order from the Codex panel of 2026-11-04:
+ * padding first, then the pie, then the text, which is the last thing to shrink.
+ * Not built yet, waiting on design: condensed font, half-width ECG, squarer outline.
+ */
+object FitLadder {
+    data class Step(val sideTrimDp: Float, val dotScale: Float, val dotGapDp: Float, val textDp: Float)
+
+    val STEPS = listOf(
+        Step(0f, 1f, FeedbackDrawable.FILL_GAP_DP, 13f),   // as designed: as tall as the status bar clock
+        Step(1f, 1f, FeedbackDrawable.FILL_GAP_DP, 13f),   // the number 1 dp nearer each edge
+        Step(1f, 0.8f, 1.5f, 13f),                         // the pie smaller and nearer the number
+        Step(1f, 0.8f, 1.5f, 12f),
+        Step(1f, 0.8f, 1.5f, 11f),                         // the floor
+    )
+
+    /** The first step whose pill fits, or the last one when none does; `fits` measures a step. */
+    fun first(fits: (Step) -> Boolean): Int = STEPS.indices.firstOrNull { fits(STEPS[it]) } ?: STEPS.lastIndex
+}

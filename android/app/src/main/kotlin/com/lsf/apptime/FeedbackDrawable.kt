@@ -28,6 +28,9 @@ class FeedbackDrawable(
     // Horizontal span of the time text inside the view; the bar matches it like an underline.
     var textLeft = 0f
     var textRight = 0f
+    // The filling dot's size and gap, as the pill's fit ladder sets them.
+    var dotScale = 1f
+    var dotGapDp = FILL_GAP_DP
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         // Same dark halo as the bare pill's text, so cues stay visible on a light status bar.
         if (halo) setShadowLayer(HALO_DP * density, 0f, 0f, HALO)
@@ -65,8 +68,8 @@ class FeedbackDrawable(
     }
 
     private fun drawFill(canvas: Canvas, progress: Float) {
-        val radius = dotRadius(density, block)
-        val cx = bounds.left + textLeft - FILL_GAP_DP * density * scale(block) - radius
+        val radius = dotRadius(density, block) * dotScale
+        val cx = bounds.left + textLeft - dotGapDp * density * scale(block) - radius
         val cy = bounds.exactCenterY()
         canvas.drawCircle(cx, cy, radius - density / 2, stroke(TRACK, density))
         paint.style = Paint.Style.FILL
@@ -120,8 +123,8 @@ class FeedbackDrawable(
         fun barStroke(density: Float, block: Boolean) = 2f * density * scale(block)
         fun dotRadius(density: Float, block: Boolean) = 3.45f * density * scale(block)
         // Room the filling dot takes left of the text: its diameter plus the gap.
-        fun fillReserve(density: Float, block: Boolean) =
-            2 * dotRadius(density, block) + FILL_GAP_DP * density * scale(block)
+        fun fillReserve(density: Float, block: Boolean, dotScale: Float = 1f, gapDp: Float = FILL_GAP_DP) =
+            2 * dotRadius(density, block) * dotScale + gapDp * density * scale(block)
         // The outline's corner radius inside its 1 dp stroke: 12 dp on the pill, 8 on the block, at most half the height.
         fun outlineRadius(insetHeight: Float, density: Float, block: Boolean) =
             minOf((if (block) 8f else 12f) * density - density * scale(block) / 2, insetHeight / 2)

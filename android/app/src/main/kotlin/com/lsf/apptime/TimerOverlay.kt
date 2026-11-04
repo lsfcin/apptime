@@ -11,6 +11,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.RelativeSizeSpan
 import android.text.style.TypefaceSpan
+import android.util.TypedValue
 import android.view.Choreographer
 import android.view.Gravity
 import android.view.View
@@ -28,6 +29,8 @@ class TimerOverlay(context: Context) {
     private val window = OverlayWindow(context, view)
     private val density = view.resources.displayMetrics.density
     private var lastAppearance: List<Any>? = null
+    private var lastText: String? = null
+    private var step = FitLadder.STEPS[0]
     private val choreographer = Choreographer.getInstance()
     private var frameMs = 0L
     private var ticking = false
@@ -52,7 +55,8 @@ class TimerOverlay(context: Context) {
         val appearance = listOf(block, state, feedback.variant, thermometer)
         if (lastAppearance != appearance) {
             lastAppearance = appearance
-            view.textSize = if (block) 17f else 14f
+            // The pill's text size is the fit ladder's (dp); the Bloco is the app's own text and follows font_scale.
+            if (block) view.textSize = 17f
             view.typeface = if (block || state == UsualState.PAST) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
             val ink = when (state) {
                 UsualState.CALM -> Color.WHITE
@@ -66,26 +70,47 @@ class TimerOverlay(context: Context) {
             feedbackDrawable = FeedbackDrawable(if (block) window.background(true) else ColorDrawable(Color.TRANSPARENT),
                 density, block, ink, halo = !block)
             view.background = feedbackDrawable
-            pad(block, feedback.variant, thermometer)
+            lastText = null
         }
         feedbackDrawable.thermometerLook = thermometer
         feedbackDrawable.thermometerLevel = level
         feedbackDrawable.frame = feedback
-        view.text = unitsCondensed(OverlayText.compact(totalMs))
         val bounds = window.bounds()
         view.maxWidth = (bounds.width * 0.88f).toInt()
-        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        feedbackDrawable.textLeft = view.paddingLeft.toFloat()
-        // The right padding holds the thermometer, so the text (and the bar under it) ends before it.
-        feedbackDrawable.textRight = (view.measuredWidth - view.paddingRight).toFloat()
-        val slot = OverlayPlacement.timer(Build.VERSION.SDK_INT, bounds.cutoutRight, bounds.statusBarHeight,
-            bounds.width, view.measuredWidth, view.measuredHeight, window.dp(52), window.dp(8),
-            window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), block, cutoutGap = 0)
+        val text = OverlayText.compact(totalMs)
+        // The ladder is climbed again only when the text or the look changes, so the pill never shifts between minutes.
+        if (text != lastText) {
+            lastText = text
+            view.text = unitsCondensed(text)
+            step = if (block) FitLadder.STEPS[0] else FitLadder.STEPS[FitLadder.first {
+                fit(block, feedback.variant, thermometer, it, bounds).fits }]
+        }
+        val slot = fit(block, feedback.variant, thermometer, step, bounds)
         view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         val x = slot.x + if (slot.inStatusBar) 0 else bounds.rightInset
         window.place(view.measuredWidth, view.measuredHeight, x, slot.y, slot.inStatusBar)
         bottom = if (visible) slot.y + view.measuredHeight else 0
         animate(if (visible && motionOn()) ThermometerMotion.frameMs(thermometer, level) else 0L)
+    }
+
+    // Applies one ladder step (the pill only), measures, and asks where it goes and whether it fits.
+    private fun fit(block: Boolean, variant: String, thermometer: String, s: FitLadder.Step,
+                    bounds: OverlayBounds): TimerPlacement {
+        if (!block) {
+            // dp, as tall as the status bar clock at 13 dp (26 px at 440 dpi), which ignores font_scale
+            // (measured 1.0 / 1.15 / 1.3 on HyperOS, 2026-11-04).
+            view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, s.textDp)
+            feedbackDrawable.dotScale = s.dotScale
+            feedbackDrawable.dotGapDp = s.dotGapDp
+        }
+        pad(block, variant, thermometer, s)
+        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        feedbackDrawable.textLeft = view.paddingLeft.toFloat()
+        // The right padding holds the thermometer, so the text (and the bar under it) ends before it.
+        feedbackDrawable.textRight = (view.measuredWidth - view.paddingRight).toFloat()
+        return OverlayPlacement.timer(Build.VERSION.SDK_INT, bounds.cutoutRight, bounds.statusBarHeight,
+            bounds.width, view.measuredWidth, view.measuredHeight, window.dp(52), window.dp(8),
+            window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), block, cutoutGap = 0)
     }
 
     private fun animate(delayMs: Long) {
@@ -101,12 +126,12 @@ class TimerOverlay(context: Context) {
     // outline's rounded ends ate it); the block, whose 8 dp margin already frames it, one space;
     // the filling dot sits left of the text; the bar's bottom padding holds the bar plus twice its thickness
     // below it, so the bar sits right under the digits (their font descent is the only gap above it).
-    private fun pad(block: Boolean, variant: String, thermometer: String) {
+    private fun pad(block: Boolean, variant: String, thermometer: String, s: FitLadder.Step) {
         val outline = variant == "outline"
         val air = view.paint.measureText(if (block) " " else "0")
         // Lucas 2026-11-03: the pill's number may sit 1.5 dp closer to its edges than a digit's width + 1 dp.
-        val side = (if (block) window.dp(8).toFloat() else -0.5f * density) + air
-        val dot = if (variant == "fill") FeedbackDrawable.fillReserve(density, block) else 0f
+        val side = (if (block) window.dp(8).toFloat() else (-0.5f - s.sideTrimDp) * density) + air
+        val dot = if (variant == "fill") FeedbackDrawable.fillReserve(density, block, s.dotScale, s.dotGapDp) else 0f
         val vertical = window.dp(if (block) 5 else 2) + if (outline) window.dp(2) else 0
         val bottom = if (variant == "bar") (3 * FeedbackDrawable.barStroke(density, block)).roundToInt() else vertical
         val glyph = FeedbackDrawable.thermometerReserve(thermometer, density, block)

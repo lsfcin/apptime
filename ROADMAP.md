@@ -95,26 +95,22 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   estimate: ~1.0 s CPU per screen-on minute, ~0 screen off → ~0.5%/day at 4 h, ~0.8% at 6 h.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
-- **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos). The bare
-  pill has no floor, only a dark halo. Checked 2026-11-03 over Chrome light: white text vanishes
-  on white, and Lucas rejects the halo itself (ugly on light, Telegram 2026-11-04): delete it. Replace
-  both with ink that follows the bar, ~200 ms colour fade on app switch. Pill only: the Bloco's own
-  96% black background already carries white. Lucas 2026-11-04: guess from the front activity's
-  declared theme (`windowLightStatusBar` / `statusBarColor` via `createPackageContext`; the
-  activity class is `UsageEvents.Event.className`, written by `MonitoringService` beside
-  `current_pkg`), re-guessed on a uiMode change (night, battery saver). Misses bars set in code
-  (Chrome per page, Maps night, Telegram themes): **test every one of those on the phone**. Dark
-  inks approved: calm `#1A1C20`, near `#6B4E12`, past `#8A5A00`. The colour feedback (amber for
-  near/past) gets its own off switch. Never invisible: near-white/near-black alone is not enough
-  (`#F3F4F6` on white ≈ 1.1:1); proposed a 1 dp mid-grey hairline, no blur — panel. A tap on pill,
-  Bloco or Aba inverts the ink, stored per app, no settings row; the pill's problem is only the
-  swipe down it would swallow (MIUI right side = Control Center): candidate is catch the touch and,
-  on a downward drag, open the shade itself (`expandNotificationsPanel`, `EXPAND_STATUS_BAR`).
-  Lucas's real worry (2026-11-04): a touchable pill that falls below the bar (`OverlayPlacement.timer`
-  drops it when wider than the 52 dp slot, taller than the bar, no cutout or API < 30) sits over the
-  app's own top-right buttons and blocks them. Proposed: shrink to fit before falling (text size to a
-  floor, then glyph, then outline), and a pill that still falls stays pass-through, no tap.
-  Codex panel pending (from 16:31 11-04).
+- **Contrast mode** (pill only; the Bloco's 96% black carries white). White on white vanishes
+  (Chrome light, 2026-11-03); the halo is rejected: delete it. Lucas 2026-11-04: **the pill gets a
+  solid background, white or black, chosen by the theme guess**, ink the opposite; a wrong guess
+  stays legible (a chip of the wrong shade, accepted risk), fixed by a per-app Auto / Claro / Escuro
+  row (Codex panel 11-04 asked for exactly this, and a contrasting fill over a hairline). Guess: the
+  front activity's declared theme (`windowLightStatusBar` / `statusBarColor` via
+  `createPackageContext`, with an app-theme fallback; activity = `UsageEvents.Event.className`,
+  written beside `current_pkg`), re-guessed on uiMode change. Android 15's enforced transparency
+  weakens `statusBarColor`. Test Chrome, Maps night, Telegram, battery-saver dark. Dark inks: calm
+  `#1A1C20`, near `#6B4E12`, past `#8A5A00`; amber feedback gets its own switch, one row in Ajustes.
+  The pill stays untouchable (tap-to-invert dropped: Codex 2/10; Bloco 9, Aba 8 if wanted later).
+  Answer: `outputs/apptime-panel-tap-answer.md`.
+- **Pill fit** (2026-11-04, built): never leaves the bar; text 13 dp (= the HyperOS clock, which
+  ignores font_scale); `FitLadder` tightens padding, then the pie, then text to 11 dp. Still to
+  design: condensed font, half-width ECG, squarer rounded outline, outline → bar and ECG → vertical
+  as last steps; reserve `getPrivacyIndicatorBounds` (API 31+).
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style;
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
   "Grande").

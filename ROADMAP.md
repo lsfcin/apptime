@@ -95,18 +95,11 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   estimate: ~1.0 s CPU per screen-on minute, ~0 screen off → ~0.5%/day at 4 h, ~0.8% at 6 h.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
-- **Contrast mode** (pill only; the Bloco's 96% black carries white). White on white vanishes
-  (Chrome light, 2026-11-03); the halo is rejected: delete it. Lucas 2026-11-04: **the pill gets a
-  solid background, white or black, chosen by the theme guess**, ink the opposite; a wrong guess
-  stays legible (a chip of the wrong shade, accepted risk), fixed by a per-app Auto / Claro / Escuro
-  row (Codex panel 11-04 asked for exactly this, and a contrasting fill over a hairline). Guess: the
-  front activity's declared theme (`windowLightStatusBar` / `statusBarColor` via
-  `createPackageContext`, with an app-theme fallback; activity = `UsageEvents.Event.className`,
-  written beside `current_pkg`), re-guessed on uiMode change. Android 15's enforced transparency
-  weakens `statusBarColor`. Test Chrome, Maps night, Telegram, battery-saver dark. Dark inks: calm
-  `#1A1C20`, near `#6B4E12`, past `#8A5A00`; amber feedback gets its own switch, one row in Ajustes.
-  The pill stays untouchable (tap-to-invert dropped: Codex 2/10; Bloco 9, Aba 8 if wanted later).
-  Answer: `outputs/apptime-panel-tap-answer.md`.
+- **Contrast chip** (built 2026-11-04, SPECS § Overlay behavior; panel
+  `outputs/apptime-panel-contrast-answer.md`). Seen on the phone: black chip + amber on a dark bar,
+  white chip + dark ink, the per-app selector in Monit. **Next**: test Maps night, Telegram,
+  battery-saver dark and Chrome light without a launcher dialog on top; Lucas checks the chip's
+  padding at 13 dp. The pill stays untouchable (tap-to-invert: Codex 2/10; Bloco 9, Aba 8 if wanted).
 - **Pill fit** (2026-11-04, built): never leaves the bar; text 13 dp (= the HyperOS clock, which
   ignores font_scale); `FitLadder` tightens padding, then the pie, then text to 11 dp. Still to
   design: condensed font, half-width ECG, squarer rounded outline, outline → bar and ECG → vertical
@@ -232,4 +225,5 @@ components that its own milestones had deliberately unwired and planned to reuse
 - Pill hugging the camera cutout to save width — every phone's cutout differs and sits off the text's line (Lucas 2026-11-03).
 - Thermometer: slicing only the front of each window (23 h + m min) — both windows drop their oldest hour at the turn, up to 34 pp on real data (2026-11-03).
 - Reading the pixels behind the overlay (AccessibilityService `takeScreenshot`, MediaProjection) — Play restricts the first, the second asks consent each session; both read as spying (Lucas 2026-11-04).
-- Per-app light/dark hint row in Ajustes — a tap on the overlay inverts the ink and is stored per app, no settings row (Lucas 2026-11-04).
+- Tap-to-invert on the pill — the pill is untouchable and a 45×22 dp target misses 48 dp; a per-app row replaced it (Codex 2/10, Lucas 2026-11-04).
+- A dark halo around the bare pill — still lost on light bars; a solid chip replaced it (Lucas 2026-11-04).

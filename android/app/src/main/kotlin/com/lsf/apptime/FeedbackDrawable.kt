@@ -1,8 +1,7 @@
-// Paints the usual-progress cue (filling dot, bar under the text, or outline) inside the timer background.
+// Paints the pill's chip, then the usual-progress cue (filling dot, bar under the text, or outline).
 package com.lsf.apptime
 
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.Path
@@ -17,7 +16,8 @@ class FeedbackDrawable(
     private val density: Float,
     private val block: Boolean,
     private val ink: Int,
-    halo: Boolean = false,
+    // The pill's solid chip colour (white or black, from the theme guess); null for the Bloco, which has its own.
+    private val chip: Int? = null,
 ) : Drawable() {
     var frame: OverlayFeedback.Frame? = null
         set(value) { field = value; invalidateSelf() }
@@ -31,15 +31,14 @@ class FeedbackDrawable(
     // The filling dot's size and gap, as the pill's fit ladder sets them.
     var dotScale = 1f
     var dotGapDp = FILL_GAP_DP
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        // Same dark halo as the bare pill's text, so cues stay visible on a light status bar.
-        if (halo) setShadowLayer(HALO_DP * density, 0f, 0f, HALO)
-    }
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val track = OverlayInk.track(ink)
     private fun dp(value: Float) = value * density * scale(block)
 
     override fun draw(canvas: Canvas) {
         background.bounds = bounds
         background.draw(canvas)
+        chip?.let { drawChip(canvas, it) }
         // Before the usual is ready the thermometer still shows, so it draws first.
         thermometerPhase.advance(thermometerLook, thermometerLevel, SystemClock.uptimeMillis())
         ThermometerGlyph.draw(canvas, paint, thermometerLook, block, thermometerLevel, thermometerPhase, ink,
@@ -57,13 +56,22 @@ class FeedbackDrawable(
         this.color = color; style = Paint.Style.STROKE; strokeWidth = width; strokeCap = Paint.Cap.ROUND
     }
 
+    // Same corners as the outline, one half stroke out, so the outline traces the chip's edge.
+    private fun drawChip(canvas: Canvas, color: Int) {
+        val half = dp(1f) / 2
+        val radius = minOf(outlineRadius(bounds.height() - 2 * half, density, block) + half, bounds.height() / 2f)
+        paint.style = Paint.Style.FILL
+        paint.color = color
+        canvas.drawRoundRect(RectF(bounds), radius, radius, paint)
+    }
+
     private fun drawBar(canvas: Canvas, progress: Float) {
         val width = barStroke(density, block)
         // Twice the bar's thickness stays free between it and the bottom edge.
         val y = bounds.bottom - 2 * width - width / 2
         val start = bounds.left + textLeft
         val end = bounds.left + textRight
-        OverlayFeedback.barSpan(start, end, width, 1f)?.let { (l, r) -> canvas.drawLine(l, y, r, y, stroke(TRACK, width)) }
+        OverlayFeedback.barSpan(start, end, width, 1f)?.let { (l, r) -> canvas.drawLine(l, y, r, y, stroke(track, width)) }
         OverlayFeedback.barSpan(start, end, width, progress)?.let { (l, r) -> canvas.drawLine(l, y, r, y, stroke(ink, width)) }
     }
 
@@ -71,7 +79,7 @@ class FeedbackDrawable(
         val radius = dotRadius(density, block) * dotScale
         val cx = bounds.left + textLeft - dotGapDp * density * scale(block) - radius
         val cy = bounds.exactCenterY()
-        canvas.drawCircle(cx, cy, radius - density / 2, stroke(TRACK, density))
+        canvas.drawCircle(cx, cy, radius - density / 2, stroke(track, density))
         paint.style = Paint.Style.FILL
         paint.color = ink
         val oval = RectF(cx - radius, cy - radius, cx + radius, cy + radius)
@@ -97,7 +105,7 @@ class FeedbackDrawable(
             arcTo(RectF(rect.left, rect.top, rect.left + 2 * radius, rect.top + 2 * radius), 180f, 90f)
             close()
         }
-        canvas.drawPath(path, stroke(TRACK, width))
+        canvas.drawPath(path, stroke(track, width))
         if (progress <= 0f) return
         val drawn = if (progress >= 1f) path else Path().also {
             val measure = PathMeasure(path, false)
@@ -114,11 +122,7 @@ class FeedbackDrawable(
     override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
 
     companion object {
-        // Empty part of every cue: white at 32%, readable over light content at window alpha 0.8.
-        val TRACK = Color.argb(82, 255, 255, 255)
         const val FILL_GAP_DP = 3f
-        const val HALO_DP = 2f
-        val HALO = Color.argb(170, 0, 0, 0)
         fun scale(block: Boolean) = if (block) 1.25f else 1f
         fun barStroke(density: Float, block: Boolean) = 2f * density * scale(block)
         fun dotRadius(density: Float, block: Boolean) = 3.45f * density * scale(block)

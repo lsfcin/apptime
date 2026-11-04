@@ -1,9 +1,5 @@
 # AppTime — Code Structure & Reference
 
-Last updated: 2026-11-03
-
----
-
 ## Flutter / Dart — `lib/`
 
 ```
@@ -12,8 +8,8 @@ lib/
 ├── main_screen.dart                 # MainScreen — bottom nav, AppInfoService init
 │
 ├── data/
-│   ├── insight_content.dart         # InsightEntry, kAlertas, kSolucoes (47 entries, PT+EN)
-│   └── insights.dart                # InsightEntry (rotator), kInsights (50 entries, PT+EN)
+│   ├── insight_content.dart         # InsightEntry, kAlertas, kSolucoes
+│   └── insights.dart                # InsightEntry (rotator), kInsights
 │
 ├── l10n/
 │   ├── app_localizations.dart       # Abstract base — all l10n keys
@@ -23,9 +19,7 @@ lib/
 ├── screens/
 │   ├── analytics/
 │   │   ├── analytics_screen.dart    # Shell: TabController + Tab1d/Tab7d/Tab30d
-│   │   ├── analytics_helpers.dart   # Shared widgets: AppAgg, DonutChart, HorizontalAppBars,
-│   │   │                            #   LegendDot/Item, Summary30dWidget, analysisCard(),
-│   │   │                            #   analyticsNoData(), sevenDayLabel()
+│   │   ├── analytics_helpers.dart   # Shared widgets: AppAgg, DonutChart, analysisCard()…
 │   │   ├── classification_message.dart  # classificationMessage() — 5×4 level matrix
 │   │   ├── tab_day.dart             # Tab1d + hourly/session/opportunity charts
 │   │   ├── tab_month.dart           # Tab30d + UsageTrend30d charts
@@ -35,7 +29,6 @@ lib/
 │   │   ├── insight_data.dart        # InsightData.compute() — pre-computed usage stats
 │   │   └── insights_screen.dart     # InsightsScreen, _InsightCarousel, _InsightCard
 │   │
-│   ├── home_screen.dart             # Permissions + insight-of-day rotator
 │   ├── monitoring_screen.dart       # MonitoringScreen, _InsightRotatorCard
 │   ├── per_app_screen.dart          # Per-app usage and monitoring switch
 │   ├── settings_screen.dart         # Settings shell and lifecycle
@@ -69,13 +62,15 @@ lib/
 | File | Responsibility |
 |------|---------------|
 | `MainActivity.kt` | Flutter MethodChannel handler — start/stop service, permissions, getAppMetadata, getStartupStatus |
-| `MonitoringService.kt` | Foreground service — 1s tick, accumulateDailyMs, session tracking, overlay text |
+| `MonitoringService.kt` | Foreground service — 1s tick, accumulateDailyMs, session tracking, overlay text, front activity |
 | `HistoryBackfill.kt` | Gap backfill (backfillGap) + 30-day history fill (backfillHistory); injectable |
 | `OverlayService.kt` | Foreground service — 500 ms poll, shared live-usage snapshot/cache, app labels, timer/message coordination |
 | `OverlayWindow.kt` | Non-touchable window lifecycle, alpha 0.8, status-bar/cutout geometry and shared rimless backgrounds |
 | `TimerOverlay.kt` | Anchored Quiet pill / accessible block text, padding per variant, measured placement; hands the text span to the feedback drawable |
 | `OverlayFeedback.kt` | Pure: variant normalization, progress over the shared `OverlayText.state`, the bar's round-cap span |
-| `FeedbackDrawable.kt` | Draws the filling dot, the bar under the text, or the clockwise outline, each over a 32% white track; scales cues 1.25× for block |
+| `FeedbackDrawable.kt` | Draws the pill's chip, then the dot, bar or clockwise outline over a 32% track of the ink; cues 1.25× on block |
+| `ChipShade.kt` · `StatusBarTheme.kt` | Pure: shade cascade, per-app override · reads the front activity's theme |
+| `OverlayInk.kt` | Pure: ink per state and chip, ≥ 4.5:1 after alpha 0.8 |
 | `MessageOverlay.kt` | Separate header/body window below status bar and timer, at most 88% screen width |
 | `OverlayPlacement.kt` | Pure: the pill's status-bar spot (right of the cutout, or right of centre), icon-row centring, and whether it fits |
 | `FitLadder.kt` | Pure: the steps that tighten a pill that does not fit — padding, then the pie, then text to 11 dp; none drops an element |
@@ -122,15 +117,15 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 
 **Overlay behavior:** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Both styles use `FLAG_NOT_TOUCHABLE`, window alpha 0.8 and tabular figures; no drag or intensity modes.
 
-- `pill` (default): 13 dp (as tall as the status bar clock, which ignores font_scale), no background: text and cues carry a 2 dp dark halo (black 67%), because no app can read another app's status-bar icon colour. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). It never leaves the status bar: on API 30+ with a top cutout it sits flush with `boundingRectTop.right`, otherwise just right of the bar's centre; centred on the icon row (12 dp above the bar's bottom; no API reports it), never past the right margin. Wider than 52 dp or taller than the bar, `FitLadder` tightens it.
+- `pill` (default): 13 dp (as tall as the status bar clock, which ignores font_scale), on a solid white or black chip, ink opposite, chosen by `ChipShade` (per-app override first), because no app can read another app's status bar. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). It never leaves the status bar: on API 30+ with a top cutout it sits flush with `boundingRectTop.right`, otherwise just right of the bar's centre; centred on the icon row (12 dp above the bar's bottom; no API reports it), never past the right margin. Wider than 52 dp or taller than the bar, `FitLadder` tightens it.
 - `block`: below the status bar, top-right; 17 sp bold, the pill's letter format (`12m`, `1h44`), 96% black background, no rim. Uses the selected feedback variant with cues scaled 1.25×.
-- Padding: every style adds one blank character's width each side of the time (Lucas, 2026-11-02), the pill 1 dp more for its halo; `fill` reserves the dot (6.9 dp, 1.25× on block) plus a fixed 3 dp gap left of the text, so the gap never varies with the state; `bar` takes a bottom padding of three bar thicknesses: the bar right under the digits, twice its thickness free below it.
-- Today's app total is compared with that app's 30-day `UsualDaily` mean; on the launcher the timer uses phone usage/usual. Before 7 real days feedback is calm and no cue is drawn. Calm is white; near is soft amber; past is amber (and bold pill). Background preferences cannot remove the contrast floor.
+- Padding: every style adds one blank character's width each side of the time (Lucas, 2026-11-02); `fill` reserves the dot (6.9 dp, 1.25× on block) plus a fixed 3 dp gap left of the text, so the gap never varies with the state; `bar` takes a bottom padding of three bar thicknesses: the bar right under the digits, twice its thickness free below it.
+- Today's app total is compared with that app's 30-day `UsualDaily` mean; on the launcher the timer uses phone usage/usual. Before 7 real days feedback is calm and no cue is drawn. Calm, near (soft amber), past (amber, bold pill) per `OverlayInk`; `overlay_amber` off keeps calm.
 - Settings exposes `overlay_feedback` beside the style selector in PT/EN, each choice and style with a one-line description. Missing/unknown values (including the retired `dots`, `underline`, `underline_delta`) use `bar`; it updates on the 500 ms poll without restarting monitoring. Drawing stays inside the measured timer, keeping the 52 dp status-bar cap.
   - `fill`: a dot left of the time fills clockwise from 12 o'clock like a pie; full at the usual.
   - `bar` (default): 2 dp round-capped line under the time, ink spanning exactly the text width (caps included); fills left→right to the usual, then stays full.
   - `outline`: 1 dp border starts at top-centre and grows clockwise, closing at the usual.
-  - `none`: no cue and no state colour; the time stays calm white (messages keep their own rule).
+  - `none`: no cue and no state colour (messages keep their own rule).
   - Cut 2026-11-01 (Lucas, panel Codex · Gemini): `dots` (no progress, hollow ring unreadable at real size), `underline_delta` (`−32m` for 3 s read as a negative balance), the 80% notch, the 100% tick and the bar jumping to the top when past.
 - Every variant takes its state from `OverlayText.state` (the `UsualDaily` rule plus the 7-day floor), so shapes and messages never disagree. Progress is clamped to [0,1]; a zero usual draws a full line for any use (no division by zero).
 - Messages have a separate window, below the status bar and the Bloco, right aligned and at most 88% screen width. This avoids overlapping non-touchable windows (whose combined obscuring opacity would exceed 0.8). The timer stays anchored. Header: `<app label> · 1h 18m hoje` / `today`; on the launcher `Celular` / `Phone` with the phone total. Language follows the saved override or system language (PT fallback).
@@ -170,6 +165,8 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `pm_last_ms` | Long | Kotlin only — epoch ms of the last message (the 90-min gap spans days) |
 | `current_pkg` | String | Foreground package right now |
 | `current_activity` | String | Its activity (`Event.className`), for the theme guess |
+| `chip_shades` | String (JSON) | Per-app chip, `{pkg: "light"\|"dark"}`; absent = Auto |
+| `overlay_amber` | Boolean | Amber state ink (default true) |
 | `current_session_start_ms` | Long | Epoch ms when current session began |
 
 ---

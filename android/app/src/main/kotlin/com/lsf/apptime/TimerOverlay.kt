@@ -50,25 +50,21 @@ class TimerOverlay(context: Context) {
     val isAdded get() = window.isAdded
 
     fun render(block: Boolean, totalMs: Long, feedback: OverlayFeedback.Frame, thermometer: String, level: Float,
-               visible: Boolean) {
+               visible: Boolean, chip: Shade, amber: Boolean) {
         val state = feedback.state
-        val appearance = listOf(block, state, feedback.variant, thermometer)
+        // The Bloco is always its 96% black, so only the pill follows the theme guess.
+        val shade = if (block) Shade.DARK else chip
+        val appearance = listOf(block, state, feedback.variant, thermometer, shade, amber)
         if (lastAppearance != appearance) {
             lastAppearance = appearance
             // The pill's text size is the fit ladder's (dp); the Bloco is the app's own text and follows font_scale.
             if (block) view.textSize = 17f
             view.typeface = if (block || state == UsualState.PAST) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
-            val ink = when (state) {
-                UsualState.CALM -> Color.WHITE
-                UsualState.NEAR -> Color.rgb(255, 218, 153)
-                UsualState.PAST -> Color.rgb(255, 194, 80)
-            }
+            val ink = OverlayInk.ink(state, shade, amber)
             view.setTextColor(ink)
-            // The pill has no background: a dark halo keeps it legible on light and dark status bars,
-            // whose icon colour no other app can read.
-            if (block) view.setShadowLayer(0f, 0f, 0f, 0) else view.setShadowLayer(FeedbackDrawable.HALO_DP * density, 0f, 0f, FeedbackDrawable.HALO)
+            // The pill sits on a solid chip, white or black, so it reads on any status bar (Lucas 2026-11-04).
             feedbackDrawable = FeedbackDrawable(if (block) window.background(true) else ColorDrawable(Color.TRANSPARENT),
-                density, block, ink, halo = !block)
+                density, block, ink, chip = if (block) null else OverlayInk.chip(shade))
             view.background = feedbackDrawable
             lastText = null
         }
@@ -122,7 +118,7 @@ class TimerOverlay(context: Context) {
     private fun motionOn() =
         Settings.Global.getFloat(view.context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) > 0f
 
-    // The pill gets one digit's width of air each side, 1 dp more for its halo (a space is ~3.5 dp, and the
+    // The pill gets one digit's width of air each side, less 0.5 dp (a space is ~3.5 dp, and the
     // outline's rounded ends ate it); the block, whose 8 dp margin already frames it, one space;
     // the filling dot sits left of the text; the bar's bottom padding holds the bar plus twice its thickness
     // below it, so the bar sits right under the digits (their font descent is the only gap above it).

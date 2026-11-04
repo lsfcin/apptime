@@ -21,6 +21,7 @@ class OverlayService : Service() {
     private lateinit var usualCache: UsualCache
     private lateinit var thermometerSource: ThermometerSource
     private lateinit var timer: TimerOverlay
+    private lateinit var statusBarTheme: StatusBarTheme
     private lateinit var message: MessageOverlay
     private var feedbackEngine: FeedbackEngine? = null
     private var launchers = AppConstants.LAUNCHERS
@@ -48,6 +49,7 @@ class OverlayService : Service() {
             usualCache = UsualCache { key -> prefs.getLong(key, 0L) }
             thermometerSource = ThermometerSource(prefs::safeGetCount)
             timer = TimerOverlay(this)
+            statusBarTheme = StatusBarTheme(this)
             message = MessageOverlay(this)
             feedbackEngine = FeedbackEngine({ prefs }, message::show, message::hide)
         }
@@ -85,7 +87,7 @@ class OverlayService : Service() {
         val level = if (look == "none") 0f else ThermometerLevel.intensity(
             thermometerSource.read(pkg, inApp, now, prefs.safeGetCount("flutter.current_session_start_ms")), usual.realDays)
         timer.render(prefs.getString("flutter.overlay_style", null) == "block", total, feedback, look, level,
-            allowed && hasText)
+            allowed && hasText, chipShade(pkg), prefs.getBoolean(OverlayInk.AMBER_KEY, true))
         feedbackEngine?.refresh(pkg, now, allowed)
         if (++evalTick >= 5) {
             evalTick = 0
@@ -96,6 +98,15 @@ class OverlayService : Service() {
             }
         }
         message.reposition(timer.bottom)
+    }
+
+    // The pill's chip: the per-app choice from Ajustes, else the front activity's declared theme.
+    private fun chipShade(pkg: String?): Shade {
+        if (pkg == null) return Shade.DARK
+        val override = ChipShade.override(prefs.getString(ChipShade.OVERRIDES_KEY, null), pkg)
+        if (override != null) return override
+        return ChipShade.decide(null, statusBarTheme.clues(pkg,
+            prefs.getString(MonitoringService.CURRENT_ACTIVITY_KEY, null)))
     }
 
     // ─────────────────────────────────────────────────────────────────────────

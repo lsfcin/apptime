@@ -135,9 +135,10 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   2026-11-03: vertical 10.7 × 4.3 dp redrawn from its box (circles stay circles), ▼ at 80% closer to
   the number, ECG as the canvas but half as wide on the pill (it ends cut at the edge: keep), unit
   letters h/m condensed at 72%, pill number 1.5 dp nearer its edges, 2 dp after the glyph.
-  **Next, on the phone** (built, not yet seen: the phone died mid-check): "1h22" + glyph stays in the
-  status bar; outline no longer touches the glyph; the morning starts calm; then
-  `screenrecord` + `dumpsys gfxinfo` for janky frames and the battery method above (~0.5%/day).
+  Seen on the phone 2026-11-04: "3h09" + glyph stays in the status bar; the outline cleared the glyph
+  once the glyph moved in by the arc's bend (`7ccafba`). `gfxinfo`, 20 s of Chrome scrolling: none and
+  vertical 38 frames (0–1 janky), ECG 221 (4%) — the ECG animates nonstop at ~11 fps, so its battery
+  cost needs its own run. **Next**: the morning starts calm (after 04:00); battery, vertical first.
   Open: Bloco keeps its 8 dp margin (only the pill's was trimmed); the Aba is still unbuilt.
 
 - **Three tabs: Hoje (landing) · Análise · Ajustes**, plus a per-app screen opened by tapping any

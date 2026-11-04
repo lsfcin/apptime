@@ -97,10 +97,14 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos). The bare
   pill has no floor, only a dark halo. Checked 2026-11-03 over Chrome light: white text vanishes
-  on white, and Lucas rejects the halo itself. Replace both: ink that follows the bar (the
-  per-app hint, or a light/dark guess), and an amber dark enough for AA contrast on white too.
-- **Settings screen** (Claude canvas S4 is the base): gallery shows every built style; per-app
-  light/dark hint `Automático · Sempre escuro · Sempre claro` (the overlay cannot see pixels);
+  on white, and Lucas rejects the halo itself. Replace both with ink that follows the bar, ~200 ms
+  colour fade on app switch, and an amber dark enough for AA on white. Lucas 2026-11-04: guess from
+  the front activity's declared theme (`windowLightStatusBar` / `statusBarColor` via
+  `createPackageContext`, uiMode for DayNight; misses bars set in code, e.g. Chrome per page); a tap
+  on pill, Bloco or Aba inverts the ink, stored per app, no settings row. Open before building: the
+  pill is pass-through today — a touchable pill eats the shade/Control Center pull from its ~45×22 dp
+  spot (MIUI: right side = Control Center), and how a user learns the tap exists. Codex panel pending.
+- **Settings screen** (Claude canvas S4 is the base): gallery shows every built style;
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
   "Grande").
 
@@ -138,7 +142,9 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   Seen on the phone 2026-11-04: "3h09" + glyph stays in the status bar; the outline cleared the glyph
   once the glyph moved in by the arc's bend (`7ccafba`). `gfxinfo`, 20 s of Chrome scrolling: none and
   vertical 38 frames (0–1 janky), ECG 221 (4%) — the ECG animates nonstop at ~11 fps, so its battery
-  cost needs its own run. **Next**: the morning starts calm (after 04:00); battery, vertical first.
+  cost needs its own run. 2026-11-04 (`e16f583`): vertical 1.5× wider, bulb rebuilt, 1 dp stroke
+  like the outline, pill as wide as the ▼ one. **Next**: Lucas checks the new vertical; the morning
+  starts calm (after 04:00); battery, vertical first; a better name than "Mão única" for the ▼ look.
   Open: Bloco keeps its 8 dp margin (only the pill's was trimmed); the Aba is still unbuilt.
 
 - **Three tabs: Hoje (landing) · Análise · Ajustes**, plus a per-app screen opened by tapping any
@@ -164,6 +170,10 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
 - **Bugs seen**: "Visão geral — 30 dias" on the 1d and 7d tabs; "esta semana" on the 30d donut;
   Y-axis labels collide in Tendência semanal; legend colours repeat (Claude/Google/outros); letter
   circles instead of app icons; AppTime lists itself; 0m apps fill the list; English chips (`unlocks`, `session`).
+
+🟡 **`core/run tools/phone/adb`** (name OK'd by Lucas 2026-11-04): promote `tools/capture.sh` plus the
+session's prefs loop (sed `FlutterSharedPreferences.xml` via `run-as`, force-stop, relaunch, open the
+target app, wait ≥9 s, screencap) and `--sheet`; then delete `capture.sh` and the INBOX proposal.
 
 Screens via adb: MIUI blocks `input tap` until "Depuração USB (configurações de segurança)" is on
 **and the phone is rebooted**. Shots and panel answers stay in the session scratchpad (usage data).

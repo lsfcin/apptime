@@ -234,3 +234,4 @@ components that its own milestones had deliberately unwired and planned to reuse
 - Tap-to-invert on the pill — the pill is untouchable and a 45×22 dp target misses 48 dp; a per-app row replaced it (Codex 2/10, Lucas 2026-11-04).
 - A dark halo around the bare pill — still lost on light bars; a solid chip replaced it (Lucas 2026-11-04).
 - Pill vs the system icons: a reserved right-hand zone per icon (Codex 7/10), detecting transient icons (3/10: other apps' location is unreadable without `WATCH_APPOPS`), the pill left of the cutout (5/10) — Lucas chose the lower slot (2026-11-04).
+- Chip: `isLightTheme` above the light-bar flag (Codex 4/10, beats specific bar evidence); a MIUI vendor check (5/10) — the conflict guard won (2026-11-04).

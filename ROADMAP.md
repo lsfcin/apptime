@@ -97,13 +97,20 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast mode**: calm background floor ~45%, not 26% (vanishes on light photos). The bare
   pill has no floor, only a dark halo. Checked 2026-11-03 over Chrome light: white text vanishes
-  on white, and Lucas rejects the halo itself. Replace both with ink that follows the bar, ~200 ms
-  colour fade on app switch, and an amber dark enough for AA on white. Lucas 2026-11-04: guess from
-  the front activity's declared theme (`windowLightStatusBar` / `statusBarColor` via
-  `createPackageContext`, uiMode for DayNight; misses bars set in code, e.g. Chrome per page); a tap
-  on pill, Bloco or Aba inverts the ink, stored per app, no settings row. Open before building: the
-  pill is pass-through today — a touchable pill eats the shade/Control Center pull from its ~45×22 dp
-  spot (MIUI: right side = Control Center), and how a user learns the tap exists. Codex panel pending.
+  on white, and Lucas rejects the halo itself (ugly on light, Telegram 2026-11-04): delete it. Replace
+  both with ink that follows the bar, ~200 ms colour fade on app switch. Pill only: the Bloco's own
+  96% black background already carries white. Lucas 2026-11-04: guess from the front activity's
+  declared theme (`windowLightStatusBar` / `statusBarColor` via `createPackageContext`; the
+  activity class is `UsageEvents.Event.className`, written by `MonitoringService` beside
+  `current_pkg`), re-guessed on a uiMode change (night, battery saver). Misses bars set in code
+  (Chrome per page, Maps night, Telegram themes): **test every one of those on the phone**. Dark
+  inks approved: calm `#1A1C20`, near `#6B4E12`, past `#8A5A00`. The colour feedback (amber for
+  near/past) gets its own off switch. Never invisible: near-white/near-black alone is not enough
+  (`#F3F4F6` on white ≈ 1.1:1); proposed a 1 dp mid-grey hairline, no blur — panel. A tap on pill,
+  Bloco or Aba inverts the ink, stored per app, no settings row; the pill's problem is only the
+  swipe down it would swallow (MIUI right side = Control Center): candidate is catch the touch and,
+  on a downward drag, open the shade itself (`expandNotificationsPanel`, `EXPAND_STATUS_BAR`).
+  Lucas to confirm that is what "impedir de descer" meant. Codex panel pending (from 16:31 11-04).
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style;
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
   "Grande").
@@ -224,4 +231,5 @@ components that its own milestones had deliberately unwired and planned to reuse
 - Thermometer: the last 24 h vs the 24 h before — at the first unlock it compares yesterday with the day before, agitated before any use today (Lucas 2026-11-03).
 - Pill hugging the camera cutout to save width — every phone's cutout differs and sits off the text's line (Lucas 2026-11-03).
 - Thermometer: slicing only the front of each window (23 h + m min) — both windows drop their oldest hour at the turn, up to 34 pp on real data (2026-11-03).
+- Reading the pixels behind the overlay (AccessibilityService `takeScreenshot`, MediaProjection) — Play restricts the first, the second asks consent each session; both read as spying (Lucas 2026-11-04).
 - Per-app light/dark hint row in Ajustes — a tap on the overlay inverts the ink and is stored per app, no settings row (Lucas 2026-11-04).

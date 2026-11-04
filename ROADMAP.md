@@ -110,7 +110,11 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   Bloco or Aba inverts the ink, stored per app, no settings row; the pill's problem is only the
   swipe down it would swallow (MIUI right side = Control Center): candidate is catch the touch and,
   on a downward drag, open the shade itself (`expandNotificationsPanel`, `EXPAND_STATUS_BAR`).
-  Lucas to confirm that is what "impedir de descer" meant. Codex panel pending (from 16:31 11-04).
+  Lucas's real worry (2026-11-04): a touchable pill that falls below the bar (`OverlayPlacement.timer`
+  drops it when wider than the 52 dp slot, taller than the bar, no cutout or API < 30) sits over the
+  app's own top-right buttons and blocks them. Proposed: shrink to fit before falling (text size to a
+  floor, then glyph, then outline), and a pill that still falls stays pass-through, no tap.
+  Codex panel pending (from 16:31 11-04).
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style;
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
   "Grande").

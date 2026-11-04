@@ -227,3 +227,4 @@ components that its own milestones had deliberately unwired and planned to reuse
 - Thermometer: the last 24 h vs the 24 h before — at the first unlock it compares yesterday with the day before, agitated before any use today (Lucas 2026-11-03).
 - Pill hugging the camera cutout to save width — every phone's cutout differs and sits off the text's line (Lucas 2026-11-03).
 - Thermometer: slicing only the front of each window (23 h + m min) — both windows drop their oldest hour at the turn, up to 34 pp on real data (2026-11-03).
+- Per-app light/dark hint row in Ajustes — a tap on the overlay inverts the ink and is stored per app, no settings row (Lucas 2026-11-04).

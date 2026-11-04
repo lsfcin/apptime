@@ -102,11 +102,12 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   (both theme in code): Telegram in system light (its own dark theme), Maps with its light map at
   system night. MIUI Settings at night fixed: miuix's root theme declares a light bar that
   `Theme.Dark` keeps, so the light-bar flag counts only when the theme does not resolve dark
-  (Codex 8/10; risk: a dark AppCompat theme over a pale transparent header, none known). **Next**:
-  Maps' location arrow touches the pill's right end (the icon-overlap item in Pill fit). Asymmetry: the chip selector lives in Monit., the tab that goes
+  (Codex 8/10; risk: a dark AppCompat theme over a pale transparent header, none known). Asymmetry: the chip selector lives in Monit., the tab that goes
   away (Three tabs below) — it moves with the per-app exceptions into Ajustes. The pill stays untouchable (tap-to-invert: Codex 2/10; Bloco 9, Aba 8 if wanted).
 - **Pill fit** (2026-11-04, built): never leaves the bar; text 13 dp (= the HyperOS clock, which
-  ignores font_scale); `FitLadder` tightens padding, then the pie, then text to 11 dp. Still to
+  ignores font_scale); `FitLadder` tightens padding, then the pie, then text to 11 dp, past a 44 dp slot (was 52:
+  Maps' location arrow touched it; now ~11 dp clear of the fixed icons, so one transient icon
+  may still touch: **Lucas checks** in Maps). Still to
   design: condensed font, half-width ECG, squarer rounded outline, outline → bar and ECG → vertical
   as last steps; reserve `getPrivacyIndicatorBounds` (API 31+).
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style;
@@ -232,3 +233,4 @@ components that its own milestones had deliberately unwired and planned to reuse
 - Reading the pixels behind the overlay (AccessibilityService `takeScreenshot`, MediaProjection) — Play restricts the first, the second asks consent each session; both read as spying (Lucas 2026-11-04).
 - Tap-to-invert on the pill — the pill is untouchable and a 45×22 dp target misses 48 dp; a per-app row replaced it (Codex 2/10, Lucas 2026-11-04).
 - A dark halo around the bare pill — still lost on light bars; a solid chip replaced it (Lucas 2026-11-04).
+- Pill vs the system icons: a reserved right-hand zone per icon (Codex 7/10), detecting transient icons (3/10: other apps' location is unreadable without `WATCH_APPOPS`), the pill left of the cutout (5/10) — Lucas chose the lower slot (2026-11-04).

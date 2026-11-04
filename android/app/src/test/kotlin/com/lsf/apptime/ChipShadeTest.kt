@@ -1,4 +1,4 @@
-// Checks the chip-shade cascade order, the override parsing, and that every ink keeps 4.5:1 on its chip.
+// Checks the shade cascade order, the known dark screens, the override parsing, and that every ink keeps 4.5:1 on its bar.
 package com.lsf.apptime
 
 import org.junit.Assert.assertEquals
@@ -13,6 +13,13 @@ class ChipShadeTest {
     @Test
     fun theOverrideBeatsEveryClue() {
         assertEquals(Shade.DARK, ChipShade.decide(Shade.DARK, ThemeClues(lightStatusBar = true)))
+    }
+
+    @Test
+    fun miuiRecentsIsDarkWhateverItsThemeSays() {
+        assertTrue(ChipShade.knownDark("com.miui.home.recents.RecentsActivity"))
+        assertEquals(false, ChipShade.knownDark("com.miui.home.launcher.Launcher"))
+        assertEquals(false, ChipShade.knownDark(null))
     }
 
     @Test

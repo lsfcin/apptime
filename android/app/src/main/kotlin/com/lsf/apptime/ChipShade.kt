@@ -21,6 +21,12 @@ enum class Shade { LIGHT, DARK }
 object ChipShade {
     const val OVERRIDES_KEY = "flutter.chip_shades"
 
+    // Screens whose theme declares a light bar over a dark screen; seen on the phone, never guessed.
+    // MIUI Recents: dark blurred cards under a light-bar theme (2026-11-04).
+    private val DARK_SCREENS = setOf("com.miui.home.recents.RecentsActivity")
+
+    fun knownDark(activity: String?) = activity in DARK_SCREENS
+
     /**
      * The panel's cascade (Codex 2026-11-04, Lucas approved): override, then bar clues, then theme brightness,
      * then the system's night mode, then black. A light bar (dark icons) gets a white chip.

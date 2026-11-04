@@ -96,7 +96,7 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   but legible, left to the per-app override (both theme in code): Telegram in system light (its own
   dark theme), Maps with its light map at system night. MIUI Settings at night fixed: miuix's root
   theme declares a light bar that `Theme.Dark` keeps, so the light-bar flag counts only when the theme
-  does not resolve dark (Codex 8/10). **To check**: Recents gave the light shade, Home the dark one.
+  does not resolve dark (Codex 8/10). MIUI Recents declares a light bar over dark cards: `ChipShade.knownDark`.
   Asymmetries: the selector lives in Monit., the tab that goes away — it moves with the per-app
   exceptions into Ajustes; `ChipShade` and `chip_shades` still name a chip that is gone. The pill
   stays untouchable (tap-to-invert: Codex 2/10; Bloco 9, Aba 8 if wanted).
@@ -106,7 +106,8 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   guesses — alarm, silent, DND, and a navigation, ride or delivery app in front for the location
   arrow, which no public API reports (panel `outputs/apptime-panel-icon-detect.md`, 8/10). With an
   icon likely, the thermometer goes, then pie or outline becomes the bar, before the text shrinks.
-  **Calibrate on the phone**: which states HyperOS shows, each icon's width. Still to design:
+  Seen 2026-11-04: Maps cut to the bar, clear of the arrow; but HyperOS showed no icon for an alarm
+  5 days off, vibrate, silent or DND, so those clues only cut the pill for nothing. Still to design:
   condensed font, half-width ECG, squarer rounded outline.
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style;
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on

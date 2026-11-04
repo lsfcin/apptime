@@ -115,8 +115,9 @@ class OverlayService : Service() {
         if (pkg == null) return Shade.DARK
         val override = ChipShade.override(prefs.getString(ChipShade.OVERRIDES_KEY, null), pkg)
         if (override != null) return override
-        return ChipShade.decide(null, statusBarTheme.clues(pkg,
-            prefs.getString(MonitoringService.CURRENT_ACTIVITY_KEY, null)))
+        val activity = prefs.getString(MonitoringService.CURRENT_ACTIVITY_KEY, null)
+        if (ChipShade.knownDark(activity)) return Shade.DARK
+        return ChipShade.decide(null, statusBarTheme.clues(pkg, activity))
     }
 
     // ─────────────────────────────────────────────────────────────────────────

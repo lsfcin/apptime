@@ -57,7 +57,7 @@ block was removed from his data and the setting is back to 0. Keep it 0 outside 
 
 - CONTEXT.md: retired token 'slug' survives (line 55).
 - CONTEXT.md: retired token 'tier' survives (line 55).
-- ROADMAP.md: retired token 'probe' survives (line 213).
+- ROADMAP.md: retired token 'probe' survives (line 214).
 - docs/store_listing.md: retired token 'nudge' survives (line 21).
 - lib/CONTEXT.md: retired token 'scaffold' survives (line 21).
 - lib/data/insight_alertas_2.dart: retired token 'spine' survives (line 114).
@@ -83,7 +83,7 @@ block was removed from his data and the setting is back to 0. Keep it 0 outside 
 
 *git is the history — cut it, or rewrite it as present-tense state*
 
-- ROADMAP.md:142: a dated completion report — prose describing finished work.
+- ROADMAP.md:143: a dated completion report — prose describing finished work.
 
 ### Unanswered placeholders
 
@@ -108,7 +108,7 @@ block was removed from his data and the setting is back to 0. Keep it 0 outside 
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/v1-impl is 1 ahead of main
+- . — feature/v1-impl is 2 ahead of main
 
 ### Local branches already merged into their base
 

@@ -97,9 +97,11 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
 - **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast chip** (built 2026-11-04, SPECS § Overlay behavior; panel
   `outputs/apptime-panel-contrast-answer.md`). Seen on the phone: black chip + amber on a dark bar,
-  white chip + dark ink, the per-app selector in Monit. **Next**: test Maps night, Telegram,
-  battery-saver dark and Chrome light without a launcher dialog on top; Lucas checks the chip's
-  padding at 13 dp. The pill stays untouchable (tap-to-invert: Codex 2/10; Bloco 9, Aba 8 if wanted).
+  white chip + dark ink, the per-app selector in Monit. Right: Settings light, Telegram and Chrome
+  dark. Wrong but legible: Telegram in system light (its own dark theme), MIUI Settings under
+  battery saver (declares light, darkens itself), Maps with its light map at system night. **Next**:
+  Lucas checks the chip's padding at 13 dp; Maps' location arrow touches the pill's right end (the
+  icon-overlap item in Pill fit). The pill stays untouchable (tap-to-invert: Codex 2/10; Bloco 9, Aba 8 if wanted).
 - **Pill fit** (2026-11-04, built): never leaves the bar; text 13 dp (= the HyperOS clock, which
   ignores font_scale); `FitLadder` tightens padding, then the pie, then text to 11 dp. Still to
   design: condensed font, half-width ECG, squarer rounded outline, outline → bar and ECG → vertical

@@ -82,7 +82,7 @@ block was removed from his data and the setting is back to 0. Keep it 0 outside 
 
 *git is the history — cut it, or rewrite it as present-tense state*
 
-- ROADMAP.md:139: a dated completion report — prose describing finished work.
+- ROADMAP.md:141: a dated completion report — prose describing finished work.
 
 ### Unanswered placeholders
 
@@ -107,7 +107,7 @@ block was removed from his data and the setting is back to 0. Keep it 0 outside 
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/v1-impl is 3 ahead of main
+- . — feature/v1-impl is 4 ahead of main
 
 ### Local branches already merged into their base
 

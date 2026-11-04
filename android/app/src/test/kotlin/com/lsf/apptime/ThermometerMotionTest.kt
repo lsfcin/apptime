@@ -1,4 +1,4 @@
-// Checks the thermometer's motion: canvas ECG numbers, clock-based phase, still shapes when calm.
+// Checks the thermometer's motion: canvas ECG numbers, phase-to-shape mapping, still shapes when calm.
 package com.lsf.apptime
 
 import org.junit.Assert.*
@@ -19,23 +19,21 @@ class ThermometerMotionTest {
         assertEquals(3.1f, ThermometerMotion.ecg(0.75f).amplitude, 1e-4f)
     }
 
-    @Test fun ecgShiftComesFromTheClockAndWrapsAtOnePeriod() {
+    @Test fun ecgShiftIsTheRunFractionOfOnePeriod() {
         val wave = ThermometerMotion.ecg(1f)
-        assertEquals(1.5f, ThermometerMotion.ecgShift(wave, 100L), 1e-4f)
-        // A dropped frame changes nothing: the shift at a time never depends on the frames before it.
-        assertEquals(ThermometerMotion.ecgShift(wave, 500L), ThermometerMotion.ecgShift(wave, 500L), 0f)
-        assertEquals(ThermometerMotion.ecgShift(wave, 0L), ThermometerMotion.ecgShift(wave, 400L), 1e-3f)
+        assertEquals(1.5f, ThermometerMotion.ecgShift(wave, 0.25), 1e-4f)
+        assertEquals(ThermometerMotion.ecgShift(wave, 0.0), ThermometerMotion.ecgShift(wave, 1.0), 1e-4f)
     }
 
     @Test fun calmVerticalAndOneWayStandStill() {
-        for (ms in listOf(0L, 137L, 900L)) {
-            assertEquals(0f, ThermometerMotion.boil(0f, ms), 0f)
-            assertEquals(0f, ThermometerMotion.bob(0f, ms), 0f)
+        for (cycles in listOf(0.0, 0.137, 0.9)) {
+            assertEquals(0f, ThermometerMotion.boil(0f, cycles), 0f)
+            assertEquals(0f, ThermometerMotion.bob(0f, cycles), 0f)
         }
     }
 
     @Test fun motionGrowsWithIntensity() {
-        val peak = { f: (Long) -> Float -> (0L..2000L step 5).maxOf { kotlin.math.abs(f(it)) } }
+        val peak = { f: (Double) -> Float -> (0..2000).maxOf { kotlin.math.abs(f(it / 200.0)) } }
         assertTrue(peak { ThermometerMotion.boil(1f, it) } > peak { ThermometerMotion.boil(0.5f, it) })
         assertTrue(peak { ThermometerMotion.bob(1f, it) } > peak { ThermometerMotion.bob(0.5f, it) })
     }

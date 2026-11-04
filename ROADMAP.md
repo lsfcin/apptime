@@ -135,7 +135,8 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   [Claude Design canvas](https://claude.ai/artifact/Rwo9Q55GG55rHqUT5NUSYY), `project/Visor.dc.html`
   holds the geometry). No colour of its own: it takes the text's ink, amber only with the number.
   Built on the pill and Bloco (`ThermometerLevel` · `ThermometerMotion` · `ThermometerGlyph` ·
-  `ThermometerSource`), selector in Ajustes, default vertical. Sizes Lucas set on the phone
+  `ThermometerSource` · `ThermometerPhase`, which steps motion by elapsed time: speed × uptime made
+  the ECG leap on every level change, fixed 2026-11-04), selector in Ajustes, default vertical. Sizes Lucas set on the phone
   2026-11-03: vertical redrawn from its box (2026-11-04: 13.7 × 6.45 dp, centre 0.5 dp up) (circles stay circles), ▼ at 80% closer to
   the number, ECG as the canvas but half as wide on the pill (it ends cut at the edge: keep), unit
   letters h/m condensed at 72%, pill number 1.5 dp nearer its edges, 2 dp after the glyph.

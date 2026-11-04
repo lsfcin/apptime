@@ -31,7 +31,7 @@ class TimerOverlay(context: Context) {
     private val choreographer = Choreographer.getInstance()
     private var frameMs = 0L
     private var ticking = false
-    // Redraws the moving thermometer; the drawable reads the clock, so a late frame never stutters it.
+    // Redraws the moving thermometer; the drawable steps its phase by elapsed time, so a late frame lands where it should.
     private val tick = object : Choreographer.FrameCallback {
         override fun doFrame(frameTimeNanos: Long) {
             ticking = false

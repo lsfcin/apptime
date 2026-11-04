@@ -1,4 +1,4 @@
-// Pure motion of the three thermometer looks, in the canvas's glyph units; every value comes from the clock.
+// Pure motion of the three thermometer looks, in the canvas's glyph units, given the phase ThermometerPhase ran.
 package com.lsf.apptime
 
 import kotlin.math.PI
@@ -6,8 +6,8 @@ import kotlin.math.sin
 
 /**
  * Units are the Claude Design canvas's (`project/Visor.dc.html`): 1 unit = 1 dp on the pill.
- * Phases are computed from [ms] alone, never stepped per frame, so a late frame lands where it
- * should and the motion never stutters.
+ * Phases come from [ThermometerPhase], which steps them by elapsed time: a late frame still lands where
+ * it should, and a level change alters the pace without teleporting the shape.
  */
 object ThermometerMotion {
     data class Wave(val amplitude: Float, val period: Float, val speed: Float)
@@ -34,26 +34,26 @@ object ThermometerMotion {
         return Wave(lerp(from.amplitude, to.amplitude, k), lerp(from.period, to.period, k), lerp(from.speed, to.speed, k))
     }
 
-    /** How far the wave has run to the right at [ms], within one period. */
-    fun ecgShift(wave: Wave, ms: Long): Float = ((wave.speed * ms / 1000.0) % wave.period).toFloat()
+    /** How far the wave has run to the right, within one period, given the [run] fraction of a period. */
+    fun ecgShift(wave: Wave, run: Double): Float = ((run % 1.0) * wave.period).toFloat()
+
+    /** Oscillations per second of the vertical's boil and the one-way mark's bob. */
+    fun hz(look: String, t: Float): Double = if (look == "mao") 0.6 + 1.4 * t else 0.8 + 3.2 * t
 
     /** Top of the liquid column: low when calm, near the top of the tube when much worse. */
     fun liquidTop(t: Float): Float = TUBE_BOTTOM - (0.12f + 0.88f * t) * (TUBE_BOTTOM - TUBE_TOP)
 
     /** Vertical offset of the liquid's surface: still when calm, bobbing, then an irregular boil. */
-    fun boil(t: Float, ms: Long): Float {
+    fun boil(t: Float, cycles: Double): Float {
         if (t <= 0f) return 0f
-        val s = ms / 1000.0
-        val hz = 0.8 + 3.2 * t
-        val wobble = sin(2 * PI * hz * s) + t * 0.6 * sin(2 * PI * hz * 2.3 * s + 1.1)
+        val wobble = sin(2 * PI * cycles) + t * 0.6 * sin(2 * PI * 2.3 * cycles + 1.1)
         return (0.9 * t * wobble).toFloat()
     }
 
     /** Vertical offset of the one-way mark: up and down, wider and faster as it worsens. */
-    fun bob(t: Float, ms: Long): Float {
+    fun bob(t: Float, cycles: Double): Float {
         if (t <= 0f) return 0f
-        val hz = 0.6 + 1.4 * t
-        return ((BOB_MAX / 2 + BOB_MAX / 2 * t) * sin(2 * PI * hz * ms / 1000.0)).toFloat()
+        return ((BOB_MAX / 2 + BOB_MAX / 2 * t) * sin(2 * PI * cycles)).toFloat()
     }
 
     fun mark(t: Float): Mark = when {

@@ -24,6 +24,7 @@ class FeedbackDrawable(
     // Thermometer look and intensity, drawn right of the text; "none" draws nothing.
     var thermometerLook = "none"
     var thermometerLevel = 0f
+    private val thermometerPhase = ThermometerPhase()
     // Horizontal span of the time text inside the view; the bar matches it like an underline.
     var textLeft = 0f
     var textRight = 0f
@@ -37,7 +38,8 @@ class FeedbackDrawable(
         background.bounds = bounds
         background.draw(canvas)
         // Before the usual is ready the thermometer still shows, so it draws first.
-        ThermometerGlyph.draw(canvas, paint, thermometerLook, block, thermometerLevel, SystemClock.uptimeMillis(), ink,
+        thermometerPhase.advance(thermometerLook, thermometerLevel, SystemClock.uptimeMillis())
+        ThermometerGlyph.draw(canvas, paint, thermometerLook, block, thermometerLevel, thermometerPhase, ink,
             bounds.left + textRight + thermometerGap(thermometerLook, density, block), bounds.exactCenterY(), density * scale(block))
         val feedback = frame ?: return
         if (!feedback.hasUsual) return

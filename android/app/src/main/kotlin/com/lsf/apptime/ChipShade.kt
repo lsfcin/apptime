@@ -24,10 +24,12 @@ object ChipShade {
     /**
      * The panel's cascade (Codex 2026-11-04, Lucas approved): override, then bar clues, then theme brightness,
      * then the system's night mode, then black. A light bar (dark icons) gets a white chip.
+     * A theme that resolves dark does not get a light bar from the flag alone: miuix's root theme sets it,
+     * Theme.Dark keeps it, and only code clears it (Codex 8/10, Lucas 2026-11-04).
      */
     fun decide(override: Shade?, clues: ThemeClues): Shade {
         override?.let { return it }
-        if (clues.lightStatusBar == true) return Shade.LIGHT
+        if (clues.lightStatusBar == true && clues.isLightTheme != false) return Shade.LIGHT
         opaque(clues.statusBarColor)?.let { return byLuminance(it) }
         clues.isLightTheme?.let { return if (it) Shade.LIGHT else Shade.DARK }
         opaque(clues.colorBackground)?.let { return byLuminance(it) }

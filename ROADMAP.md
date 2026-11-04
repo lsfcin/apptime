@@ -98,10 +98,12 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
 - **Contrast chip** (built 2026-11-04, SPECS § Overlay behavior; panel
   `outputs/apptime-panel-contrast-answer.md`). Seen on the phone: black chip + amber on a dark bar,
   white chip + dark ink, the per-app selector in Monit. Right: Settings light, Telegram and Chrome
-  dark. Wrong but legible: Telegram in system light (its own dark theme), MIUI Settings under
-  battery saver (declares light, darkens itself), Maps with its light map at system night. **Next**:
-  Lucas checks the chip's padding at 13 dp; Maps' location arrow touches the pill's right end (the
-  icon-overlap item in Pill fit). Asymmetry: the chip selector lives in Monit., the tab that goes
+  dark; padding at 13 dp OK (Lucas 2026-11-04). Wrong but legible, left to the per-app override
+  (both theme in code): Telegram in system light (its own dark theme), Maps with its light map at
+  system night. MIUI Settings at night fixed: miuix's root theme declares a light bar that
+  `Theme.Dark` keeps, so the light-bar flag counts only when the theme does not resolve dark
+  (Codex 8/10; risk: a dark AppCompat theme over a pale transparent header, none known). **Next**:
+  Maps' location arrow touches the pill's right end (the icon-overlap item in Pill fit). Asymmetry: the chip selector lives in Monit., the tab that goes
   away (Three tabs below) — it moves with the per-app exceptions into Ajustes. The pill stays untouchable (tap-to-invert: Codex 2/10; Bloco 9, Aba 8 if wanted).
 - **Pill fit** (2026-11-04, built): never leaves the bar; text 13 dp (= the HyperOS clock, which
   ignores font_scale); `FitLadder` tightens padding, then the pie, then text to 11 dp. Still to

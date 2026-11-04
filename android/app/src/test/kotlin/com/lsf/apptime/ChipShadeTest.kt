@@ -26,6 +26,14 @@ class ChipShadeTest {
     }
 
     @Test
+    fun aDarkThemeCannotClaimALightBarAlone() {
+        // miuix at night: the root theme's windowLightStatusBar survives Theme.Dark, cleared only in code.
+        val miuixNight = ThemeClues(lightStatusBar = true, statusBarColor = 0x00000000, isLightTheme = false)
+        assertEquals(Shade.DARK, ChipShade.decide(null, miuixNight))
+        assertEquals(Shade.LIGHT, ChipShade.decide(null, miuixNight.copy(statusBarColor = white)))
+    }
+
+    @Test
     fun aTranslucentBarColourFallsThroughToTheTheme() {
         val clues = ThemeClues(statusBarColor = 0x00FFFFFF, isLightTheme = false)
         assertEquals(Shade.DARK, ChipShade.decide(null, clues))

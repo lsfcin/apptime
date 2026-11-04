@@ -25,7 +25,8 @@ object ThermometerGlyph {
     /** Height the glyph needs in canvas units, the one-way mark's bob included; 0 for no look. */
     fun room(look: String): Float = when (look) {
         "mao" -> (ThermometerMotion.MAO_H + 2 * ThermometerMotion.BOB_MAX) * MAO_SCALE
-        "ecg", "vertical" -> height(look)
+        "vertical" -> height(look) + 2 * VERTICAL_LIFT
+        "ecg" -> height(look)
         else -> 0f
     }
 
@@ -40,7 +41,8 @@ object ThermometerGlyph {
              left: Float, centerY: Float, unit: Float) {
         val width = width(look, block)
         if (width == 0f) return
-        val top = centerY - height(look) * unit / 2
+        val lift = if (look == "vertical") VERTICAL_LIFT else 0f
+        val top = centerY - (height(look) / 2 + lift) * unit
         canvas.save()
         canvas.translate(left, top)
         canvas.scale(unit, unit)
@@ -127,7 +129,9 @@ object ThermometerGlyph {
     // Box of the vertical thermometer in dp, and its canvas proportions (tube 1.8 · bulb 2.3 · dot 1.25 · column 0.8).
     // Width 1.5× the 2026-11-03 4.3 dp (Lucas 2026-11-04); the bulb is rebuilt from the box, never stretched.
     private const val VERTICAL_W = 4.3f * 1.5f
-    private const val VERTICAL_H = 10.7f
+    // Lucas 2026-11-04: 1 dp longer downward and 2 dp upward, so the box grows 3 dp and its centre rises 0.5 dp.
+    private const val VERTICAL_H = 10.7f + 3f
+    private const val VERTICAL_LIFT = (2f - 1f) / 2
     private const val TUBE_TO_BULB = 1.8f / 2.3f
     private const val DOT_TO_BULB = 1.25f / 2.3f
     private const val COLUMN_TO_TUBE = 0.8f / 1.8f

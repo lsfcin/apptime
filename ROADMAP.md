@@ -136,7 +136,7 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   holds the geometry). No colour of its own: it takes the text's ink, amber only with the number.
   Built on the pill and Bloco (`ThermometerLevel` · `ThermometerMotion` · `ThermometerGlyph` ·
   `ThermometerSource`), selector in Ajustes, default vertical. Sizes Lucas set on the phone
-  2026-11-03: vertical 10.7 × 4.3 dp redrawn from its box (circles stay circles), ▼ at 80% closer to
+  2026-11-03: vertical redrawn from its box (2026-11-04: 13.7 × 6.45 dp, centre 0.5 dp up) (circles stay circles), ▼ at 80% closer to
   the number, ECG as the canvas but half as wide on the pill (it ends cut at the edge: keep), unit
   letters h/m condensed at 72%, pill number 1.5 dp nearer its edges, 2 dp after the glyph.
   Seen on the phone 2026-11-04: "3h09" + glyph stays in the status bar; the outline cleared the glyph

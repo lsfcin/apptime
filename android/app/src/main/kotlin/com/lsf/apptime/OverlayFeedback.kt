@@ -1,6 +1,8 @@
 // Computes timer feedback progress over the shared usual rule, without Android dependencies.
 package com.lsf.apptime
 
+import kotlin.math.sqrt
+
 object OverlayFeedback {
     val VARIANTS = listOf("fill", "bar", "outline", "none")
     const val DEFAULT = "bar"
@@ -33,5 +35,12 @@ object OverlayFeedback {
         val right = end - stroke / 2
         if (right <= left || progress <= 0f) return null
         return left to left + (right - left) * progress.coerceIn(0f, 1f)
+    }
+
+    // How far a rounded end of [radius] bends inward at [halfHeight] above or below its centre.
+    fun arcBend(radius: Float, halfHeight: Float): Float {
+        if (radius <= 0f) return 0f
+        val h = halfHeight.coerceIn(0f, radius)
+        return radius - sqrt(radius * radius - h * h)
     }
 }

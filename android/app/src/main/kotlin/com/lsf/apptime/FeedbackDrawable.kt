@@ -78,8 +78,7 @@ class FeedbackDrawable(
         val width = dp(1f)
         val inset = width / 2
         val rect = RectF(bounds).apply { inset(inset, inset) }
-        val radius = minOf((if (block) 8f else 12f) * density - inset, rect.height() / 2, rect.width() / 2)
-            .coerceAtLeast(0f)
+        val radius = minOf(outlineRadius(rect.height(), density, block), rect.width() / 2).coerceAtLeast(0f)
         // Explicit clockwise rounded path starts at top-centre (addRoundRect starts elsewhere).
         val path = Path().apply {
             moveTo(rect.centerX(), rect.top)
@@ -121,6 +120,9 @@ class FeedbackDrawable(
         // Room the filling dot takes left of the text: its diameter plus the gap.
         fun fillReserve(density: Float, block: Boolean) =
             2 * dotRadius(density, block) + FILL_GAP_DP * density * scale(block)
+        // The outline's corner radius inside its 1 dp stroke: 12 dp on the pill, 8 on the block, at most half the height.
+        fun outlineRadius(insetHeight: Float, density: Float, block: Boolean) =
+            minOf((if (block) 8f else 12f) * density - density * scale(block) / 2, insetHeight / 2)
         fun thermometerGap(look: String, density: Float, block: Boolean) = ThermometerGlyph.gap(look) * density * scale(block)
         // Room the thermometer takes right of the text: the gap plus its glyph.
         fun thermometerReserve(look: String, density: Float, block: Boolean): Float {

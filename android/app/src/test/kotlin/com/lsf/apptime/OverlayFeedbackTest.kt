@@ -70,4 +70,11 @@ class OverlayFeedbackTest {
         assertNull(OverlayFeedback.barSpan(10f, 50f, 2f, 0f))
         assertNull(OverlayFeedback.barSpan(10f, 11f, 2f, 1f))
     }
+
+    @Test fun arcBendIsZeroAtTheCentreAndTheRadiusAtTheTop() {
+        assertEquals(0f, OverlayFeedback.arcBend(12f, 0f), 1e-6f)
+        assertEquals(2f, OverlayFeedback.arcBend(10f, 6f), 1e-5f) // 10 − √(100 − 36)
+        assertEquals(10f, OverlayFeedback.arcBend(10f, 15f), 0f) // past the radius: the whole radius
+        assertEquals(0f, OverlayFeedback.arcBend(0f, 5f), 0f)
+    }
 }

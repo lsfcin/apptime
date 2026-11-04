@@ -117,10 +117,12 @@ class TimerOverlay(context: Context) {
             .coerceAtLeast(0f).roundToInt()
         // On the pill the glyph is the right-hand air, so it still fits the 52 dp status-bar slot. The outline's
         // rounded end bends in at the glyph's top and bottom, so the glyph moves in as far: they never touch.
-        val bend = if (outline) OverlayFeedback.arcBend(
-            FeedbackDrawable.outlineRadius(height + 2 * extra - density, density, block),
-            ThermometerGlyph.room(thermometer) * density / 2) else 0f
-        val right = if (glyph > 0f && !block) 2 * density + bend + glyph else side + glyph
+        val radius = FeedbackDrawable.outlineRadius(height + 2 * extra - density, density, block)
+        fun pillRight(look: String) = 2 * density + FeedbackDrawable.thermometerReserve(look, density, block) +
+            if (outline) OverlayFeedback.arcBend(radius, ThermometerGlyph.room(look) * density / 2) else 0f
+        // Lucas 2026-11-04: the vertical pill is as wide as the one-way one; the spare air lands right of the glyph.
+        val pill = if (thermometer == "vertical") maxOf(pillRight("vertical"), pillRight("mao")) else pillRight(thermometer)
+        val right = if (glyph > 0f && !block) pill else side + glyph
         view.setPadding((side + dot).roundToInt(), vertical + extra, right.roundToInt(), bottom + extra)
     }
 

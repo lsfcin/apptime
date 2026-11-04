@@ -18,7 +18,7 @@ object ThermometerGlyph {
     /** Air between the number and the glyph, in canvas units: the ▼ sits closer, its triangle has air of its own. */
     fun gap(look: String): Float = when (look) {
         "mao" -> 1.5f
-        "vertical" -> 2.5f
+        "vertical" -> 3.5f
         else -> 3f
     }
 
@@ -93,7 +93,8 @@ object ThermometerGlyph {
     // Capsule with a bulb, built in dp from its box so circles stay circles at any size (Lucas 2026-11-03:
     // cap height + 7%, one dp wider than the canvas's 0.57 scale). The liquid rises with intensity and boils.
     private fun drawVertical(canvas: Canvas, paint: Paint, t: Float, ms: Long) {
-        val stroke = 0.75f
+        // As thick as the pill's 1 dp outline (Lucas 2026-11-04).
+        val stroke = 1f
         val cx = VERTICAL_W / 2
         val bulbR = cx - stroke / 2
         val tubeR = bulbR * TUBE_TO_BULB
@@ -124,7 +125,8 @@ object ThermometerGlyph {
     }
 
     // Box of the vertical thermometer in dp, and its canvas proportions (tube 1.8 · bulb 2.3 · dot 1.25 · column 0.8).
-    private const val VERTICAL_W = 4.3f
+    // Width 1.5× the 2026-11-03 4.3 dp (Lucas 2026-11-04); the bulb is rebuilt from the box, never stretched.
+    private const val VERTICAL_W = 4.3f * 1.5f
     private const val VERTICAL_H = 10.7f
     private const val TUBE_TO_BULB = 1.8f / 2.3f
     private const val DOT_TO_BULB = 1.25f / 2.3f

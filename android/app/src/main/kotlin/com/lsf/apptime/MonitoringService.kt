@@ -26,6 +26,7 @@ class MonitoringService : Service() {
     private lateinit var backfill: HistoryBackfill
 
     private var lastPackage: String? = null
+    private var lastActivity: String? = null
     private var sessionStartMs: Long = 0L
     private var watchdogTick = 0
     private var lastDate: String = ""
@@ -65,6 +66,7 @@ class MonitoringService : Service() {
                         .putString("flutter.overlay_text", "")
                         .putBoolean("flutter.overlay_visible", false)
                         .remove("flutter.current_pkg")
+                        .remove(CURRENT_ACTIVITY_KEY)
                         .putLong(HistoryBackfill.HEARTBEAT_KEY, System.currentTimeMillis())
                         .apply()
                     published = null
@@ -170,7 +172,10 @@ class MonitoringService : Service() {
         // IS on (guarded above), so fall back to the last known foreground package.
         // Session close only happens via ACTION_SCREEN_OFF (immediate flush) or an actual
         // app switch detected below.
-        val current = getCurrentApp() ?: lastPackage
+        val front = getCurrentApp()
+        val current = front?.pkg ?: lastPackage
+        // The activity feeds the overlay's theme guess; with no new event it is still the last one seen.
+        if (front != null) lastActivity = front.activity
 
         if (current == null) {
             // Screen on but no app ever recorded yet — nothing to show.
@@ -218,7 +223,8 @@ class MonitoringService : Service() {
     private var published: List<Any?>? = null
 
     private fun publishLive(timer: Boolean, visible: Boolean, pkg: String?) {
-        val state = listOf(timer, visible, pkg, sessionStartMs)
+        val activity = if (pkg == null) null else lastActivity
+        val state = listOf(timer, visible, pkg, activity, sessionStartMs)
         if (state == published) return
         published = state
         val editor = prefs.edit()
@@ -226,21 +232,24 @@ class MonitoringService : Service() {
             .putBoolean("flutter.overlay_visible", visible)
             .putLong("flutter.current_session_start_ms", sessionStartMs)
         if (pkg == null) editor.remove("flutter.current_pkg") else editor.putString("flutter.current_pkg", pkg)
+        if (activity == null) editor.remove(CURRENT_ACTIVITY_KEY) else editor.putString(CURRENT_ACTIVITY_KEY, activity)
         editor.apply()
     }
 
-    private fun getCurrentApp(): String? {
+    private class Foreground(val pkg: String, val activity: String?)
+
+    private fun getCurrentApp(): Foreground? {
         val now = System.currentTimeMillis()
         val events = usageStatsManager.queryEvents(now - 60_000, now)
         val event = UsageEvents.Event()
-        var lastFg: String? = null
+        var lastFg: Foreground? = null
         var lastTs = 0L
 
         while (events.getNextEvent(event)) {
             when (event.eventType) {
                 UsageEvents.Event.MOVE_TO_FOREGROUND -> {
                     if (event.timeStamp > lastTs) {
-                        lastFg = event.packageName
+                        lastFg = Foreground(event.packageName, event.className)
                         lastTs = event.timeStamp
                     }
                 }
@@ -404,6 +413,8 @@ class MonitoringService : Service() {
         const val NOTIF_ID = 1002
         // On the launcher: passing through it to switch apps shows nothing.
         const val HOME_DELAY_MS = 2_000L
+        // The foreground activity's class name, beside current_pkg: the overlay guesses its theme from it.
+        const val CURRENT_ACTIVITY_KEY = "flutter.current_activity"
         var isRunning = false
     }
 }

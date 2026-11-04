@@ -150,7 +150,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `overlay_enabled` | Boolean | Show timer/messages; monitoring continues (default true) |
 | `monitor_launcher` | Boolean | Show overlay on launcher (default true) |
 | `overlay_visible` | Boolean | Whether overlay should appear |
-| `overlay_font_size`, `overlay_show_background`, `overlay_show_border`, `overlay_top_dp`, `monitoring_ever_started` | — | Legacy; retained, ignored |
+| `overlay_font_size`, `_show_background`, `_show_border`, `_top_dp`, `monitoring_ever_started` | — | Legacy, ignored |
 | `daily_ms_{pkg}_{date}` | Long | Accumulated ms for app that calendar day |
 | `open_count_{pkg}_{date}` | Int | App opens that calendar day |
 | `unlock_count_{date}` | Int | Device unlocks that calendar day |
@@ -159,16 +159,17 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `hourly_opens_{pkg}_{date}_{h}` | Int | Per-app opens in hour h |
 | `hourly_unlocks_{date}_{h}` | Int | Device unlocks in hour h |
 | `session_bucket_{i}_{date}` | Int | Session count for bucket i (0=<1m 1=1-5m 2=5-15m 3=>15m) |
-| `packages_index_{date}` | String (JSON) | Package names active on that date — avoids O(n_keys) scan |
+| `packages_index_{date}` | String (JSON) | Package names active on that date (no key scan) |
 | `disabled_apps` | String (JSON) | Unmonitored packages: no overlay, never counted in any total |
 | `default_unmonitored_seen` | String (JSON) | Packages already switched off once by `applyDefaultUnmonitored`; the user's later choice stands |
-| `onboarding_done` | Boolean | Whether onboarding has been completed |
+| `onboarding_done` | Boolean | Onboarding completed |
 | `monitoring_enabled` | Boolean | Kotlin writes on Iniciar/Parar; boot/reinstall resume only when true; app open resumes unless false |
 | `language_code` | String? | `null`=system · `"pt"` · `"en"` |
 | `pm_day` | String | Kotlin only — date key the shown set below belongs to |
 | `pm_shown` | String | Kotlin only — triggers shown on `pm_day`, comma-separated |
 | `pm_last_ms` | Long | Kotlin only — epoch ms of the last message (the 90-min gap spans days) |
-| `current_pkg` | String | Foreground package right now (written each tick) |
+| `current_pkg` | String | Foreground package right now |
+| `current_activity` | String | Its activity (`Event.className`), for the theme guess |
 | `current_session_start_ms` | Long | Epoch ms when current session began |
 
 ---

@@ -105,7 +105,7 @@ class TimerOverlay(context: Context) {
         // The right padding holds the thermometer, so the text (and the bar under it) ends before it.
         feedbackDrawable.textRight = (view.measuredWidth - view.paddingRight).toFloat()
         return OverlayPlacement.timer(Build.VERSION.SDK_INT, bounds.cutoutRight, bounds.statusBarHeight,
-            bounds.width, view.measuredWidth, view.measuredHeight, window.dp(52), window.dp(8),
+            bounds.width, view.measuredWidth, view.measuredHeight, window.dp(OverlayPlacement.PILL_SLOT_DP), window.dp(8),
             window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), block, cutoutGap = 0)
     }
 
@@ -136,7 +136,7 @@ class TimerOverlay(context: Context) {
         val height = metrics.descent - metrics.ascent + vertical + bottom
         val extra = ((ThermometerGlyph.room(thermometer) * density * FeedbackDrawable.scale(block) - height) / 2)
             .coerceAtLeast(0f).roundToInt()
-        // On the pill the glyph is the right-hand air, so it still fits the 52 dp status-bar slot. The outline's
+        // On the pill the glyph is the right-hand air, so it still fits the status-bar slot. The outline's
         // rounded end bends in at the glyph's top and bottom, so the glyph moves in as far: they never touch.
         val radius = FeedbackDrawable.outlineRadius(height + 2 * extra - density, density, block)
         fun pillRight(look: String) = 2 * density + FeedbackDrawable.thermometerReserve(look, density, block) +

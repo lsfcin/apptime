@@ -7,6 +7,8 @@ data class TimerPlacement(val inStatusBar: Boolean, val x: Int, val y: Int, val 
 object OverlayPlacement {
     // Status icons sit low in a tall cutout band (Xiaomi: centre 12 dp above the bar's bottom); no API reports it.
     const val ICON_ROW_FROM_BOTTOM_DP = 12
+    // The pill's widest slot: 52 dp met Maps' location arrow, ~5 dp left of the icons (Lucas 2026-11-04, Codex A 5/10).
+    const val PILL_SLOT_DP = 44
 
     /**
      * The pill never leaves the bar (Lucas 2026-11-04: a pill below it covers the app's own top-right

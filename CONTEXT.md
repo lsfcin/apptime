@@ -54,7 +54,6 @@ Roadmap and pending milestones → [ROADMAP.md](ROADMAP.md)
 | [`lib/`](lib/CONTEXT.md) | — |
 | [`refs/`](refs/CONTEXT.md) | Captured references for apptime — tier-1 links in [REFS.md](refs/REFS.md); promote to `<slug>.yaml` for deep study (schema: `academy/papers/*/refs/CONTEXT.md`). |
 | [`test/`](test/CONTEXT.md) | Dart tests; fixtures/ holds cases shared with the Kotlin unit tests |
-| [`tools/`](tools/CONTEXT.md) | Phone-side helpers for design rounds: screenshots over adb |
 
 | File | Description |
 |------|-------------|

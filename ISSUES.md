@@ -88,7 +88,7 @@ block was removed from his data and the setting is back to 0. Keep it 0 outside 
 
 *a generator asked a question — answer it at the source, never by cutting the marker*
 
-- CONTEXT.md:68: 3 unanswered placeholder(s).
+- CONTEXT.md:67: 3 unanswered placeholder(s).
 - lib/CONTEXT.md:2: 1 unanswered placeholder(s).
 - lib/data/CONTEXT.md:2: 1 unanswered placeholder(s).
 - lib/l10n/CONTEXT.md:2: 1 unanswered placeholder(s).
@@ -107,7 +107,7 @@ block was removed from his data and the setting is back to 0. Keep it 0 outside 
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/v1-impl is 1 ahead of main
+- . — feature/v1-impl is 2 ahead of main
 
 ### Local branches already merged into their base
 

@@ -172,11 +172,7 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   Y-axis labels collide in Tendência semanal; legend colours repeat (Claude/Google/outros); letter
   circles instead of app icons; AppTime lists itself; 0m apps fill the list; English chips (`unlocks`, `session`).
 
-🟡 **`core/run tools/phone/adb`** (name OK'd by Lucas 2026-11-04): promote `tools/capture.sh` plus the
-session's prefs loop (sed `FlutterSharedPreferences.xml` via `run-as`, force-stop, relaunch, open the
-target app, wait ≥9 s, screencap) and `--sheet`; then delete `capture.sh` and the INBOX proposal.
-
-Screens via adb: MIUI blocks `input tap` until "Depuração USB (configurações de segurança)" is on
+Screens via adb: `core/run tools/phone/adb shoot|prefs|sheet` (debug build only, for `prefs`). MIUI blocks `input tap` until "Depuração USB (configurações de segurança)" is on
 **and the phone is rebooted**. Shots and panel answers stay in the session scratchpad (usage data).
 
 Session 2 starts by installing Flutter SDK + JDK 17 in the background: this machine has neither

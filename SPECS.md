@@ -64,6 +64,7 @@ lib/
 | `MainActivity.kt` | Flutter MethodChannel handler — start/stop service, permissions, getAppMetadata, getStartupStatus |
 | `MonitoringService.kt` | Foreground service — 1s tick, accumulateDailyMs, session tracking, overlay text, front activity |
 | `HistoryBackfill.kt` | Gap backfill (backfillGap) + 30-day history fill (backfillHistory); injectable |
+| `GapBackfill.kt` | Startup replay window and checkpoint; injectable clock, heartbeat storage and replay |
 | `OverlayService.kt` | Foreground service — 500 ms poll, shared live-usage snapshot/cache, app labels, timer/message coordination |
 | `OverlayWindow.kt` | Non-touchable window lifecycle, alpha 0.8, status-bar/cutout geometry and shared rimless backgrounds |
 | `TimerOverlay.kt` | Anchored Quiet pill / accessible block text, padding per variant, measured placement; hands the text span to the feedback drawable |
@@ -168,6 +169,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `chip_shades` | String (JSON) | Per-app chip, `{pkg: "light"\|"dark"}`; absent = Auto |
 | `overlay_amber` | Boolean | Amber state ink (default true) |
 | `current_session_start_ms` | Long | Epoch ms when current session began |
+| `monitoring_heartbeat_ms` | Long | Kotlin restart cursor; advanced after gap replay, atomically with live-session totals, every 30s while running and at screen off |
 
 ---
 
@@ -195,7 +197,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - **No goals** (rejected 2026-10-31): the four goal levels, per-app levels and `GoalScreen` are gone. Messages key off the user's own 30-day mean, never a target the user picked.
 - **Thermometer parity and continuity**: the last 2 h against the 30-day daily mean × 2 / 17 awake hours; the hour 2 h back splits by the minute, so the window moves without a jump at an hour turn; `test/fixtures/thermometer.json` checks it on both sides. The open session is added hour by hour, since buckets fill only when it ends.
 - **Daily total == sum of hourly values**: `accumulateDailyMs` accumulates daily totals within the hourly walk loop.
-- **Heartbeat granularity**: written every 30s (not 1s) and at the screen-off flush — the tick is stopped after it, so a restart overnight must not backfill seconds already counted.
+- **Restart replay checkpoint**: advance the heartbeat after successful gap replay, even with no events, and atomically with live-session flushes. Short skipped gaps stay pending. The 30s watchdog and screen-off flush also advance it; a restart must not replay time already stored.
 
 ---
 

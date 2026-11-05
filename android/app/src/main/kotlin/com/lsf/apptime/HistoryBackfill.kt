@@ -1,3 +1,4 @@
+// Replays Android usage history into the stored app and phone totals
 package com.lsf.apptime
 
 import android.app.usage.UsageEvents
@@ -24,56 +25,19 @@ class HistoryBackfill(
         const val HEARTBEAT_KEY = "flutter.monitoring_heartbeat_ms"
     }
 
+    private val gapBackfill = GapBackfill(
+        readHeartbeat = { prefs.getLong(HEARTBEAT_KEY, 0L) },
+        writeHeartbeat = { prefs.edit().putLong(HEARTBEAT_KEY, it).apply() },
+        replay = { start, end -> backfillDayFromEvents(start, end) },
+    )
+
     /**
      * Replays usage events for any gap between the last heartbeat and now.
      * [gapThresholdMs] defines how large a gap must be before we attempt backfill
      * (10 s covers normal poll jitter; anything larger is a real gap).
      */
     fun backfillGap(gapThresholdMs: Long) {
-        val lastHeartbeat = prefs.getLong(HEARTBEAT_KEY, 0L)
-        val now = System.currentTimeMillis()
-
-        val gapStart = if (lastHeartbeat == 0L) {
-            // Fresh install / first ever run: fill from today's 4am boundary.
-            java.util.Calendar.getInstance().apply {
-                if (get(java.util.Calendar.HOUR_OF_DAY) < 4) add(java.util.Calendar.DATE, -1)
-                set(java.util.Calendar.HOUR_OF_DAY, 4)
-                set(java.util.Calendar.MINUTE, 0)
-                set(java.util.Calendar.SECOND, 0)
-                set(java.util.Calendar.MILLISECOND, 0)
-            }.timeInMillis
-        } else {
-            if ((now - lastHeartbeat) < gapThresholdMs) return
-            lastHeartbeat
-        }
-
-        val events = usageStats.queryEvents(gapStart, now)
-        val event = UsageEvents.Event()
-        val segments = mutableListOf<Seg>()
-        var lastFgPkg: String? = null
-        var lastFgTs = gapStart
-
-        while (events.getNextEvent(event)) {
-            when (event.eventType) {
-                UsageEvents.Event.MOVE_TO_FOREGROUND -> {
-                    if (lastFgPkg != null && event.timeStamp > lastFgTs)
-                        segments += Seg(lastFgPkg!!, lastFgTs, event.timeStamp)
-                    lastFgPkg = event.packageName
-                    lastFgTs = event.timeStamp
-                }
-                UsageEvents.Event.MOVE_TO_BACKGROUND,
-                UsageEvents.Event.SCREEN_NON_INTERACTIVE -> {
-                    if (lastFgPkg != null && event.timeStamp > lastFgTs) {
-                        segments += Seg(lastFgPkg!!, lastFgTs, event.timeStamp)
-                        lastFgPkg = null
-                    }
-                }
-            }
-        }
-        if (lastFgPkg != null && now > lastFgTs)
-            segments += Seg(lastFgPkg!!, lastFgTs, now)
-
-        for (seg in segments) accumulate(seg.pkg, seg.startMs, seg.endMs)
+        gapBackfill.backfill(gapThresholdMs)
     }
 
     /**
@@ -102,7 +66,7 @@ class HistoryBackfill(
                 val dayEnd   = dayStart + 24 * 3_600_000L
                 val dateKey  = epochToDate(dayStart)
                 if (hasAnyDataForDate(dateKey)) continue
-                if (!backfillDayFromEvents(dateKey, dayStart, dayEnd))
+                if (!backfillDayFromEvents(dayStart, dayEnd))
                     backfillDayFromStats(dateKey, dayStart, dayEnd)
             }
         }.start()
@@ -114,7 +78,7 @@ class HistoryBackfill(
     }
 
     /** Replays UsageEvents for [start, end) into accumulate. Returns true if any data found. */
-    private fun backfillDayFromEvents(dateKey: String, start: Long, end: Long): Boolean {
+    private fun backfillDayFromEvents(start: Long, end: Long): Boolean {
         val events = usageStats.queryEvents(start, end)
         val event = UsageEvents.Event()
         val segments = mutableListOf<Seg>()

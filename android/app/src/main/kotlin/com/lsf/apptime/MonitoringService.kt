@@ -1,3 +1,4 @@
+// Tracks foreground sessions and publishes live overlay state
 package com.lsf.apptime
 
 import android.app.Notification
@@ -56,8 +57,9 @@ class MonitoringService : Service() {
             when (intent.action) {
                 Intent.ACTION_SCREEN_OFF -> {
                     // Immediately flush the active session when screen turns off
+                    val now = System.currentTimeMillis()
                     if (lastPackage != null) {
-                        accumulateDailyMs(lastPackage!!, sessionStartMs, System.currentTimeMillis())
+                        accumulateDailyMs(lastPackage!!, sessionStartMs, now, updateHeartbeat = true)
                         lastPackage = null
                     }
                     // The tick stops until SCREEN_ON, so the heartbeat marks the flush itself:
@@ -67,7 +69,7 @@ class MonitoringService : Service() {
                         .putBoolean("flutter.overlay_visible", false)
                         .remove("flutter.current_pkg")
                         .remove(CURRENT_ACTIVITY_KEY)
-                        .putLong(HistoryBackfill.HEARTBEAT_KEY, System.currentTimeMillis())
+                        .putLong(HistoryBackfill.HEARTBEAT_KEY, now)
                         .apply()
                     published = null
                     handler.removeCallbacks(pollRunnable)
@@ -111,7 +113,8 @@ class MonitoringService : Service() {
         effectiveLaunchers = AppConstants.resolveLaunchers(packageManager)
         lastDate = today()
         migrateCorruptedDeviceDaily()
-        backfill = HistoryBackfill(usageStatsManager, prefs, ::accumulateDailyMs, DateUtils::dateKey)
+        backfill = HistoryBackfill(usageStatsManager, prefs,
+            { pkg, start, end -> accumulateDailyMs(pkg, start, end) }, DateUtils::dateKey)
         val screenFilter = IntentFilter().apply {
             addAction(Intent.ACTION_SCREEN_OFF)
             addAction(Intent.ACTION_SCREEN_ON)
@@ -189,7 +192,7 @@ class MonitoringService : Service() {
             // App switch — close previous session, open new one
             val now = System.currentTimeMillis()
             if (lastPackage != null) {
-                accumulateDailyMs(lastPackage!!, sessionStartMs, now)
+                accumulateDailyMs(lastPackage!!, sessionStartMs, now, updateHeartbeat = true)
                 lastClosedPkg = lastPackage
                 lastClosedMs  = now
             }
@@ -276,7 +279,9 @@ class MonitoringService : Service() {
      * each hourly_ms bucket only receives the milliseconds that actually fell within it.
      * Daily totals are attributed to the end-of-session date (same behaviour as before).
      */
-    private fun accumulateDailyMs(pkg: String, startMs: Long, endMs: Long) {
+    private fun accumulateDailyMs(
+        pkg: String, startMs: Long, endMs: Long, updateHeartbeat: Boolean = false,
+    ) {
         val duration = endMs - startMs
         if (duration <= 0L) return
 
@@ -331,6 +336,8 @@ class MonitoringService : Service() {
 
         val editor = prefs.edit()
         for ((key, value) in acc) editor.putLong(key, value)
+        // Commit live coverage with its totals; historical replay must not move it.
+        if (updateHeartbeat) editor.putLong(HistoryBackfill.HEARTBEAT_KEY, endMs)
         // Update per-day package index — allows Flutter to look up packages in O(1)
         // instead of scanning all prefs keys.
         for ((date, pkgs) in indexUpdates) {

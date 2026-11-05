@@ -30,7 +30,6 @@ class TimerOverlay(context: Context) {
     private val density = view.resources.displayMetrics.density
     private var lastAppearance: List<Any>? = null
     private var lastText: String? = null
-    private var lastIcons = 0
     private var step = FitLadder.STEPS[0]
     private val choreographer = Choreographer.getInstance()
     private var frameMs = 0L
@@ -51,7 +50,7 @@ class TimerOverlay(context: Context) {
     val isAdded get() = window.isAdded
 
     fun render(block: Boolean, totalMs: Long, feedback: OverlayFeedback.Frame, thermometer: String, level: Float,
-               visible: Boolean, chip: Shade, amber: Boolean, icons: Int) {
+               visible: Boolean, chip: Shade, amber: Boolean) {
         val state = feedback.state
         // The Bloco is always its 96% black, so only the pill follows the theme guess.
         val shade = if (block) Shade.DARK else chip
@@ -73,32 +72,26 @@ class TimerOverlay(context: Context) {
         val bounds = window.bounds()
         view.maxWidth = (bounds.width * 0.88f).toInt()
         val text = OverlayText.compact(totalMs)
-        // The ladder is climbed again only when the text, the look or the likely icons change, so the pill never
-        // shifts between minutes.
-        if (text != lastText || icons != lastIcons) {
+        // The ladder is climbed again only when the text or the look changes, so the pill never shifts between minutes.
+        if (text != lastText) {
             lastText = text
-            lastIcons = icons
             view.text = unitsCondensed(text)
-            step = if (block) FitLadder.STEPS[0] else FitLadder.first(icons > 0) {
-                fit(block, feedback.variant, thermometer, it, bounds, icons).fits }
+            step = if (block) FitLadder.STEPS[0] else FitLadder.STEPS[FitLadder.first {
+                fit(block, feedback.variant, thermometer, it, bounds).fits }]
         }
-        val look = FitLadder.thermometer(step, thermometer)
-        feedbackDrawable.thermometerLook = look
-        feedbackDrawable.frame = feedback.copy(variant = FitLadder.variant(step, feedback.variant))
-        val slot = fit(block, feedback.variant, thermometer, step, bounds, icons)
+        feedbackDrawable.thermometerLook = thermometer
+        feedbackDrawable.frame = feedback
+        val slot = fit(block, feedback.variant, thermometer, step, bounds)
         view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         val x = slot.x + if (slot.inStatusBar) 0 else bounds.rightInset
         window.place(view.measuredWidth, view.measuredHeight, x, slot.y, slot.inStatusBar)
         bottom = if (visible) slot.y + view.measuredHeight else 0
-        animate(if (visible && motionOn()) ThermometerMotion.frameMs(look, level) else 0L)
+        animate(if (visible && motionOn()) ThermometerMotion.frameMs(thermometer, level) else 0L)
     }
 
-    // Applies one ladder step (the pill only), measures, and asks where it goes and whether it fits; each
-    // likely transient icon takes its width off the slot.
-    private fun fit(block: Boolean, chosenVariant: String, chosenLook: String, s: FitLadder.Step,
-                    bounds: OverlayBounds, icons: Int): TimerPlacement {
-        val variant = FitLadder.variant(s, chosenVariant)
-        val thermometer = FitLadder.thermometer(s, chosenLook)
+    // Applies one ladder step (the pill only), measures, and asks where it goes and whether it fits.
+    private fun fit(block: Boolean, variant: String, thermometer: String, s: FitLadder.Step,
+                    bounds: OverlayBounds): TimerPlacement {
         if (!block) {
             // dp, as tall as the status bar clock at 13 dp (26 px at 440 dpi), which ignores font_scale
             // (measured 1.0 / 1.15 / 1.3 on HyperOS, 2026-11-04).
@@ -112,9 +105,8 @@ class TimerOverlay(context: Context) {
         // The right padding holds the thermometer, so the text (and the bar under it) ends before it.
         feedbackDrawable.textRight = (view.measuredWidth - view.paddingRight).toFloat()
         return OverlayPlacement.timer(Build.VERSION.SDK_INT, bounds.cutoutRight, bounds.statusBarHeight,
-            bounds.width, view.measuredWidth, view.measuredHeight, window.dp(OverlayPlacement.PILL_SLOT_DP - icons * TransientIcons.ICON_DP),
-            window.dp(8), window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), block,
-            cutoutGap = -window.dp(OverlayPlacement.CUTOUT_OVERLAP_DP))
+            bounds.width, view.measuredWidth, view.measuredHeight, window.dp(OverlayPlacement.PILL_SLOT_DP),
+            window.dp(8), window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), block, cutoutGap = 0)
     }
 
     private fun animate(delayMs: Long) {

@@ -92,7 +92,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get overlayFeedbackOutlineSub => 'A borda se desenha em volta do tempo e fecha no seu habitual';
   @override String get overlayFeedbackNone => 'Nenhuma';
   @override String get overlayFeedbackNoneSub => 'Só o tempo, sem comparar com o seu habitual';
-  @override String get overlayAmber => 'Âmbar perto do habitual';
+  @override String get overlayAmber => 'Cores de alerta';
   @override String get overlayAmberSub => 'Desligado: o tempo fica numa cor só; as formas continuam';
   @override String get chipAuto => 'Fundo da pílula: automático';
   @override String get chipLight => 'Fundo da pílula: claro';

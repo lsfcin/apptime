@@ -7,10 +7,9 @@ data class TimerPlacement(val inStatusBar: Boolean, val x: Int, val y: Int, val 
 object OverlayPlacement {
     // Status icons sit low in a tall cutout band (Xiaomi: centre 12 dp above the bar's bottom); no API reports it.
     const val ICON_ROW_FROM_BOTTOM_DP = 12
-    // The pill's widest slot with no transient icon: 52 dp met Maps' arrow; Lucas set 46 (2026-11-04),
-    // one more dp each side than 44: the right one here, the left one into the cutout's reported margin.
-    const val PILL_SLOT_DP = 46
-    const val CUTOUT_OVERLAP_DP = 1
+    // The pill's widest slot. A transient system icon (Maps' arrow) may still draw over it: no public API
+    // says which icons are showing, so the pill stays put and the user changes its look (Lucas 2026-11-05).
+    const val PILL_SLOT_DP = 52
 
     /**
      * The pill never leaves the bar (Lucas 2026-11-04: a pill below it covers the app's own top-right

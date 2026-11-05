@@ -1,4 +1,4 @@
-// Asserts the thermometer's two windows, its continuity at the hour turn and its bucket keys against the cases shared with Kotlin
+// Asserts the thermometer's moving window and pace, its continuity at the hour turn and its bucket keys against the cases shared with Kotlin
 import 'dart:convert';
 import 'dart:io';
 
@@ -22,6 +22,7 @@ void main() {
         final t = thermometer(
           now: DateTime.parse(c['now'] as String),
           hourMs: _hours(c['hours'] as Map<String, dynamic>),
+          usualDailyMs: c['usualDailyMs'] as int,
           sessionStart: _time(c['sessionStart']),
         );
         expect(t.recentMs, c['recentMs']);
@@ -35,7 +36,10 @@ void main() {
       test(c['name'], () {
         final turn = DateTime.parse(c['turn'] as String);
         Thermometer at(DateTime now) => thermometer(
-            now: now, hourMs: _hours(c['hours'] as Map<String, dynamic>), sessionStart: _time(c['sessionStart']));
+            now: now,
+            hourMs: _hours(c['hours'] as Map<String, dynamic>),
+            usualDailyMs: c['usualDailyMs'] as int,
+            sessionStart: _time(c['sessionStart']));
         final before = at(turn.subtract(const Duration(milliseconds: 1)));
         final after = at(turn);
         expect((after.recentMs - before.recentMs).abs(), lessThanOrEqualTo(c['maxStepMs'] as int));

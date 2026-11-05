@@ -27,10 +27,6 @@ class OverlayService : Service() {
     private var launchers = AppConstants.LAUNCHERS
     private val handler = Handler(Looper.getMainLooper())
     private var evalTick = 0
-    // The system states behind likely icons, read every 10th poll (5 s): three binder calls each 500 ms cost
-    // battery. The front app is already known each poll, so a location app cuts the pill at once.
-    private var clues: IconClues? = null
-    private var iconTick = 0
 
     private val pollRunnable = object : Runnable {
         override fun run() {
@@ -70,11 +66,6 @@ class OverlayService : Service() {
         super.onDestroy()
     }
 
-    private fun likelyIcons(pkg: String?): Int {
-        if (iconTick++ % 10 == 0 || clues == null) clues = TransientIcons.read(this, pkg)
-        return TransientIcons.count(clues!!.copy(frontPkg = pkg))
-    }
-
     private fun updateOverlay() {
         // Read single keys, never prefs.all: that copies the whole store (hundreds of KB) every poll.
         // MonitoringService writes on this same main looper, so the reads below cannot interleave a write.
@@ -94,10 +85,9 @@ class OverlayService : Service() {
         val feedback = OverlayFeedback.frame(prefs.getString("flutter.overlay_feedback", null), total, usual)
         val look = ThermometerLevel.look(prefs.getString("flutter.overlay_thermometer", null))
         val level = if (look == "none") 0f else ThermometerLevel.intensity(
-            thermometerSource.read(pkg, inApp, now, prefs.safeGetCount("flutter.current_session_start_ms")), usual.realDays)
+            thermometerSource.read(pkg, inApp, now, prefs.safeGetCount("flutter.current_session_start_ms"), usual.meanMs), usual.realDays)
         timer.render(prefs.getString("flutter.overlay_style", null) == "block", total, feedback, look, level,
-            allowed && hasText, chipShade(pkg), prefs.getBoolean(OverlayInk.AMBER_KEY, true),
-            likelyIcons(pkg))
+            allowed && hasText, chipShade(pkg), prefs.getBoolean(OverlayInk.AMBER_KEY, true))
         feedbackEngine?.refresh(pkg, now, allowed)
         if (++evalTick >= 5) {
             evalTick = 0

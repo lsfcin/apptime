@@ -39,7 +39,7 @@ lib/
 │   ├── app_info_service.dart        # AppInfoService — loads labels + launchers once
 │   ├── service_channel.dart         # ServiceChannel — MethodChannel bridge to Kotlin
 │   ├── storage_service.dart         # StorageService — SharedPreferences wrapper
-│   ├── thermometer.dart             # thermometer(), hourKey() — today since 04:00 vs yesterday to the same time, no jump at the hour turn
+│   ├── thermometer.dart             # thermometer(), hourKey() — the last 2 h vs the 30-day pace, no jump at the hour turn
 │   └── usual_daily.dart             # usualDaily(), usualState() — "your usual" (30-day mean)
 │
 ├── theme/
@@ -73,7 +73,7 @@ lib/
 | `OverlayInk.kt` | Pure: ink per state and bar shade, ≥ 4.5:1 after alpha 0.8 |
 | `MessageOverlay.kt` | Separate header/body window below status bar and timer, at most 88% screen width |
 | `OverlayPlacement.kt` | Pure: the pill's status-bar spot (right of the cutout, or right of centre), icon-row centring, and whether it fits |
-| `FitLadder.kt` · `TransientIcons.kt` | Pure: the steps that tighten a pill that does not fit (padding, pie, text to 11 dp; with an icon likely, thermometer off, then the bar) · counts likely icons |
+| `FitLadder.kt` | Pure: the steps that tighten a pill that does not fit — padding, then the pie, then text to 11 dp; none drops an element |
 | `OverlayText.kt` | Pure: compact durations (pill and block), localized message headers, 7-real-day feedback floor |
 | `LiveUsage.kt` | Pure: stored daily totals plus unflushed app/launcher session for both timer and messages |
 | `UsualCache.kt` | Per-package/phone usual cache shared by timer and messages; invalidated on 04:00 day-key change or a new unmonitored set |
@@ -117,7 +117,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 
 **Overlay behavior:** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Both styles use `FLAG_NOT_TOUCHABLE`, window alpha 0.8 and tabular figures; no drag or intensity modes.
 
-- `pill` (default): 13 dp (as tall as the status bar clock, which ignores font_scale), no fill; light or dark ink by `ChipShade` (per-app override first), as no app can read another's status bar. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). It never leaves the status bar: on API 30+ with a top cutout it sits 1 dp into `boundingRectTop.right`, otherwise just right of the bar's centre; centred on the icon row (12 dp above the bar's bottom; no API reports it), never past the right margin. Wider than `PILL_SLOT_DP` (46 dp, 15 dp less per icon `TransientIcons` guesses: alarm, silent, DND, a location app in front) or taller than the bar, `FitLadder` tightens it.
+- `pill` (default): 13 dp (as tall as the status bar clock, which ignores font_scale), no fill; light or dark ink by `ChipShade` (per-app override first), as no app can read another's status bar. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). It never leaves the status bar: on API 30+ with a top cutout it sits flush with `boundingRectTop.right`, otherwise just right of the bar's centre; centred on the icon row (12 dp above the bar's bottom; no API reports it), never past the right margin. Wider than `PILL_SLOT_DP` (52 dp) or taller than the bar, `FitLadder` tightens it; a transient system icon may draw over it.
 - `block`: below the status bar, top-right; 17 sp bold, the pill's letter format (`12m`, `1h44`), 96% black background, no rim. Uses the selected feedback variant with cues scaled 1.25×.
 - Padding: every style adds one blank character's width each side of the time (Lucas, 2026-11-02); `fill` reserves the dot (6.9 dp, 1.25× on block) plus a fixed 3 dp gap left of the text, so the gap never varies with the state; `bar` takes a bottom padding of three bar thicknesses: the bar right under the digits, twice its thickness free below it.
 - Today's app total is compared with that app's 30-day `UsualDaily` mean; on the launcher the timer uses phone usage/usual. Before 7 real days feedback is calm and no cue is drawn. Calm, near (soft amber), past (amber, bold pill) per `OverlayInk`; `overlay_amber` off keeps calm.
@@ -193,7 +193,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - **Single source of truth**: `kAppMeta` is the sole source for app labels and colors.
 - **"Your usual" parity**: Dart and Kotlin both run `test/fixtures/usual_daily.json`; a rule change edits both files and adds a case there.
 - **No goals** (rejected 2026-10-31): the four goal levels, per-app levels and `GoalScreen` are gone. Messages key off the user's own 30-day mean, never a target the user picked.
-- **Thermometer parity and continuity**: today since 04:00 against yesterday from 04:00 to the same time; the hour 24 h back splits by the minute, so the value never jumps at an hour turn and both sides start over at 04:00; `test/fixtures/thermometer.json` checks it on both sides. The open session is added hour by hour, since buckets fill only when it ends.
+- **Thermometer parity and continuity**: the last 2 h against the 30-day daily mean × 2 / 17 awake hours; the hour 2 h back splits by the minute, so the window moves without a jump at an hour turn; `test/fixtures/thermometer.json` checks it on both sides. The open session is added hour by hour, since buckets fill only when it ends.
 - **Daily total == sum of hourly values**: `accumulateDailyMs` accumulates daily totals within the hourly walk loop.
 - **Heartbeat granularity**: written every 30s (not 1s) and at the screen-off flush — the tick is stopped after it, so a restart overnight must not backfill seconds already counted.
 

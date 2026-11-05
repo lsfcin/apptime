@@ -29,7 +29,7 @@ class ThermometerTest {
         val reading = cases.getJSONArray("reading")
         for (i in 0 until reading.length()) {
             val c = reading.getJSONObject(i)
-            val t = Thermometer.read(epoch(c.getString("now")), hours(c.getJSONObject("hours")), session(c))
+            val t = Thermometer.read(epoch(c.getString("now")), hours(c.getJSONObject("hours")), c.getLong("usualDailyMs"), session(c))
             assertEquals(c.getString("name"), c.getLong("recentMs"), t.recentMs)
             assertEquals(c.getString("name"), c.getLong("previousMs"), t.previousMs)
         }
@@ -41,7 +41,7 @@ class ThermometerTest {
         for (i in 0 until continuity.length()) {
             val c = continuity.getJSONObject(i)
             val turn = epoch(c.getString("turn"))
-            val read = { now: Long -> Thermometer.read(now, hours(c.getJSONObject("hours")), session(c)) }
+            val read = { now: Long -> Thermometer.read(now, hours(c.getJSONObject("hours")), c.getLong("usualDailyMs"), session(c)) }
             val before = read(turn - 1)
             val after = read(turn)
             val max = c.getLong("maxStepMs")

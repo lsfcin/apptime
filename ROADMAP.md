@@ -69,10 +69,11 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   too (Lucas 2026-11-03: a timer with only the feedbacks must work on pill, Bloco and Aba):
   **number** (today's time in this app), **progress** (the day since 04:00 vs the daily usual: bar,
   fill or outline; works well as is) and the **thermometer** below. Progress on by default.
-- **Thermometer** (Lucas 2026-11-03): **today since 04:00 vs yesterday from 04:00 to the same
-  time**, on the hour buckets, the hour 24 h back split by the minute so no hour turn jumps; both
-  sides start over at 04:00. It answers "am I doing better or worse right now", where progress
-  only warns when the bar bursts. Built in `thermometer.dart` · `Thermometer.kt`, held equal by
+- **Thermometer** (Lucas 2026-11-05): **the last 2 h, moving by the minute, vs your pace** — the
+  30-day daily mean over 17 awake hours (a fixed 7 h of sleep), × 2 h; per app and on the launcher
+  phone-wide, like the timer; under 10 min in the window it stays calm. It heats under use and cools
+  in a pause, where progress only warns when the bar bursts. Measured sleep (the longest run of
+  empty hours) is a later refinement if 7 h misleads. Panel `outputs/apptime-panel-icon-thermo.md`. Built in `thermometer.dart` · `Thermometer.kt`, held equal by
   `test/fixtures/thermometer.json`. Next: Hoje, beside "hoje até agora" (phone-wide). Holes: none
   in real data (`HistoryBackfill` covers stops); if one shows up, borrow the hour from an earlier day.
 - **"Your usual" = mean daily total over the 30 days before today** (Lucas, 2026-10-31, replacing
@@ -100,15 +101,15 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   Asymmetries: the selector lives in Monit., the tab that goes away — it moves with the per-app
   exceptions into Ajustes; `ChipShade` and `chip_shades` still name a chip that is gone. The pill
   stays untouchable (tap-to-invert: Codex 2/10; Bloco 9, Aba 8 if wanted).
-- **Pill fit** (2026-11-04, built): never leaves the bar; text 13 dp (= the HyperOS clock, which
-  ignores font_scale); `FitLadder` tightens padding, then the pie, then text to 11 dp, past a 46 dp
-  slot (Lucas: 1 dp into the cutout's margin, 1 dp right) less 15 dp per icon `TransientIcons`
-  guesses — alarm, silent, DND, and a navigation, ride or delivery app in front for the location
-  arrow, which no public API reports (panel `outputs/apptime-panel-icon-detect.md`, 8/10). With an
-  icon likely, the thermometer goes, then pie or outline becomes the bar, before the text shrinks.
-  Seen 2026-11-04: Maps cut to the bar, clear of the arrow; but HyperOS showed no icon for an alarm
-  5 days off, vibrate, silent or DND, so those clues only cut the pill for nothing. Still to design:
-  condensed font, half-width ECG, squarer rounded outline.
+- **Pill fit** (Lucas 2026-11-05, built): never leaves the bar; text 13 dp (= the HyperOS clock,
+  which ignores font_scale); a 52 dp slot, and a transient icon (Maps' arrow) may draw over it — the
+  user changes the look. Measured at "3h09": every look fits as designed but the pie with a
+  thermometer (50.5–51.3 dp: `FitLadder` shrinks the pie; pie + ECG also takes the text to 12 dp).
+  Still to design, to keep 13 dp there: a narrower ECG beside the pie, condensed font.
+- 🟡 **Our notification icon** (idea, Lucas 2026-11-05, undecided): the foreground notification's
+  small icon is the one official spot in the bar (left side, one colour, ~24 dp, updated per minute,
+  may be hidden). Not the pill and no second time: the AppTime logo whose phone screen looks more or
+  less "agitated" with the thermometer, without animation.
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style;
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
   "Grande").
@@ -211,5 +212,5 @@ components that its own milestones had deliberately unwired and planned to reuse
 - Reading the pixels behind the overlay (AccessibilityService `takeScreenshot`, MediaProjection) — Play restricts the first, the second asks consent each session; both read as spying (Lucas 2026-11-04).
 - Tap-to-invert on the pill — the pill is untouchable and a 45×22 dp target misses 48 dp; a per-app row replaced it (Codex 2/10, Lucas 2026-11-04).
 - A dark halo, then a solid chip, behind the pill — the halo was lost on light bars, the chip redundant once the ink follows the bar (Lucas 2026-11-04).
-- Pill vs the system icons: a reserved zone per icon (Codex 7/10), the pill left of the cutout (5/10), a fixed 29 or 40 dp slot (4 · 2/10), accepting the overlap (8/10, Lucas prefers cutting), drawing above the bar via accessibility (1/10, Play policy), a per-app "shows an icon" switch (nobody marks it) — state probes plus a location-app guess won (2026-11-04).
+- Pill vs the system icons: a reserved zone per icon (Codex 7/10), the pill left of the cutout (5/10), a fixed 29 or 40 dp slot (4 · 2/10), accepting the overlap (8/10, Lucas prefers cutting), drawing above the bar via accessibility (1/10, Play policy), a per-app "shows an icon" switch (nobody marks it), guessing icons from alarm, ringer, DND and the front app (HyperOS showed none of the first three) — no detection; the pill keeps 52 dp and may sit under an icon (Lucas 2026-11-05).
 - Chip: `isLightTheme` above the light-bar flag (Codex 4/10, beats specific bar evidence); a MIUI vendor check (5/10) — the conflict guard won (2026-11-04).

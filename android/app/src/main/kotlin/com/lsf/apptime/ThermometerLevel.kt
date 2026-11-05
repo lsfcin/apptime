@@ -11,8 +11,8 @@ object ThermometerLevel {
 
     /**
      * Lucas's anchors on recent / previous: 60% calm (0), 90% worsening (0.5), 110% much worse (1),
-     * linear between and clamped outside. Under 10 minutes in the last 24 h it stays calm; with nothing
-     * before, 10 minutes is the top; before two real days of history it shows calm.
+     * linear between and clamped outside. Under 10 minutes in the last 2 h it stays calm; with no usual
+     * yet, 10 minutes is the top; before two real days of history it shows calm.
      */
     fun intensity(reading: ThermometerReading, realDays: Int): Float {
         if (realDays < MIN_REAL_DAYS || reading.recentMs < FLOOR_MS) return 0f

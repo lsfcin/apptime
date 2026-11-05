@@ -10,12 +10,12 @@ class ThermometerSource(private val readMs: (String) -> Long) {
     private var cacheKey: Triple<String, Long, Long>? = null
     private val buckets = HashMap<Long, Long>()
 
-    fun read(pkg: String?, inApp: Boolean, nowMs: Long, sessionStartMs: Long): ThermometerReading {
+    fun read(pkg: String?, inApp: Boolean, nowMs: Long, sessionStartMs: Long, usualDailyMs: Long): ThermometerReading {
         val prefix = if (inApp) "flutter.hourly_ms_${pkg}_" else "flutter.device_hourly_ms_"
         val key = Triple(prefix, nowMs / HOUR_MS, sessionStartMs)
         if (key != cacheKey) { cacheKey = key; buckets.clear() }
         return Thermometer.read(nowMs, { start -> buckets.getOrPut(start) { readMs(prefix + Thermometer.hourKey(start)) } },
-            sessionStartMs)
+            usualDailyMs, sessionStartMs)
     }
 
     private companion object { const val HOUR_MS = 60 * 60 * 1000L }

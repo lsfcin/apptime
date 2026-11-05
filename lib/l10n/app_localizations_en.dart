@@ -93,7 +93,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get overlayFeedbackOutlineSub => 'The border draws itself around the time and closes at your usual';
   @override String get overlayFeedbackNone => 'None';
   @override String get overlayFeedbackNoneSub => 'Just the time, no comparison with your usual';
-  @override String get overlayAmber => 'Amber near your usual';
+  @override String get overlayAmber => 'Alert colours';
   @override String get overlayAmberSub => 'Off: the time keeps one colour; the shapes still show';
   @override String get chipAuto => 'Pill background: automatic';
   @override String get chipLight => 'Pill background: light';

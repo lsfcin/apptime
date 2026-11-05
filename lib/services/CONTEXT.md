@@ -14,6 +14,6 @@
 | [`storage_service.dart`](storage_service.dart) | [`storage_service.dart.api`](storage_service.dart.api) | StorageService: typed SharedPreferences wrapper for screen time and settings |
 | [`storage_service_queries.dart`](storage_service_queries.dart) | [`storage_service_queries.dart.api`](storage_service_queries.dart.api) | StorageService query helpers: weekday-pattern aggregation and data maintenance methods |
 | [`storage_service_settings.dart`](storage_service_settings.dart) | [`storage_service_settings.dart.api`](storage_service_settings.dart.api) | StorageService extension: per-app control, onboarding, and language settings |
-| [`thermometer.dart`](thermometer.dart) | [`thermometer.dart.api`](thermometer.dart.api) | Thermometer: today since 04:00 against yesterday up to the same time, over hour buckets |
+| [`thermometer.dart`](thermometer.dart) | [`thermometer.dart.api`](thermometer.dart.api) | Thermometer: the last 2 h of use against the user's own pace over 2 h, over hour buckets |
 | [`usual_daily.dart`](usual_daily.dart) | [`usual_daily.dart.api`](usual_daily.dart.api) | "Your usual": mean daily total over the 30 complete days before today, zero-use days included |
 <!-- routing:end -->

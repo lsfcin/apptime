@@ -2,7 +2,9 @@
 typedef Thermometer = (
   required DateTime now,
   required int Function(DateTime hourStart) hourMs,
+  required int usualDailyMs,
   DateTime? sessionStart,
   int bucket(int back)
-  int sum(int from, int to)
+  var recent = bucket(kThermometerWindowHours) * (_kHourMs - elapsedMs) ~/ _kHourMs;
+  for (var back = 0; back < kThermometerWindowHours; back++)
   return (

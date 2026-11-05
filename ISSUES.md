@@ -10,6 +10,13 @@ and no public API reports them. Any cut-off undercounts a long video or read. Th
 (Instagram 04:00–09:25 while Lucas slept) came from `stay_on_while_plugged_in=7`, set for adb: that
 block was removed from his data and the setting is back to 0. Keep it 0 outside a screenshot run.
 
+## B3 — the phone total jumps when the app is restarted
+
+Seen 2026-11-05: the launcher pill went 2h54 → 3h16 in 2 min 25 s of real time while `phone/adb prefs`
+force-stopped and relaunched AppTime 16 times (logcat `PILLFIT`, 16:36:20 → 16:38:45). Each restart
+seems to add more than the time that passed — suspect `HistoryBackfill`'s gap fill or the unflushed
+launcher session being counted twice. Not yet reproduced on its own.
+
 <!-- entropy:start -->
 ## Entropy
 
@@ -107,7 +114,7 @@ block was removed from his data and the setting is back to 0. Keep it 0 outside 
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/v1-impl is 3 ahead of main
+- . — feature/v1-impl is 4 ahead of main
 
 ### Local branches already merged into their base
 

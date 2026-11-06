@@ -51,9 +51,9 @@ gets past it. The way around is in [SETUP.md](SETUP.md) § Install on a phone. A
 | Header fields naming code that is not there | 0 |
 | Truncated routing descriptions | 0 |
 | Constraints trapped in a CONTEXT.md head | 1 |
-| Local branches holding unpromoted work | 1 |
+| Local branches holding unpromoted work | 0 |
 | Work that exists on this disk and nowhere else | 0 |
-| Local branches already merged into their base | 0 |
+| Local branches already merged into their base | 1 |
 | Remote branches already merged into their base | 1 |
 
 *A check with no findings is the `0` in that table and nothing more. Only a check with something to show gets a section below.*
@@ -116,16 +116,16 @@ gets past it. The way around is in [SETUP.md](SETUP.md) § Install on a phone. A
 
 - CONTEXT.md: head is 757 tok carrying 2 constraint(s), over the warning
 
-### Local branches holding unpromoted work
+### Local branches already merged into their base
 
-*promote when the work is green, or say which reason applies — /roundup Phase 5*
+*safe to delete, and purely local — `git -C <repo> branch -d <branch>`*
 
-- . — feature/b5-autostart-verified is 3 ahead of main
+- . — 1 merged into main: git -C . branch -d feature/b5-autostart-verified
 
 ### Remote branches already merged into their base
 
 *safe to delete, and outward-facing — `git -C <repo> push origin --delete <branch>`, Lucas*
 
-- . — 1 merged into main: git -C . push origin --delete feature/b3-restart-total
+- . — 2 merged into main: git -C . push origin --delete feature/b3-restart-total feature/b5-autostart-verified
 
 <!-- entropy:end -->

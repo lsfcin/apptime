@@ -212,6 +212,7 @@ components that its own milestones had deliberately unwired and planned to reuse
 - Thermometer: extrapolating the current hour (`60/m ×` its minutes) — up to 60× noise at the start of each hour (Lucas 2026-11-03).
 - Thermometer: the last 24 h vs the 24 h before — at the first unlock it compares yesterday with the day before, agitated before any use today (Lucas 2026-11-03).
 - Pill hugging the camera cutout to save width — every phone's cutout differs and sits off the text's line (Lucas 2026-11-03).
+- `phone/adb install` with an automatic retry — MIUI's on-screen prompt asks again on each try, so only a hand gets past it (Lucas 2026-11-06).
 - Thermometer: slicing only the front of each window (23 h + m min) — both windows drop their oldest hour at the turn, up to 34 pp on real data (2026-11-03).
 - Reading the pixels behind the overlay (AccessibilityService `takeScreenshot`, MediaProjection) — Play restricts the first, the second asks consent each session; both read as spying (Lucas 2026-11-04).
 - Tap-to-invert on the pill — the pill is untouchable and a 45×22 dp target misses 48 dp; a per-app row replaced it (Codex 2/10, Lucas 2026-11-04).

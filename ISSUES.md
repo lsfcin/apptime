@@ -120,12 +120,12 @@ gets past it. The way around is in [SETUP.md](SETUP.md) § Install on a phone. A
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/b5-autostart-verified is 2 ahead of main
+- . — feature/b5-autostart-verified is 3 ahead of main
 
 ### Remote branches already merged into their base
 
 *safe to delete, and outward-facing — `git -C <repo> push origin --delete <branch>`, Lucas*
 
-- . — 4 merged into main: git -C . push origin --delete feature/b3-restart-total feature/v1-design-decisions feature/v1-impl feature/v1-overlay
+- . — 1 merged into main: git -C . push origin --delete feature/b3-restart-total
 
 <!-- entropy:end -->

@@ -5,11 +5,7 @@
 ```
 lib/
 ├── main.dart                        # App entry point, AppTimeApp, _AppTimeAppState
-├── main_screen.dart                 # MainScreen — bottom nav, AppInfoService init
-│
-├── data/
-│   ├── insight_content.dart         # InsightEntry, kAlertas, kSolucoes
-│   └── insights.dart                # InsightEntry (rotator), kInsights
+├── main_screen.dart                 # MainScreen — 3 tabs: Hoje (landing) · Análise · Ajustes
 │
 ├── l10n/
 │   ├── app_localizations.dart       # Abstract base — all l10n keys
@@ -25,12 +21,9 @@ lib/
 │   │   ├── tab_month.dart           # Tab30d + UsageTrend30d charts
 │   │   └── tab_week.dart            # Tab7d + 7-day pattern + trend bars
 │   │
-│   ├── insights/
-│   │   ├── insight_data.dart        # InsightData.compute() — pre-computed usage stats
-│   │   └── insights_screen.dart     # InsightsScreen, _InsightCarousel, _InsightCard
-│   │
-│   ├── monitoring_screen.dart       # MonitoringScreen, _InsightRotatorCard
-│   ├── per_app_screen.dart          # Per-app usage and monitoring switch
+│   ├── apps/                        # AppScreen (one app vs its usual) · AppsScreen (Ajustes > Apps)
+│   │                                #   · AppOverlayControls (switch + pill background)
+│   ├── today/today_screen.dart      # TodayScreen (Hoje) — reads TodaySummary
 │   ├── settings_screen.dart         # Settings shell and lifecycle
 │   └── settings_screen_sections.dart # Overlay style/feedback selectors, data/privacy and language sections
 │
@@ -39,6 +32,7 @@ lib/
 │   ├── app_info_service.dart        # AppInfoService — loads labels + launchers once
 │   ├── service_channel.dart         # ServiceChannel — MethodChannel bridge to Kotlin
 │   ├── storage_service.dart         # StorageService — SharedPreferences wrapper
+│   ├── today_summary.dart         # TodaySummary — Hoje's data
 │   ├── thermometer.dart             # thermometer(), hourKey() — the last 2 h vs the 30-day pace, no jump at the hour turn
 │   └── usual_daily.dart             # usualDaily(), usualState() — "your usual" (30-day mean)
 │
@@ -52,6 +46,8 @@ lib/
 │   └── time_utils.dart              # fmtDuration(), fmtMs()
 │
 └── widgets/
+    ├── app_icon.dart               # AppIcon — real icon, cached
+    ├── lead_number.dart            # LeadNumber, dayAgainstUsual()
     └── section_header.dart          # SectionHeader widget (shared across screens)
 ```
 

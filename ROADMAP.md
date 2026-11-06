@@ -98,8 +98,7 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   dark theme), Maps with its light map at system night. MIUI Settings at night fixed: miuix's root
   theme declares a light bar that `Theme.Dark` keeps, so the light-bar flag counts only when the theme
   does not resolve dark (Codex 8/10). MIUI Recents declares a light bar over dark cards: `ChipShade.knownDark`.
-  Asymmetries: the selector lives in Monit., the tab that goes away — it moves with the per-app
-  exceptions into Ajustes; `ChipShade` and `chip_shades` still name a chip that is gone. The pill
+  Asymmetry: `ChipShade` and `chip_shades` still name a chip that is gone. The pill
   stays untouchable (tap-to-invert: Codex 2/10; Bloco 9, Aba 8 if wanted).
 - **Pill fit** (Lucas 2026-11-05, built): never leaves the bar; text 13 dp (= the HyperOS clock,
   which ignores font_scale); a 52 dp slot, and a transient icon (Maps' arrow) may draw over it — the
@@ -152,19 +151,16 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   starts calm (after 04:00); battery, vertical first; a better name than "Mão única" for the ▼ look; avaliar granularidade (3 estágios vs 7 estágios vs escala linear contínua) para feedback mais imediato sem perda de performance (INBOX 2026-11-03).
   Open: Bloco keeps its 8 dp margin (only the pill's was trimmed); the Aba is still unbuilt.
 
-- **Three tabs: Hoje (landing) · Análise · Ajustes**, plus a per-app screen opened by tapping any
-  app. Monit. and Insights stop being tabs. Today Ajustes is the landing tab, and `HomeScreen`,
-  `GoalScreen`, `PerAppScreen` are reachable from nowhere.
-- **Hoje** reuses `HomeScreen` (deleted as dead code 2026-11-02; in git at `920b385`) without its goal card: "hoje até agora" (since 04:00) vs the daily usual, and the thermometer
-  (last 24 h vs the 24 h before), then the most-used apps with real icons. **Per-app screen** reuses `PerAppScreen`: that app's usage vs its
-  usual, and its overlay controls (on/off, position, light/dark hint, fullscreen/landscape).
+- **Hoje and the per-app screen are provisional** (built 2026-11-06 under the charter, `lib/screens/today/`,
+  `apps/`): round 4 redesigns the lead number and the day chart. Per-app still lacks position and
+  fullscreen/landscape controls and the "quando você costuma usar" map. Not yet seen on the phone.
 - **"Your usual" shows in three places**: Hoje, the per-app screen, the overlay preview in Ajustes.
 - **Análise: 7d · 30d** (the day lives in Hoje). Cut: Custo de oportunidade, Alerta de phubbing,
   Balanço de engajamento, Padrão dos últimos 7 dias, the research bands `4–6h/dia` / `30–60/dia`.
   Merge Uso diário + Tendência semanal; Fragmentação do foco + Índice de impulsividade → "Sessões e
   desbloqueios"; Dreno de dopamina → "Apps mais abertos" (no thresholds). 30-day trend: total + average only.
-- **Insights goes.** At most a one-line note inside the matching Análise card; audit the claims
-  first (QI drop, 23 min per interruption, 21-day habit, a card that promotes One Sec).
+- **Análise copy**: `classification_message.dart` still cites the debunked "~23 min per
+  interruption" and research bands; cut per [refs/interventions-evidence.md](refs/interventions-evidence.md).
 - **Ajustes order**: live preview · overlay (gallery, one switch per feedback, size) · per-app exceptions ·
   messages · collection · language (one row) · privacy. Permissions only when one is missing. Cut
   the separate Parar button, Mostrar borda / Mostrar fundo, and the stale "(5s)" text.
@@ -174,15 +170,15 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   amber = excess · cyan = both; WCAG in both themes.
 - **Patterns: flows and triggers** (Lucas 2026-11-06; SPECS § Visual): `SessionLog` records since
   2026-11-06. Next: define a loop on real days (start: A → B → A inside 10 min, a short launcher stop
-  counts as a transition); entry app per unlock; a short evidence table of interventions with a
-  measured effect that fit "never blocks"; where the screen lives is round 4's first question.
+  counts as a transition); entry app per unlock; where the screen lives is round 4's first question.
+  No study measures feedback on flows or triggers (refs/interventions-evidence.md): each pattern
+  pairs with a step that has evidence (grayscale, notification batching, a dismissable prompt).
 - **Visual: Obsidian Mono** (Lucas, over Codex's light editorial): carbon `#0B0C0E`, borderless
   surfaces `#14161B`, text `#F3F4F6` / `#7E8594`, the usual in graphite, amber `#E5A93C` only well
   above it; no red, neon green or electric blue; Inter `tnum`, metric 40sp Light, section labels
   11sp caps; 24dp between sections, no card borders. Reference: Oura.
-- **Bugs seen**: "Visão geral — 30 dias" on the 1d and 7d tabs; "esta semana" on the 30d donut;
-  Y-axis labels collide in Tendência semanal; legend colours repeat (Claude/Google/outros); letter
-  circles instead of app icons; AppTime lists itself; 0m apps fill the list; English chips (`unlocks`, `session`).
+- **Bugs seen** (Análise, left for its round): Y-axis labels collide in Tendência semanal; legend
+  colours repeat (Claude/Google/outros); English chips (`unlocks`, `session`).
 
 Screens via adb: `core/run tools/phone/adb shoot|prefs|sheet` (debug build only, for `prefs`). MIUI blocks `input tap` until "Depuração USB (configurações de segurança)" is on
 **and the phone is rebooted**. Shots and panel answers stay in the session scratchpad (usage data).

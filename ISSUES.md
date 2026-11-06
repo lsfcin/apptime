@@ -124,7 +124,7 @@ deve rodar apenas `:app:testDebugUnitTest`. No MIUI, `adb install` ocasionalment
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/b3-restart-total is 1 ahead of main
+- . — feature/b3-restart-total is 2 ahead of main
 
 ### Local branches already merged into their base
 

@@ -79,6 +79,11 @@
         <package android:name="com.huawei.systemmanager" />
         <package android:name="com.hihonor.systemmanager" />
         <package android:name="com.asus.mobilemanager" />
+        <!-- Every app with a launcher entry: AppIcon and labels; without it Android 11+ hides them -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT" />
             <data android:mimeType="text/plain" />

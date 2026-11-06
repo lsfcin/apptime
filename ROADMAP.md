@@ -216,6 +216,7 @@ components that its own milestones had deliberately unwired and planned to reuse
 
 - Session log written inside `accumulateDailyMs` — file and prefs are no transaction and the history backfill would log twice (Codex 4/10, 2026-11-06).
 - Round 4 mockups recoloured from the round 3 canvases — Lucas finds them crowded and hard to absorb; agent wireframes from the charter instead (2026-11-06).
+- Padrões as a 4th tab (panel 7/10) or spread over Hoje and the app screen (4/10); Apps list in two groups — the row jumps on toggle (Lucas 2026-11-06).
 
 - Thermometer: extrapolating the current hour (`60/m ×` its minutes) — up to 60× noise at the start of each hour (Lucas 2026-11-03).
 - Thermometer: the last 24 h vs the 24 h before — at the first unlock it compares yesterday with the day before, agitated before any use today (Lucas 2026-11-03).

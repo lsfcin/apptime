@@ -172,6 +172,10 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   agent wireframes first, then short per-screen briefs for Claude Design and Stitch. Colour: 5–6 hues
   near-green → near-blue against Obsidian amber, in three meanings — cyan = excess · cyan = brand with
   amber = excess · cyan = both; WCAG in both themes.
+- **Patterns: flows and triggers** (Lucas 2026-11-06; SPECS § Visual): `SessionLog` records since
+  2026-11-06. Next: define a loop on real days (start: A → B → A inside 10 min, a short launcher stop
+  counts as a transition); entry app per unlock; a short evidence table of interventions with a
+  measured effect that fit "never blocks"; where the screen lives is round 4's first question.
 - **Visual: Obsidian Mono** (Lucas, over Codex's light editorial): carbon `#0B0C0E`, borderless
   surfaces `#14161B`, text `#F3F4F6` / `#7E8594`, the usual in graphite, amber `#E5A93C` only well
   above it; no red, neon green or electric blue; Inter `tnum`, metric 40sp Light, section labels
@@ -211,6 +215,9 @@ it. And **grep this ROADMAP for a filename before calling it dead**: `flows` nea
 components that its own milestones had deliberately unwired and planned to reuse.
 
 ## Rejected
+
+- Session log written inside `accumulateDailyMs` — file and prefs are no transaction and the history backfill would log twice (Codex 4/10, 2026-11-06).
+- Round 4 mockups recoloured from the round 3 canvases — Lucas finds them crowded and hard to absorb; agent wireframes from the charter instead (2026-11-06).
 
 - Thermometer: extrapolating the current hour (`60/m ×` its minutes) — up to 60× noise at the start of each hour (Lucas 2026-11-03).
 - Thermometer: the last 24 h vs the 24 h before — at the first unlock it compares yesterday with the day before, agitated before any use today (Lucas 2026-11-03).

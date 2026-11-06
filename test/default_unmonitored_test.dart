@@ -5,11 +5,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  test('tools and government apps start unmonitored; YouTube Music and Instagram do not', () {
-    for (final pkg in ['com.waze', 'com.spotify.music', 'com.nu.production', 'br.gov.meugovbr']) {
+  test('tools and government apps start unmonitored; AI, shopping, YouTube Music and Instagram do not', () {
+    for (final pkg in ['com.waze', 'com.spotify.music', 'com.nu.production', 'br.gov.meugovbr',
+        'br.jus.tse.eleitoral.etitulo', 'com.android.settings', 'com.google.android.apps.photos',
+        'br.com.brainweb.ifood', 'com.google.android.gm']) {
       expect(isUnmonitoredByDefault(pkg), isTrue, reason: pkg);
     }
-    for (final pkg in ['com.google.android.apps.youtube.music', 'com.instagram.android']) {
+    for (final pkg in ['com.google.android.apps.youtube.music', 'com.instagram.android',
+        'com.openai.chatgpt', 'com.anthropic.claude', 'com.mercadolibre', 'com.amazon.mShop.android.shopping']) {
       expect(isUnmonitoredByDefault(pkg), isFalse, reason: pkg);
     }
   });

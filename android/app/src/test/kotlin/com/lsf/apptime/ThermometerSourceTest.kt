@@ -20,6 +20,13 @@ class ThermometerSourceTest {
         assertEquals(Thermometer.read(now, { 2_000L }, 3_400_000L), phone)
     }
 
+    // Lucas 2026-11-06: 1 h of Maps navigation (switched off) ran the launcher's ECG hot.
+    @Test fun thePhonesBucketsLeaveOutSwitchedOffApps() {
+        val phone = source.read(null, false, now, 0L, 3_400_000L, setOf("com.maps"))
+        assertTrue(reads.any { it.startsWith("flutter.hourly_ms_com.maps_") })
+        assertEquals(Thermometer.read(now, { 1_000L }, 3_400_000L), phone)
+    }
+
     @Test fun bucketsAreReadOnceUntilTheSessionChanges() {
         source.read("com.app", true, now, now - hour, 3_400_000L)
         val first = reads.size

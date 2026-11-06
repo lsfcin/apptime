@@ -78,7 +78,7 @@ lib/
 | `OverlayText.kt` | Pure: compact durations (pill and block), localized message headers, 7-real-day feedback floor |
 | `LiveUsage.kt` | Pure: stored daily totals plus unflushed app/launcher session for both timer and messages |
 | `UsualCache.kt` | Per-package/phone usual cache shared by timer and messages; invalidated on 04:00 day-key change or a new unmonitored set |
-| `PhoneTotal.kt` | Pure: a day's phone total minus unmonitored apps, mirrored by `getDeviceDailyMs`/`getDeviceHourlyMs` in Dart |
+| `PhoneTotal.kt` | Pure: a day's or an hour's phone total minus unmonitored apps (the launcher thermometer reads the hour), mirrored by `getDeviceDailyMs`/`getDeviceHourlyMs` in Dart |
 | `MessageDisplay.kt` | Pure: 6.5 s message lifetime and foreground-package cancellation |
 | `FeedbackEngine.kt` | Consumes shared live usage, asks MessageRules, schedules 6.5 s display; cadence persisted before display and retained on cancellation |
 | `MessageRules.kt` | Pure: three triggers (session ≥20 min, app past usual, phone past usual), each once a day, ≥90 min apart |

@@ -1,0 +1,9 @@
+<!-- AppTime notification icon, rhythm level 0 of 0-2: the phone with its screen's zigzag (Lucas 2026-11-06) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="1.5" android:strokeLineCap="round"
+        android:strokeLineJoin="round" android:pathData="M8,2H16Q19,2 19,5V19Q19,22 16,22H8Q5,22 5,19V5Q5,2 8,2Z"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M11.25,4.6a0.75,0.75 0,1 0,1.5 0a0.75,0.75 0,1 0,-1.5 0Z"/>
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="1.5" android:strokeLineCap="round"
+        android:strokeLineJoin="round" android:pathData="M8.5,12H15.5"/>
+</vector>

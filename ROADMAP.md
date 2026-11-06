@@ -106,10 +106,9 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   user changes the look. On the pill the pie is the left-hand air, 2 dp from the edge as the glyph is
   on the right; pie 8 dp, ECG 8 dp (Lucas 2026-11-06): "5h41" with pie + ECG fills the 52 dp slot at
   13 dp, its pie gap 2 dp. Bold digits not yet measured.
-- 🟡 **Our notification icon** (idea, Lucas 2026-11-05, undecided): the foreground notification's
-  small icon is the one official spot in the bar (left side, one colour, ~24 dp, updated per minute,
-  may be hidden). Not the pill and no second time: the AppTime logo whose phone screen looks more or
-  less "agitated" with the thermometer, without animation.
+- 🟡 **Notification icon** (built 2026-11-06, not yet seen in the bar): the phone with a zigzag whose
+  amplitude is the whole phone's pace (`RhythmLevel`, 3 levels, LOW channel `apptime_rhythm`). Lucas
+  checks it shows on HyperOS ("show notification icons" may be off). Launcher icon now cyan (#17D1D1).
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style;
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
   "Grande").

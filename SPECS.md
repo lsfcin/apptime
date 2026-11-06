@@ -143,6 +143,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `overlay_style` | String | `"pill"` (default; also fallback for unknown values) or `"block"` |
 | `overlay_feedback` | String | `"fill"`, `"bar"` (default; also fallback for unknown values), `"outline"`, `"none"`; Kotlin reads `flutter.overlay_feedback` |
 | `overlay_thermometer` | String | `"vertical"` (default; also fallback for unknown values), `"ecg"`, `"mao"`, `"none"`; Kotlin reads `flutter.overlay_thermometer` |
+| `rhythm_level` | Long | Kotlin only: the notification icon's last level, 0–2 (`RhythmLevel`), kept across `OverlayService` restarts |
 | `overlay_enabled` | Boolean | Show timer/messages; monitoring continues (default true) |
 | `monitor_launcher` | Boolean | Show overlay on launcher (default true) |
 | `overlay_visible` | Boolean | Whether overlay should appear |

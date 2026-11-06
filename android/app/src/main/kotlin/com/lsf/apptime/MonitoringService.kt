@@ -375,7 +375,7 @@ class MonitoringService : Service() {
         }
         return NotificationCompat.Builder(this, channelId)
             .setContentTitle("AppTime monitorando")
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setSmallIcon(R.drawable.ic_stat_rhythm_0)
             .setPriority(NotificationCompat.PRIORITY_MIN)
             .build()
     }

@@ -20,6 +20,8 @@ class OverlayService : Service() {
     private lateinit var powerManager: PowerManager
     private lateinit var usualCache: UsualCache
     private lateinit var thermometerSource: ThermometerSource
+    private lateinit var phoneThermometer: ThermometerSource
+    private var rhythm = RhythmLevel.CALM
     private lateinit var timer: TimerOverlay
     private lateinit var statusBarTheme: StatusBarTheme
     private lateinit var message: MessageOverlay
@@ -40,14 +42,17 @@ class OverlayService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(NOTIF_ID, buildNotification())
         prefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        // The watchdog restarts this every 30 s: the icon keeps the level it last showed.
+        rhythm = prefs.getLong(RHYTHM_KEY, 0L).toInt()
+        startForeground(NOTIF_ID, buildNotification(rhythm))
         powerManager = getSystemService(POWER_SERVICE) as PowerManager
         launchers = AppConstants.resolveLaunchers(packageManager)
         // MonitoringService's watchdog calls this every 30 s; retain message cadence and cache.
         if (feedbackEngine == null) {
             usualCache = UsualCache { key -> prefs.getLong(key, 0L) }
             thermometerSource = ThermometerSource(prefs::safeGetCount)
+            phoneThermometer = ThermometerSource(prefs::safeGetCount)
             timer = TimerOverlay(this)
             statusBarTheme = StatusBarTheme(this)
             message = MessageOverlay(this)
@@ -91,6 +96,9 @@ class OverlayService : Service() {
         feedbackEngine?.refresh(pkg, now, allowed)
         if (++evalTick >= 5) {
             evalTick = 0
+            showRhythm(ThermometerLevel.intensity(phoneThermometer.read(null, false, now,
+                prefs.safeGetCount("flutter.current_session_start_ms"), usage.phoneUsual.meanMs, disabled),
+                usage.phoneUsual.realDays))
             if (allowed && timer.isAdded) {
                 val lang = prefs.getString("flutter.language_code", null) ?: Locale.getDefault().language
                 val header = OverlayText.header(if (inApp) resolveAppLabel(pkg!!) else null, total, lang)
@@ -135,23 +143,37 @@ class OverlayService : Service() {
     // Notification
     // ─────────────────────────────────────────────────────────────────────────
 
-    private fun buildNotification(): Notification {
-        val channelId = "apptime_overlay"
+    // The phone's recent pace, always the whole phone: the icon stays put while the apps change.
+    private fun showRhythm(intensity: Float) {
+        val next = RhythmLevel.of(intensity, rhythm)
+        if (next == rhythm) return
+        rhythm = next
+        prefs.edit().putLong(RHYTHM_KEY, next.toLong()).apply()
+        (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).notify(NOTIF_ID, buildNotification(next))
+    }
+
+    // LOW, not MIN: a MIN channel shows no icon in the status bar. A channel's importance cannot change
+    // once made, so the icon has its own channel and the old MIN one is deleted.
+    private fun buildNotification(level: Int): Notification {
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        if (manager.getNotificationChannel(channelId) == null) {
+        manager.deleteNotificationChannel("apptime_overlay")
+        if (manager.getNotificationChannel(CHANNEL_ID) == null) {
             manager.createNotificationChannel(
-                NotificationChannel(channelId, "AppTime Overlay",
-                    NotificationManager.IMPORTANCE_MIN)
+                NotificationChannel(CHANNEL_ID, "AppTime ritmo", NotificationManager.IMPORTANCE_LOW)
+                    .apply { setShowBadge(false) }
             )
         }
-        return NotificationCompat.Builder(this, channelId)
+        return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("AppTime ativo")
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setPriority(NotificationCompat.PRIORITY_MIN)
+            .setSmallIcon(RhythmLevel.icon(level))
+            .setOnlyAlertOnce(true)
+            .setOngoing(true)
             .build()
     }
 
     companion object {
         const val NOTIF_ID = 1001
+        const val CHANNEL_ID = "apptime_rhythm"
+        const val RHYTHM_KEY = "flutter.rhythm_level"
     }
 }

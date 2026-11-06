@@ -99,7 +99,7 @@ deve rodar apenas `:app:testDebugUnitTest`. No MIUI, `adb install` ocasionalment
 
 *git is the history — cut it, or rewrite it as present-tense state*
 
-- ROADMAP.md:144: a dated completion report — prose describing finished work.
+- ROADMAP.md:143: a dated completion report — prose describing finished work.
 
 ### Unanswered placeholders
 
@@ -124,7 +124,7 @@ deve rodar apenas `:app:testDebugUnitTest`. No MIUI, `adb install` ocasionalment
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/b3-restart-total is 2 ahead of main
+- . — feature/b3-restart-total is 3 ahead of main
 
 ### Local branches already merged into their base
 

@@ -168,9 +168,10 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
 - **Round 4 reopens structure and colour** (Lucas 2026-11-06), under the charter in SPECS § Visual:
   structure decided on [the round 4 page](https://lucassf.pages.dev/apptime/estrutura) (votes in its db):
   Padrões is a section of Análise with its detail on tap (B, panel 9/10); "últimas 2 h", "sessões e
-  desbloqueios" and "apps mais abertos" move into it. **Next: the colour page** — 5–6 hues
-  near-green → near-blue against Obsidian amber, in three meanings — cyan = excess · cyan = brand with
-  amber = excess · cyan = both; WCAG in both themes; then Claude Design projects into the inventory.
+  desbloqueios" and "apps mais abertos" move into it. **Colour waits on Lucas's vote** at
+  [apptime/cor](https://lucassf.pages.dev/apptime/cor) (panel: cyan = brand, amber = above usual,
+  `#14B8C4`, 9/10); light twins at 4.6:1, light amber stays `#8A5A00`. Then Claude Design projects
+  into the inventory.
 - **Patterns: flows and triggers** (Lucas 2026-11-06; SPECS § Visual): `SessionLog` records since
   2026-11-06. Next: define a loop on real days (start: A → B → A inside 10 min, a short launcher stop
   counts as a transition); entry app per unlock. Wording (panel): "ciclos", "como seu uso começa",

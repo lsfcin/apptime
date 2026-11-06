@@ -150,7 +150,7 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   vertical 38 frames (0–1 janky), ECG 221 (4%) — the ECG animates nonstop at ~11 fps, so its battery
   cost needs its own run. 2026-11-04 (`e16f583`): vertical 1.5× wider, bulb rebuilt, 1 dp stroke
   like the outline, pill as wide as the ▼ one. **Next**: Lucas checks the new vertical; the morning
-  starts calm (after 04:00); battery, vertical first; a better name than "Mão única" for the ▼ look.
+  starts calm (after 04:00); battery, vertical first; a better name than "Mão única" for the ▼ look; avaliar granularidade (3 estágios vs 7 estágios vs escala linear contínua) para feedback mais imediato sem perda de performance (INBOX 2026-11-03).
   Open: Bloco keeps its 8 dp margin (only the pill's was trimmed); the Aba is still unbuilt.
 
 - **Three tabs: Hoje (landing) · Análise · Ajustes**, plus a per-app screen opened by tapping any

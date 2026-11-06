@@ -15,11 +15,13 @@ block was removed from his data and the setting is back to 0. Keep it 0 outside 
 Phone and app totals counted before `1d82611` (restarts replayed time already counted) were not
 repaired; days up to 2026-11-05 may read high in the 30-day usual.
 
-## B6 — gradle test falha no plugin url_launcher e verificação adb
+## B6 — a USB install on MIUI needs someone at the phone
 
-`./gradlew testDebugUnitTest` falha em `:url_launcher_android` (teste do plugin, não do app); o verify
-deve rodar apenas `:app:testDebugUnitTest`. No MIUI, `adb install` ocasionalmente falha com
-`INSTALL_FAILED_VERIFICATION_FAILURE`; `phone/adb` deve executar retry automático.
+**Accepted limitation (Lucas 2026-11-06):** MIUI asks on screen before each `adb install`; a missed
+prompt fails with `INSTALL_FAILED_VERIFICATION_FAILURE` and a retry only asks again, so no script
+gets past it. The way around is in [SETUP.md](SETUP.md) § Install on a phone. A bare
+`./gradlew testDebugUnitTest` also runs `:url_launcher_android`'s own failing tests: run
+`make verify-full`, which runs `:app:testDebugUnitTest` only.
 
 <!-- entropy:start -->
 ## Entropy
@@ -118,7 +120,7 @@ deve rodar apenas `:app:testDebugUnitTest`. No MIUI, `adb install` ocasionalment
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/b5-autostart-verified is 1 ahead of main
+- . — feature/b5-autostart-verified is 2 ahead of main
 
 ### Remote branches already merged into their base
 

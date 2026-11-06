@@ -4,15 +4,17 @@ package com.lsf.apptime
 /**
  * No step drops an element the user chose (Lucas 2026-11-04). Order from the Codex panel of 2026-11-04:
  * padding first, then the pie, then the text, which is the last thing to shrink.
- * Not built yet, waiting on design: condensed font, half-width ECG, squarer outline.
+ * Not built yet, waiting on design: condensed font, squarer outline.
  */
 object FitLadder {
     data class Step(val sideTrimDp: Float, val dotScale: Float, val dotGapDp: Float, val textDp: Float)
 
     val STEPS = listOf(
         Step(0f, 1f, FeedbackDrawable.FILL_GAP_DP, 13f),   // as designed: as tall as the status bar clock
-        Step(1f, 1f, FeedbackDrawable.FILL_GAP_DP, 13f),   // the number 1 dp nearer each edge
-        Step(1f, 0.8f, 1.5f, 13f),                         // the pie smaller and nearer the number
+        Step(1f, 1f, FeedbackDrawable.FILL_GAP_DP, 13f),   // the number 1 dp nearer each edge with no glyph there
+        Step(1f, 1f, 2f, 13f),                             // the whole pie nearer the number: fits pie + ECG
+        Step(1f, 1f, 1.5f, 13f),                           // nearer still, for the wider bold digits
+        Step(1f, 0.8f, 1.5f, 13f),                         // the pie smaller and nearer still
         Step(1f, 0.8f, 1.5f, 12f),
         Step(1f, 0.8f, 1.5f, 11f),                         // the floor
     )

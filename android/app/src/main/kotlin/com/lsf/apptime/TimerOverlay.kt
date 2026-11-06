@@ -128,6 +128,9 @@ class TimerOverlay(context: Context) {
         // Lucas 2026-11-03: the pill's number may sit 1.5 dp closer to its edges than a digit's width + 1 dp.
         val side = (if (block) window.dp(8).toFloat() else (-0.5f - s.sideTrimDp) * density) + air
         val dot = if (variant == "fill") FeedbackDrawable.fillReserve(density, block, s.dotScale, s.dotGapDp) else 0f
+        // On the pill the pie is the left-hand air, as the glyph is the right-hand one: both sit PILL_EDGE_DP
+        // from their edge (Codex panel 2026-11-05, 9/10), so the pie keeps its size at 13 dp.
+        val left = if (dot > 0f && !block) PILL_EDGE_DP * density + dot else side + dot
         val vertical = window.dp(if (block) 5 else 2) + if (outline) window.dp(2) else 0
         val bottom = if (variant == "bar") (3 * FeedbackDrawable.barStroke(density, block)).roundToInt() else vertical
         val glyph = FeedbackDrawable.thermometerReserve(thermometer, density, block)
@@ -139,12 +142,12 @@ class TimerOverlay(context: Context) {
         // On the pill the glyph is the right-hand air, so it still fits the status-bar slot. The outline's
         // rounded end bends in at the glyph's top and bottom, so the glyph moves in as far: they never touch.
         val radius = FeedbackDrawable.outlineRadius(height + 2 * extra - density, density, block)
-        fun pillRight(look: String) = 2 * density + FeedbackDrawable.thermometerReserve(look, density, block) +
+        fun pillRight(look: String) = PILL_EDGE_DP * density +FeedbackDrawable.thermometerReserve(look, density, block) +
             if (outline) OverlayFeedback.arcBend(radius, ThermometerGlyph.room(look) * density / 2) else 0f
         // Lucas 2026-11-04: the vertical pill is as wide as the one-way one; the spare air lands right of the glyph.
         val pill = if (thermometer == "vertical") maxOf(pillRight("vertical"), pillRight("mao")) else pillRight(thermometer)
         val right = if (glyph > 0f && !block) pill else side + glyph
-        view.setPadding((side + dot).roundToInt(), vertical + extra, right.roundToInt(), bottom + extra)
+        view.setPadding(left.roundToInt(), vertical + extra, right.roundToInt(), bottom + extra)
     }
 
     // The unit letters (h, m) condensed and smaller, so "1h22" plus a thermometer still fits the status bar.
@@ -159,5 +162,8 @@ class TimerOverlay(context: Context) {
 
     fun remove() { animate(0L); choreographer.removeFrameCallback(tick); ticking = false; window.remove() }
 
-    private companion object { const val UNIT_SIZE = 0.72f }
+    private companion object {
+        const val UNIT_SIZE = 0.72f
+        const val PILL_EDGE_DP = 2f   // a glyph's distance from the pill's edge, pie or thermometer
+    }
 }

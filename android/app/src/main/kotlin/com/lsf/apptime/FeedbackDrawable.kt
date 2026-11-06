@@ -113,7 +113,7 @@ class FeedbackDrawable(
         const val FILL_GAP_DP = 3f
         fun scale(block: Boolean) = if (block) 1.25f else 1f
         fun barStroke(density: Float, block: Boolean) = 2f * density * scale(block)
-        fun dotRadius(density: Float, block: Boolean) = 3.45f * density * scale(block)
+        fun dotRadius(density: Float, block: Boolean) = 3.95f * density * scale(block)
         // Room the filling dot takes left of the text: its diameter plus the gap.
         fun fillReserve(density: Float, block: Boolean, dotScale: Float = 1f, gapDp: Float = FILL_GAP_DP) =
             2 * dotRadius(density, block) * dotScale + gapDp * density * scale(block)

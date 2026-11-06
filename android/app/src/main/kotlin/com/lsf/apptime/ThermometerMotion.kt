@@ -14,7 +14,7 @@ object ThermometerMotion {
     enum class Mark { DASH, OUTLINED, FILLED }
 
     const val ECG_W = 18f
-    const val ECG_W_PILL = ECG_W / 2
+    const val ECG_W_PILL = ECG_W / 2 - 1f   // 8 dp: the 1 dp it gives up goes to the pie (Lucas 2026-11-06)
     const val ECG_H = 10f
     const val MAO_W = 10f
     const val MAO_H = 13f

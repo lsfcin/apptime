@@ -13,7 +13,8 @@ class FitLadderTest {
 
     @Test
     fun theFirstFittingStepWins() {
-        assertEquals(2, FitLadder.first { it.dotScale < 1f })
+        assertEquals(2, FitLadder.first { it.dotGapDp < FeedbackDrawable.FILL_GAP_DP })
+        assertEquals(4, FitLadder.first { it.dotScale < 1f })
     }
 
     @Test

@@ -103,9 +103,9 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   stays untouchable (tap-to-invert: Codex 2/10; Bloco 9, Aba 8 if wanted).
 - **Pill fit** (Lucas 2026-11-05, built): never leaves the bar; text 13 dp (= the HyperOS clock,
   which ignores font_scale); a 52 dp slot, and a transient icon (Maps' arrow) may draw over it — the
-  user changes the look. Measured at "3h09": every look fits as designed but the pie with a
-  thermometer (50.5–51.3 dp: `FitLadder` shrinks the pie; pie + ECG also takes the text to 12 dp).
-  Still to design, to keep 13 dp there: a narrower ECG beside the pie, condensed font.
+  user changes the look. On the pill the pie is the left-hand air, 2 dp from the edge as the glyph is
+  on the right; pie 8 dp, ECG 8 dp (Lucas 2026-11-06): "5h41" with pie + ECG fills the 52 dp slot at
+  13 dp, its pie gap 2 dp. Bold digits not yet measured.
 - 🟡 **Our notification icon** (idea, Lucas 2026-11-05, undecided): the foreground notification's
   small icon is the one official spot in the bar (left side, one colour, ~24 dp, updated per minute,
   may be hidden). Not the pill and no second time: the AppTime logo whose phone screen looks more or

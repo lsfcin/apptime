@@ -7,6 +7,6 @@
 - [Overlay round 2 (Google Stitch)](https://stitch.withgoogle.com/projects/8491422817078596880) — same brief; needs Lucas's Google login, so he exports PNG/HTML for the agent. Render boards with `core/run tools/web/shoot`
 - [Round 3 screens (Claude Design, strict brief)](https://claude.ai/artifact/5uK1jRdjRNnoYi4c68yKFC) — base of the screen plan: every tab, state and the light theme
 - [Round 3 screens (Claude Design, free brief)](https://claude.ai/artifact/BDfbCNLMo2n7G11WXXLDjc) — source of the dashed tracking gap, the 24-hour map, the welcome line
-- [AppTime — Icon (Figma)](https://www.figma.com/design/hXJFHj1HeDdXra5Z5zRB1g/AppTime-%E2%80%94-Icon?node-id=0-1) — the launcher icon's source; needs Lucas's Figma login (connector not authorised yet). Cyan try 2026-11-06: #17D1D1 / #14FCFC
+- [AppTime — Icon (Figma)](https://www.figma.com/design/hXJFHj1HeDdXra5Z5zRB1g/AppTime-%E2%80%94-Icon?node-id=0-1) — the launcher icon's source; needs Lucas's Figma login (connector not authorised yet). Cyan try 2026-11-06: #17D1D1 / #14FCFC; Lucas's favourite since, `Downloads/AppTime — Icon(1).png` (local only): #00C1C1 / #1CE8E8 / #66DADA
 - [Icon study: levels and colours](https://claude.ai/artifact/UQdTiSNgggtqeCBcPrVxsx) — 10 notification-icon variants × 3 levels, 4 launcher palettes; verdicts in `outputs/apptime-icon-panel{,-2}.md`
 - [Round 3 choices](https://claude.ai/artifact/LmWmaVXx9SWZHPh3WjXTFC) — the decision page Lucas answered on 2026-11-03; Stitch exports sit in `/mnt/workspace/Downloads/stitch_*` (local only)

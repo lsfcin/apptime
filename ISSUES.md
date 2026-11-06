@@ -120,7 +120,7 @@ gets past it. The way around is in [SETUP.md](SETUP.md) § Install on a phone. A
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/new-look is 1 ahead of main
+- . — feature/new-look is 2 ahead of main
 
 ### Local branches already merged into their base
 

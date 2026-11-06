@@ -48,6 +48,7 @@ lib/
 └── widgets/
     ├── app_icon.dart               # AppIcon — real icon, cached
     ├── lead_number.dart            # LeadNumber, dayAgainstUsual()
+    ├── reload_on_resume.dart       # ReloadOnResume
     └── section_header.dart          # SectionHeader widget (shared across screens)
 ```
 

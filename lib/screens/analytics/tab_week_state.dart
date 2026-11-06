@@ -1,12 +1,16 @@
 // State class for the 7-day analytics tab
 part of 'tab_week.dart';
 
-class _Tab7dState extends State<Tab7d> {
+class _Tab7dState extends State<Tab7d> with ReloadOnResume {
+  @override
   StorageService get storage => widget.storage;
+  @override
+  Duration get reloadEvery => const Duration(minutes: 5);
+  @override
+  void onReloaded() => _refresh();
   AnalyticsService get analytics => widget.analytics;
 
   late List<DaySummary> _summaries;
-  Timer? _refreshTimer;
   String? _classificationMsg;
 
   void _refresh() {
@@ -20,19 +24,12 @@ class _Tab7dState extends State<Tab7d> {
   void initState() {
     super.initState();
     _summaries = widget.analytics.getSummaries(7);
-    _refreshTimer = Timer.periodic(const Duration(minutes: 5), (_) => _refresh());
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _classificationMsg = null;
-  }
-
-  @override
-  void dispose() {
-    _refreshTimer?.cancel();
-    super.dispose();
   }
 
   @override

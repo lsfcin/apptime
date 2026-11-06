@@ -1,5 +1,4 @@
 // 30-day analytics tab — monthly usage summary, trend line chart, and engagement donut
-import 'dart:async';
 import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import '../../l10n/index.dart';
 import '../../services/index.dart';
 import '../../theme/index.dart';
 import '../../utils/index.dart';
+import '../../widgets/index.dart';
 import 'analytics_helpers.dart';
 import 'classification_message.dart';
 
@@ -24,9 +24,14 @@ class Tab30d extends StatefulWidget {
   State<Tab30d> createState() => _Tab30dState();
 }
 
-class _Tab30dState extends State<Tab30d> {
+class _Tab30dState extends State<Tab30d> with ReloadOnResume {
+  @override
+  StorageService get storage => widget.storage;
+  @override
+  Duration get reloadEvery => const Duration(minutes: 5);
+  @override
+  void onReloaded() => _refresh();
   late List<DaySummary> _summaries;
-  Timer? _refreshTimer;
   String? _classificationMsg;
 
   void _refresh() {
@@ -40,19 +45,12 @@ class _Tab30dState extends State<Tab30d> {
   void initState() {
     super.initState();
     _summaries = widget.analytics.getSummaries(30);
-    _refreshTimer = Timer.periodic(const Duration(minutes: 5), (_) => _refresh());
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _classificationMsg = null;
-  }
-
-  @override
-  void dispose() {
-    _refreshTimer?.cancel();
-    super.dispose();
   }
 
   @override

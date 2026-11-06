@@ -1,0 +1,10 @@
+// reload_on_resume.dart
+mixin ReloadOnResume<T extends StatefulWidget> on State<T>
+  StorageService get storage;
+  Duration get reloadEvery;
+  void onReloaded();
+  late final AppLifecycleListener _lifecycle;
+  Timer? _tick;
+  void initState()
+  void dispose()
+  Future<void> reloadNow() async

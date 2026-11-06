@@ -7,6 +7,6 @@
 
 | File | Interface | Description |
 |------|-----------|-------------|
-| [`index.dart`](index.dart) | — | **facade** — Facade for screens/today/: the Hoje tab |
+| [`index.dart`](index.dart) | [`index.dart.api`](index.dart.api) | **facade** — Facade for screens/today/: the Hoje tab |
 | [`today_screen.dart`](today_screen.dart) | [`today_screen.dart.api`](today_screen.dart.api) | TodayScreen (Hoje): today's phone total against your usual, the last 2 h against your pace, the apps that pulled the day |
 <!-- routing:end -->

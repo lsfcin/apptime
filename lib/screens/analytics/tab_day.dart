@@ -1,11 +1,11 @@
 // 1-day analytics tab — today's usage summary, sleep quality, yesterday pattern, impulsivity, focus, and phubbing cards
-import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/index.dart';
 import '../../services/index.dart';
 import '../../theme/index.dart';
 import '../../utils/index.dart';
+import '../../widgets/index.dart';
 import 'analytics_helpers.dart';
 import 'classification_message.dart';
 

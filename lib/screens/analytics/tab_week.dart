@@ -1,11 +1,11 @@
 // 7-day analytics tab — usage summary, hourly pattern, dopamine loop, engagement, and trend cards
-import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/index.dart';
 import '../../services/index.dart';
 import '../../theme/index.dart';
 import '../../utils/index.dart';
+import '../../widgets/index.dart';
 import 'analytics_helpers.dart';
 import 'classification_message.dart';
 

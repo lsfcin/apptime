@@ -15,7 +15,7 @@
 | [`tab_day.dart`](tab_day.dart) | [`tab_day.dart.api`](tab_day.dart.api) | 1-day analytics tab — today's usage summary, sleep quality, yesterday pattern, impulsivity, focus, and phubbing cards |
 | [`tab_day_charts.dart`](tab_day_charts.dart) | — | Chart widgets for the 1-day analytics tab: hourly bars and yesterday pattern |
 | [`tab_day_charts2.dart`](tab_day_charts2.dart) | — | Session histogram and opportunity cost widgets for the 1-day analytics tab |
-| [`tab_day_state.dart`](tab_day_state.dart) | — | State class for the 1-day analytics tab |
+| [`tab_day_state.dart`](tab_day_state.dart) | [`tab_day_state.dart.api`](tab_day_state.dart.api) | State class for the 1-day analytics tab |
 | [`tab_day_yesterday_chart.dart`](tab_day_yesterday_chart.dart) | — | Yesterday stacked hourly pattern chart for the 1-day analytics tab |
 | [`tab_month.dart`](tab_month.dart) | [`tab_month.dart.api`](tab_month.dart.api) | 30-day analytics tab — monthly usage summary, trend line chart, and engagement donut |
 | [`tab_month_charts.dart`](tab_month_charts.dart) | — | 30-day usage trend line chart with regression line and app breakdowns |
@@ -23,6 +23,6 @@
 | [`tab_week.dart`](tab_week.dart) | [`tab_week.dart.api`](tab_week.dart.api) | 7-day analytics tab — usage summary, hourly pattern, dopamine loop, engagement, and trend cards |
 | [`tab_week_pattern_chart.dart`](tab_week_pattern_chart.dart) | — | Hourly usage pattern heat-map chart for the 7-day analytics tab |
 | [`tab_week_pattern_state.dart`](tab_week_pattern_state.dart) | — | State class for _LastDaysPatternChart heat-map |
-| [`tab_week_state.dart`](tab_week_state.dart) | — | State class for the 7-day analytics tab |
+| [`tab_week_state.dart`](tab_week_state.dart) | [`tab_week_state.dart.api`](tab_week_state.dart.api) | State class for the 7-day analytics tab |
 | [`tab_week_trend_bars.dart`](tab_week_trend_bars.dart) | — | Weekly trend bar chart comparing this week's daily usage vs previous week average |
 <!-- routing:end -->

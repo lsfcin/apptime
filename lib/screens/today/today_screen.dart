@@ -1,5 +1,4 @@
 // TodayScreen (Hoje): today's phone total against your usual, the last 2 h against your pace, the apps that pulled the day
-import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../l10n/index.dart';
 import '../../services/index.dart';
@@ -19,32 +18,13 @@ class TodayScreen extends StatefulWidget {
   State<TodayScreen> createState() => _TodayScreenState();
 }
 
-class _TodayScreenState extends State<TodayScreen> with WidgetsBindingObserver {
-  Timer? _tick;
-
+class _TodayScreenState extends State<TodayScreen> with ReloadOnResume {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _tick = Timer.periodic(const Duration(minutes: 1), (_) => _refresh());
-  }
-
+  StorageService get storage => widget.storage;
   @override
-  void dispose() {
-    _tick?.cancel();
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
+  Duration get reloadEvery => const Duration(minutes: 1);
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) _refresh();
-  }
-
-  Future<void> _refresh() async {
-    await widget.storage.reload();
-    if (mounted) setState(() {});
-  }
+  void onReloaded() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +39,7 @@ class _TodayScreenState extends State<TodayScreen> with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.navToday)),
       body: RefreshIndicator(
-        onRefresh: _refresh,
+        onRefresh: reloadNow,
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.md),
           children: [
@@ -73,7 +53,7 @@ class _TodayScreenState extends State<TodayScreen> with WidgetsBindingObserver {
             if (day.apps.isEmpty)
               Text(l10n.todayNoApps, style: TextStyle(color: quiet))
             else
-              for (final app in day.apps) _AppDayRow(storage: widget.storage, app: app, onBack: _refresh),
+              for (final app in day.apps) _AppDayRow(storage: widget.storage, app: app, onBack: reloadNow),
           ],
         ),
       ),

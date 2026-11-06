@@ -18,6 +18,9 @@ class StorageService {
     return StorageService._(prefs);
   }
 
+  /// Re-reads the file: the Dart side caches every value, and Kotlin keeps writing the totals.
+  Future<void> reload() => _prefs.reload();
+
   // ── Overlay state (escrito pelo MonitoringService Kotlin, lido pelo OverlayService) ──
 
   String get overlayText => _prefs.getString('overlay_text') ?? '';

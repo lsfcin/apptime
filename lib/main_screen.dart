@@ -1,8 +1,7 @@
-// Main scaffold: bottom navigation between Home, Monitoring, Analytics, Insights, and Settings tabs
+// Root screen: bottom navigation between Hoje (landing), Análise and Ajustes
 import 'package:flutter/material.dart';
 import 'l10n/index.dart';
 import 'screens/analytics/index.dart';
-import 'screens/insights/index.dart';
 import 'screens/index.dart';
 import 'services/index.dart';
 
@@ -21,27 +20,18 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  static const _tabCount = 3;
   int _selectedIndex = 0;
   late final AppInfoService _appInfo;
   // Screens are built lazily on first visit — avoids running initState (and
   // prefs reads) for tabs the user never opens in a given session.
   final _screens = <int, Widget>{};
 
-  Widget _buildScreen(int index) {
-    switch (index) {
-      case 0:
-        return SettingsScreen(
-          storage: widget.storage,
-          onLocaleChange: widget.onLocaleChange,
-        );
-      case 1:
-        return MonitoringScreen(storage: widget.storage, appInfo: _appInfo);
-      case 2:
-        return AnalyticsScreen(storage: widget.storage, appInfo: _appInfo);
-      default:
-        return InsightsScreen(storage: widget.storage);
-    }
-  }
+  Widget _buildScreen(int index) => switch (index) {
+        0 => TodayScreen(storage: widget.storage),
+        1 => AnalyticsScreen(storage: widget.storage, appInfo: _appInfo),
+        _ => SettingsScreen(storage: widget.storage, onLocaleChange: widget.onLocaleChange),
+      };
 
   @override
   void initState() {
@@ -59,32 +49,24 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          for (int i = 0; i < 4; i++)
+          for (int i = 0; i < _tabCount; i++)
             Offstage(
               offstage: _selectedIndex != i,
-              child: _screens.containsKey(i)
-                  ? _screens[i]!
-                  : const SizedBox.shrink(),
+              child: _screens[i] ?? const SizedBox.shrink(),
             ),
         ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: (i) {
-          // Build the screen widget on first visit only.
           _screens.putIfAbsent(i, () => _buildScreen(i));
           setState(() => _selectedIndex = i);
         },
         destinations: [
           NavigationDestination(
-            icon: const Icon(Icons.settings_outlined),
-            selectedIcon: const Icon(Icons.settings),
-            label: l10n.navSettings,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.monitor_heart_outlined),
-            selectedIcon: const Icon(Icons.monitor_heart),
-            label: l10n.navMonitoring,
+            icon: const Icon(Icons.today_outlined),
+            selectedIcon: const Icon(Icons.today),
+            label: l10n.navToday,
           ),
           NavigationDestination(
             icon: const Icon(Icons.bar_chart_outlined),
@@ -92,9 +74,9 @@ class _MainScreenState extends State<MainScreen> {
             label: l10n.navAnalysis,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.lightbulb_outlined),
-            selectedIcon: const Icon(Icons.lightbulb),
-            label: l10n.navInsights,
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: const Icon(Icons.settings),
+            label: l10n.navSettings,
           ),
         ],
       ),

@@ -79,7 +79,7 @@ class _Tab7dState extends State<Tab7d> {
       padding: const EdgeInsets.all(AppSpacing.md),
       children: [
         analysisCard(context: context, icon: Icons.analytics_outlined,
-          title: l10n.block30dSummaryTitle, chartHeight: null,
+          title: l10n.blockSummaryTitle(l10n.tab7d), chartHeight: null,
           chart: Summary30dWidget(avgMinDay: avgMinDay7d, avgUnlocksDay: avgUnlocksDay7d,
             totalMs: totalMs, totalUnlocks: totalUnlocks,
             nDays: summaries.length.clamp(1, 7), l10n: l10n),

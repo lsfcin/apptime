@@ -32,22 +32,18 @@ abstract class AppLocalizations {
   ];
 
   // ── Navigation ───────────────────────────────────────────────────────────────
+  String get navToday;
   String get navAnalysis;
-  String get navInsights;
-  String get navMonitoring;
   String get navSettings;
 
   // ── Common ───────────────────────────────────────────────────────────────────
   String get cancel;
-  String get save;
   String get noData;
   String get collectingData;
 
   // ── Settings: checklist, monitoring ──────────────────────────────────────────
   String get permFloatingWindow;
   String get permUsageStats;
-  String get insightOfDay;
-  String get insightViewSource;
   String get monitoringActive;
   String get monitoringInactive;
   String get monitoringNoPerms;
@@ -126,23 +122,10 @@ abstract class AppLocalizations {
   String get overlayThermometerMaoSub;
   String get overlayThermometerNone;
   String get overlayThermometerNoneSub;
-  String get showBorder;
-  String get showBackground;
   String fontSize(int size);
   String get sectionBehavior;
   String get perAppControlTitle;
-  String get perAppUsageCaption;
   // Level chip / popup strings (per-app monitoring level selector)
-  String get levelChipOff;
-  String get levelChipDefault;
-  String get levelChipMin;
-  String get levelChipMax;
-  String get levelMenuNotMonitored;
-  String get levelMenuDefault;
-  String get levelMenuMinimal;
-  String get levelMenuNormal;
-  String get levelMenuExtensive;
-  String get perAppControlSub;
   String get monitorLauncherTitle;
   String get monitorLauncherSub;
   String get sectionLanguage;
@@ -150,9 +133,20 @@ abstract class AppLocalizations {
   String get languagePtBr;
   String get languageEn;
 
-  // ── PerAppScreen ─────────────────────────────────────────────────────────────
-  String get perAppTitle;
+  // ── Today and per app — every number carries what it means (SPECS § Visual) ──
   String get noAppsMsg;
+  String get todayLead;
+  String todayWarmup(int day);
+  String usualCalm(String usual);
+  String usualNear(String usual);
+  String usualPast(String over, String usual);
+  String paceCalm(String recent, String pace);
+  String paceAbove(String recent, String pace);
+  String get todayAppsTitle;
+  String get todayNoApps;
+  String get appOverlayTitle;
+  String get appsTitle;
+  String get appsSub;
 
   // ── AnalyticsScreen ──────────────────────────────────────────────────────────
   String get trendIdealLabel;
@@ -164,8 +158,6 @@ abstract class AppLocalizations {
   String get dayBoundaryNote;
   String get statTotalUsage;
   String get statUnlocks;
-  String get statYesterday;
-  String get statTotalTime;
   String get noSessions;
   String get dailyUsageLabel;
   String get passive;
@@ -195,24 +187,14 @@ abstract class AppLocalizations {
   String get blockTrendTitle;
   String blockTrendReduced(int pct);
   String blockTrendIncreased(int pct);
-  String get blockTrend30Title;
-  String get blockTrend30Text;
-  String get blockWeekPatternTitle;
-  String get blockWeekPatternText;
-  String get weekdayOtherLabel;
   String get blockYesterdayPatternTitle;
   String get blockYesterdayPatternText;
   String get yesterdayPatternOther;
   String get blockLastDaysPatternTitle;
   String get blockLastDaysPatternText;
-  String get statLast7Days;
 
-  // ── InsightsScreen ───────────────────────────────────────────────────────────
-  String get insightsTitle;
-  String get tabAlerts;
-  String get tabSolutions;
   // ── Tab30d ───────────────────────────────────────────────────────────────────
-  String get block30dSummaryTitle;
+  String blockSummaryTitle(String period);
   String get block30dChartTitle;
   String get block30dChartText;
   // ── Data / Privacy ───────────────────────────────────────────────────────────

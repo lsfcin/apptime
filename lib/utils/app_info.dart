@@ -1,4 +1,4 @@
-// App info utilities: three-tier app name resolution (PackageManager, curated map, package fallback)
+// App info utilities: three-level app name resolution (PackageManager, curated map, package fallback)
 import 'package:flutter/material.dart';
 
 part 'app_info_meta.dart';
@@ -161,5 +161,8 @@ bool isSystemPkg(String pkg) {
       pkg.endsWith('.daemon');
 }
 
+/// This app's own package: it never lists itself among the apps it measures.
+const kSelfPackage = 'com.lsf.apptime';
+
 bool isUserFacingApp(String pkg) =>
-    !isLauncherPkg(pkg) && !isSystemPkg(pkg);
+    pkg != kSelfPackage && !isLauncherPkg(pkg) && !isSystemPkg(pkg);

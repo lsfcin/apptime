@@ -46,6 +46,10 @@ class ServiceChannel {
     return raw.map((k, v) => MapEntry(k.toString(), v.toString()));
   }
 
+  /// The app's own icon as PNG bytes, [sizePx] square; null when the package is not installed.
+  static Future<Uint8List?> getAppIcon(String package, int sizePx) =>
+      _channel.invokeMethod<Uint8List>('getAppIcon', {'package': package, 'sizePx': sizePx});
+
   /// Returns package names of all apps registered as home-screen launchers.
   static Future<Set<String>> getLaunchers() async {
     final raw = await _channel.invokeMethod<List<Object?>>('getLaunchers');

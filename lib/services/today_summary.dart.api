@@ -1,0 +1,4 @@
+// today_summary.dart
+typedef AppDay = (
+class TodaySummary
+  static TodaySummary of(StorageService s, DateTime now)

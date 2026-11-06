@@ -1,3 +1,0 @@
-// monitoring_screen.dart
-class MonitoringScreen extends StatefulWidget
-  State<MonitoringScreen> createState()

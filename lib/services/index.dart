@@ -5,4 +5,5 @@ export 'service_channel.dart';
 export 'setup_check.dart';
 export 'storage_service.dart';
 export 'thermometer.dart';
+export 'today_summary.dart';
 export 'usual_daily.dart';

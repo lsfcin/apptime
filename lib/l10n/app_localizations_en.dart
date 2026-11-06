@@ -4,20 +4,16 @@ import 'app_localizations_en_base.dart';
 class AppLocalizationsEn extends AppLocalizationsEnBase {
   const AppLocalizationsEn(super.locale);
 
+  @override String get navToday => 'Today';
   @override String get navAnalysis => 'Analysis';
-  @override String get navInsights => 'Insights';
-  @override String get navMonitoring => 'Monitor';
   @override String get navSettings => 'Settings';
 
   @override String get cancel => 'Cancel';
-  @override String get save => 'Save';
   @override String get noData => 'No data yet.';
   @override String get collectingData => 'Collecting data — check back later.';
 
   @override String get permFloatingWindow => 'Floating window';
   @override String get permUsageStats => 'Usage statistics';
-  @override String get insightOfDay => 'Insight of the day';
-  @override String get insightViewSource => 'View source';
   @override String get monitoringActive => 'Active — overlay showing real-time usage.';
   @override String get monitoringInactive => 'Inactive. Tap Start.';
   @override String get monitoringNoPerms => 'Grant the permissions above to start.';
@@ -98,7 +94,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get chipAuto => 'Pill background: automatic';
   @override String get chipLight => 'Pill background: light';
   @override String get chipDark => 'Pill background: dark';
-  @override String get overlayThermometer => 'Thermometer: today vs yesterday by this hour';
+  @override String get overlayThermometer => 'Thermometer: the last 2 h vs your pace';
   @override String get overlayThermometerVertical => 'Vertical thermometer';
   @override String get overlayThermometerVerticalSub => 'The liquid rises and boils when today passes yesterday by this hour';
   @override String get overlayThermometerEcg => 'ECG';
@@ -107,22 +103,9 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get overlayThermometerMaoSub => 'A ▼ that bobs up and down: use less';
   @override String get overlayThermometerNone => 'Off';
   @override String get overlayThermometerNoneSub => 'No thermometer';
-  @override String get showBorder => 'Show border';
-  @override String get showBackground => 'Show background';
   @override String fontSize(int size) => 'Font size: ${size}sp';
   @override String get sectionBehavior => 'Behavior';
   @override String get perAppControlTitle => 'Per-app definitions';
-  @override String get perAppUsageCaption => 'Usage shown is the total for the last 7 days';
-  @override String get levelChipOff => 'off';
-  @override String get levelChipDefault => 'default';
-  @override String get levelChipMin => 'min';
-  @override String get levelChipMax => 'max';
-  @override String get levelMenuNotMonitored => 'not monitored';
-  @override String get levelMenuDefault => 'default (global config.)';
-  @override String get levelMenuMinimal => 'occasional';
-  @override String get levelMenuNormal => 'regular';
-  @override String get levelMenuExtensive => 'frequent';
-  @override String get perAppControlSub => 'Enable / disable overlay per app';
   @override String get monitorLauncherTitle => 'Monitor home screen';
   @override String get monitorLauncherSub => 'Show overlay on the launcher / home screen';
   @override String get sectionLanguage => 'Language';
@@ -130,7 +113,6 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get languagePtBr => 'Português (Brasil)';
   @override String get languageEn => 'English';
 
-  @override String get perAppTitle => 'Per-app control';
   @override String get noAppsMsg =>
       'No apps recorded in the last 7 days.\n'
       'Start monitoring and use your phone normally.';
@@ -144,8 +126,6 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
       'The "day" starts at 4 AM — usage between midnight and 4 AM counts toward the previous day.';
   @override String get statTotalUsage => 'Total usage';
   @override String get statUnlocks => 'Unlocks';
-  @override String get statYesterday => 'yesterday';
-  @override String get statTotalTime => 'Total time';
   @override String get noSessions => 'No sessions recorded yet.';
   @override String get dailyUsageLabel => 'Daily usage';
   @override String get passive => 'Passive';
@@ -188,7 +168,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get blockDopamineNoData => 'No data yet.';
   @override String get blockEngagementTitle => 'Engagement balance';
   @override String blockEngagementText(int pct) =>
-      'Your usage was $pct% passive this week. '
+      'Your usage was $pct% passive over the period. '
       'Passive feed consumption (without interacting) is linked to '
       'rumination and depression symptoms, while active use (real messaging) '
       'may have a protective effect on mental health.';
@@ -203,17 +183,6 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String blockTrendIncreased(int pct) =>
       'Your usage increased $pct% vs. last week. '
       'Try to identify the triggers that led to the increase.';
-  @override String get blockTrend30Title => '30-day trend';
-  @override String get blockTrend30Text =>
-      'Maintaining a downward trend for 21 consecutive days is '
-      'the scientific benchmark for habit circuit rewiring '
-      'and strengthening the prefrontal cortex.';
-  @override String get blockWeekPatternTitle => 'Week pattern';
-  @override String get blockWeekPatternText =>
-      'Average usage per hour for each day of the week (last 4 weeks). '
-      'Each horizontal bar represents 60 minutes; the filled portion '
-      'shows time used, stacked by app.';
-  @override String get weekdayOtherLabel => 'other';
   @override String get blockYesterdayPatternTitle => 'Yesterday pattern';
   @override String get blockYesterdayPatternText =>
       'Horizontal stacked bars by app — each row is one hour of yesterday.';
@@ -222,13 +191,9 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get blockLastDaysPatternText =>
       'Horizontal stacked bars — each row is one hour, grouped by day. '
       'Tap the zoom icon to toggle between 2.5-day and full-week view.';
-  @override String get statLast7Days => 'Relative to the last 7 days';
 
-  @override String get insightsTitle => 'Insights';
-  @override String get tabAlerts => 'Alerts';
-  @override String get tabSolutions => 'Solutions';
 
-  @override String get block30dSummaryTitle => '30-Day Overview';
+  @override String blockSummaryTitle(String period) => 'Overview — $period';
   @override String get block30dChartTitle => 'Daily Usage Trend — 30 Days';
   @override String get block30dChartText =>
       'Total screen time per day (thick white line) with linear trend (dashed grey). '
@@ -237,4 +202,17 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
       '4 h critical threshold — Twenge et al. (2018), "Increases in Depressive Symptoms", '
       'Clinical Psychological Science.';
 
+  // Today and per app
+  @override String get todayLead => 'Today so far';
+  @override String todayWarmup(int day) => 'Day $day of 7 · no comparison yet';
+  @override String usualCalm(String usual) => 'Your usual day: $usual';
+  @override String usualNear(String usual) => 'Close to your usual day ($usual)';
+  @override String usualPast(String over, String usual) => '$over above your usual day ($usual)';
+  @override String paceCalm(String recent, String pace) => 'Last 2 h: $recent · your pace: $pace';
+  @override String paceAbove(String recent, String pace) => 'Last 2 h: $recent, above your pace ($pace)';
+  @override String get todayAppsTitle => 'What pulled the day';
+  @override String get todayNoApps => 'No app passed 1 minute today.';
+  @override String get appOverlayTitle => 'Overlay in this app';
+  @override String get appsTitle => 'Apps';
+  @override String get appsSub => 'Overlay and pill background, app by app';
 }

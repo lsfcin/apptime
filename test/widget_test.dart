@@ -5,7 +5,7 @@ import 'package:apptime/main.dart';
 import 'package:apptime/services/storage_service.dart';
 
 void main() {
-  testWidgets('App smoke test — navega entre as 3 tabs', (WidgetTester tester) async {
+  testWidgets('App smoke test — abre no Hoje e navega entre as 3 abas', (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.init();
 
@@ -15,6 +15,8 @@ void main() {
       skipOnboarding: true,
     ));
     await tester.pumpAndSettle();
+
+    expect(find.text('Hoje até agora'.toUpperCase()), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.bar_chart_outlined));
     await tester.pumpAndSettle();

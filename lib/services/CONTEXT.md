@@ -15,5 +15,6 @@
 | [`storage_service_queries.dart`](storage_service_queries.dart) | [`storage_service_queries.dart.api`](storage_service_queries.dart.api) | StorageService query helpers: weekday-pattern aggregation and data maintenance methods |
 | [`storage_service_settings.dart`](storage_service_settings.dart) | [`storage_service_settings.dart.api`](storage_service_settings.dart.api) | StorageService extension: per-app control, onboarding, and language settings |
 | [`thermometer.dart`](thermometer.dart) | [`thermometer.dart.api`](thermometer.dart.api) | Thermometer: the last 2 h of use against the user's own pace over 2 h, over hour buckets |
+| [`today_summary.dart`](today_summary.dart) | [`today_summary.dart.api`](today_summary.dart.api) | TodaySummary: today's phone total against its usual, the last 2 h against the pace, and the apps that pulled the day |
 | [`usual_daily.dart`](usual_daily.dart) | [`usual_daily.dart.api`](usual_daily.dart.api) | "Your usual": mean daily total over the 30 complete days before today, zero-use days included |
 <!-- routing:end -->

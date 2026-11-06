@@ -13,4 +13,5 @@
 | [`briefs/round3-stitch.md`](briefs/round3-stitch.md) | AppTime — round 3: prompts para Google Stitch (colar um por vez, modo App/mobile) |
 | [`briefs/thermometer-claude-design.md`](briefs/thermometer-claude-design.md) | AppTime — termômetro: variações de visual (brief para Claude Design) |
 | [`briefs/thermometer-stitch.md`](briefs/thermometer-stitch.md) | AppTime — thermometer look: prompts for Google Stitch (paste one at a time, App/mobile mode) |
+| [`interventions-evidence.md`](interventions-evidence.md) | Smartphone-overuse interventions with a measured effect, scored against "never blocks", plus an audit of the Insights claims. |
 <!-- routing:end -->

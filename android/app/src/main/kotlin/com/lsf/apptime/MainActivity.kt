@@ -69,28 +69,15 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
                     "hasUsagePermission" -> result.success(hasUsagePermission())
-                    "getInstalledApps" -> {
-                        val pm = packageManager
-                        val apps = mutableMapOf<String, String>()
-                        val launcherIntent = Intent(Intent.ACTION_MAIN, null).apply {
-                            addCategory(Intent.CATEGORY_LAUNCHER)
-                        }
-                        for (ri in pm.queryIntentActivities(launcherIntent, 0)) {
-                            apps[ri.activityInfo.packageName] = ri.loadLabel(pm).toString()
-                        }
-                        result.success(apps)
-                    }
-                    "getLaunchers" -> {
-                        val homeIntent = Intent(Intent.ACTION_MAIN).apply {
-                            addCategory(Intent.CATEGORY_HOME)
-                        }
-                        val fromQuery = packageManager
-                            .queryIntentActivities(homeIntent, 0)
-                            .map { it.activityInfo.packageName }.toSet()
-                        val defaultPkg = packageManager
-                            .resolveActivity(homeIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
-                            ?.activityInfo?.packageName
-                        result.success((fromQuery + setOfNotNull(defaultPkg)).toList())
+                    "getInstalledApps" -> result.success(installedAppLabels())
+                    "getLaunchers" -> result.success(launcherPackages())
+                    "getAppIcon" -> {
+                        val pkg = call.argument<String>("package") ?: ""
+                        val sizePx = call.argument<Int>("sizePx") ?: 96
+                        Thread {
+                            val png = AppIcon.png(packageManager, pkg, sizePx)
+                            runOnUiThread { result.success(png) }
+                        }.start()
                     }
                     "getStartupStatus" -> {
                         val overlay = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -101,29 +88,29 @@ class MainActivity : FlutterActivity() {
                             "isRunning" to MonitoringService.isRunning,
                         ))
                     }
-                    "getAppMetadata" -> {
-                        val pm = packageManager
-                        val labels = mutableMapOf<String, String>()
-                        val launcherIntent = Intent(Intent.ACTION_MAIN, null).apply {
-                            addCategory(Intent.CATEGORY_LAUNCHER)
-                        }
-                        for (ri in pm.queryIntentActivities(launcherIntent, 0)) {
-                            labels[ri.activityInfo.packageName] = ri.loadLabel(pm).toString()
-                        }
-                        val homeIntent = Intent(Intent.ACTION_MAIN).apply {
-                            addCategory(Intent.CATEGORY_HOME)
-                        }
-                        val fromQuery = pm.queryIntentActivities(homeIntent, 0)
-                            .map { it.activityInfo.packageName }.toSet()
-                        val defaultPkg = pm
-                            .resolveActivity(homeIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
-                            ?.activityInfo?.packageName
-                        val launchers = (fromQuery + setOfNotNull(defaultPkg)).toList()
-                        result.success(mapOf("labels" to labels, "launchers" to launchers))
-                    }
+                    "getAppMetadata" -> result.success(
+                        mapOf("labels" to installedAppLabels(), "launchers" to launcherPackages()))
                     else -> result.notImplemented()
                 }
             }
+    }
+
+    /** Package → label of every app with a launcher entry. */
+    private fun installedAppLabels(): Map<String, String> {
+        val launcherIntent = Intent(Intent.ACTION_MAIN, null).apply { addCategory(Intent.CATEGORY_LAUNCHER) }
+        return packageManager.queryIntentActivities(launcherIntent, 0)
+            .associate { it.activityInfo.packageName to it.loadLabel(packageManager).toString() }
+    }
+
+    /** Every home app, the default one included even when the query misses it. */
+    private fun launcherPackages(): List<String> {
+        val homeIntent = Intent(Intent.ACTION_MAIN).apply { addCategory(Intent.CATEGORY_HOME) }
+        val fromQuery = packageManager.queryIntentActivities(homeIntent, 0)
+            .map { it.activityInfo.packageName }.toSet()
+        val defaultPkg = packageManager
+            .resolveActivity(homeIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
+            ?.activityInfo?.packageName
+        return (fromQuery + setOfNotNull(defaultPkg)).toList()
     }
 
     private fun hasUsagePermission(): Boolean {

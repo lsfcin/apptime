@@ -8,6 +8,11 @@ static const surfaceLight = Color(0xFFF7F8FC);
   static const cardDark = Color(0xFF242740);
   static const success = Color(0xFF34D399);
   static const error = Color(0xFFF87171);
+
+  /// Amber marks only what is past the user's usual (ROADMAP § Visual: Obsidian dark, round 3 light).
+  static Color past(BuildContext context) => Theme.of(context).brightness == Brightness.dark
+      ? const Color(0xFFE5A93C)
+      : const Color(0xFF8A5A00);
 }
 
 abstract final class AppSpacing {

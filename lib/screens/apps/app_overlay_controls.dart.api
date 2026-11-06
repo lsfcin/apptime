@@ -1,0 +1,6 @@
+// app_overlay_controls.dart
+class AppOverlayControls extends StatelessWidget
+  bool get _monitored
+  void _setMonitored(bool on)
+  Widget _shadeSelector(AppLocalizations l10n)
+  Widget build(BuildContext context)

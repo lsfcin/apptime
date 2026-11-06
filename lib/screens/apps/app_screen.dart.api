@@ -1,0 +1,4 @@
+// app_screen.dart
+class AppScreen extends StatefulWidget
+  static Future<void> open(BuildContext context, StorageService storage, String package)
+  State<AppScreen> createState()

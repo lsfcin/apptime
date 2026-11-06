@@ -2,6 +2,7 @@
 class StorageService
   StorageService._(this._prefs);
   static Future<StorageService> init() async
+  Future<void> reload()
   String get overlayText
   set overlayText(String v)
   bool get overlayVisible

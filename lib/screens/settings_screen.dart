@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../l10n/index.dart';
 import '../services/index.dart';
 import '../theme/index.dart';
+import 'apps/index.dart';
 import 'onboarding_screen.dart';
 
 part 'settings_screen_widgets.dart';
@@ -174,12 +175,22 @@ class _SettingsScreenState extends State<SettingsScreen>
           // ── Behavior ──────────────────────────────────────────────────
           _SectionHeader(l10n.sectionBehavior),
           Card(
-            child: SwitchListTile(
-              title: Text(l10n.monitorLauncherTitle),
-              subtitle: Text(l10n.monitorLauncherSub),
-              value: _s.monitorLauncher,
-              onChanged: (v) => setState(() => _s.monitorLauncher = v),
-            ),
+            child: Column(children: [
+              // Per-app exceptions moved here from the Monit. tab (ROADMAP § Ajustes order).
+              ListTile(
+                title: Text(l10n.appsTitle),
+                subtitle: Text(l10n.appsSub),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => AppsScreen(storage: _s))),
+              ),
+              SwitchListTile(
+                title: Text(l10n.monitorLauncherTitle),
+                subtitle: Text(l10n.monitorLauncherSub),
+                value: _s.monitorLauncher,
+                onChanged: (v) => setState(() => _s.monitorLauncher = v),
+              ),
+            ]),
           ),
           const SizedBox(height: AppSpacing.md),
 

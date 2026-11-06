@@ -1,0 +1,5 @@
+// app_icon.dart
+class AppIcon extends StatelessWidget
+  static final _cache = <String, Future<Uint8List?>>
+  Future<Uint8List?> _png(BuildContext context)
+  Widget build(BuildContext context)

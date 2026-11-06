@@ -1,0 +1,3 @@
+// apps_screen.dart
+class AppsScreen extends StatefulWidget
+  State<AppsScreen> createState()

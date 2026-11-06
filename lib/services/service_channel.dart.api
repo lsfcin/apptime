@@ -15,6 +15,7 @@ class ServiceChannel
   static Future<void> requestNotifications()
   static Future<Map<Object?, Object?>> getBackgroundStatus() async
   static Future<Map<String, String>> getInstalledAppLabels() async
+  static Future<Uint8List?> getAppIcon(String package, int sizePx)
   static Future<Set<String>> getLaunchers() async
   static Future<(
   static Future<(

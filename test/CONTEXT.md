@@ -18,6 +18,7 @@
 | [`setup_check_test.dart`](setup_check_test.dart) | [`setup_check_test.dart.api`](setup_check_test.dart.api) | Verifies which setup items a device shows, what counts as on, and what makes the timer "stopped". |
 | [`setup_reopen_b3_test.dart`](setup_reopen_b3_test.dart) | [`setup_reopen_b3_test.dart.api`](setup_reopen_b3_test.dart.api) | B3: a vendor can close AppTime from a system screen, so every step that opens one says to reopen it. |
 | [`thermometer_test.dart`](thermometer_test.dart) | [`thermometer_test.dart.api`](thermometer_test.dart.api) | Asserts the thermometer's moving window and pace, its continuity at the hour turn and its bucket keys against the cases shared with Kotlin |
+| [`today_summary_test.dart`](today_summary_test.dart) | [`today_summary_test.dart.api`](today_summary_test.dart.api) | Hoje: the phone total against its usual, which apps list (never this app, a launcher or under a minute), and the warm-up sentence |
 | [`unmonitored_total_b1_test.dart`](unmonitored_total_b1_test.dart) | [`unmonitored_total_b1_test.dart.api`](unmonitored_total_b1_test.dart.api) | B1: an app switched off never counts in the phone's total — today, history and hours — and comes back on re-enable. |
 | [`usual_daily_test.dart`](usual_daily_test.dart) | [`usual_daily_test.dart.api`](usual_daily_test.dart.api) | Asserts the 30-day "your usual" mean and the calm/near/past cut-offs against the cases shared with Kotlin |
 | [`widget_test.dart`](widget_test.dart) | [`widget_test.dart.api`](widget_test.dart.api) | ← add first-line comment |

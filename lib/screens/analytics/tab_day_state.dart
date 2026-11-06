@@ -59,7 +59,7 @@ class _Tab1dState extends State<Tab1d> {
         analysisCard(
           context: context,
           icon: Icons.analytics_outlined,
-          title: l10n.block30dSummaryTitle,
+          title: l10n.blockSummaryTitle(l10n.tab1d),
           chartHeight: null,
           chart: Summary30dWidget(
             avgMinDay: avgMinDay1d,

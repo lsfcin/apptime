@@ -182,8 +182,6 @@ Outside panel: `core/run tools/panel/ask` (calls and traps in `core/agents/SPECS
 
 - 🟡 **More apps start unmonitored** (Lucas 2026-11-03): delivery (iFood and
   similar), rides (Uber and similar), travel (Airbnb, Booking, Skyscanner and others).
-- 🟡 **Onboarding de permissões com leitura consciente** (Lucas 2026-11-02): frases curtas em tipografia
-  grande, botão com delay para leitura real antes do clique, e instrução/intent de Autostart para MIUI.
 - 🟡 **Ajustes de layout e delay da pílula** (Lucas 2026-11-02): dar respiro horizontal à pílula (padding
   interno), mover o acréscimo para a esquerda consumindo o espaço até a câmera no Redmi Note 10 Pro,
   e encurtar o tempo de espera para o timer aparecer na tela inicial.

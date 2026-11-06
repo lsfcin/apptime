@@ -9,6 +9,8 @@ class ServiceChannel {
 
   static Future<void> startMonitoring() => _channel.invokeMethod('startMonitoring');
   static Future<void> stopMonitoring() => _channel.invokeMethod('stopMonitoring');
+  /// Erases the session log (Kotlin files, outside SharedPreferences): delete-all's other half.
+  static Future<void> deleteSessionLog() => _channel.invokeMethod('deleteSessionLog');
   static Future<bool> isRunning() async =>
       await _channel.invokeMethod<bool>('isRunning') ?? false;
 

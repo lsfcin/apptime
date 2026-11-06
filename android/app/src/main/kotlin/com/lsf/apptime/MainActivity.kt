@@ -27,6 +27,10 @@ class MainActivity : FlutterActivity() {
                         MonitoringSwitch.turnOff(this)
                         result.success(null)
                     }
+                    "deleteSessionLog" -> {
+                        MonitoringService.sessionLogOf(this).deleteAll()
+                        result.success(null)
+                    }
                     "isRunning" -> result.success(isServiceRunning(MonitoringService::class.java))
                     "requestOverlayPermission" -> {
                         SystemSettings.openOverlay(this)

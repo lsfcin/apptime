@@ -5,8 +5,6 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.SharedPreferences
 
-private data class Seg(val pkg: String, val startMs: Long, val endMs: Long)
-
 /**
  * Fills in usage data for periods when MonitoringService was not running.
  *
@@ -18,6 +16,8 @@ class HistoryBackfill(
     private val prefs: SharedPreferences,
     private val accumulate: (String, Long, Long) -> Unit,
     private val epochToDate: (Long) -> String,
+    private val log: SessionLog? = null,
+    private val isLauncher: (String) -> Boolean = { false },
 ) {
     companion object {
         // Key used to persist the last-alive timestamp so gap detection survives
@@ -28,7 +28,7 @@ class HistoryBackfill(
     private val gapBackfill = GapBackfill(
         readHeartbeat = { prefs.getLong(HEARTBEAT_KEY, 0L) },
         writeHeartbeat = { prefs.edit().putLong(HEARTBEAT_KEY, it).apply() },
-        replay = { start, end -> backfillDayFromEvents(start, end) },
+        replay = { start, end -> replayGap(start, end) },
     )
 
     /**
@@ -61,6 +61,7 @@ class HistoryBackfill(
                 if (!backfillDayFromEvents(dayStart, dayEnd))
                     backfillDayFromStats(dateKey, dayStart, dayEnd)
             }
+            seedLog(now)
         }.start()
     }
 
@@ -69,37 +70,46 @@ class HistoryBackfill(
         return prefs.all.keys.any { it.startsWith("flutter.daily_ms_") && it.endsWith("_$dateKey") }
     }
 
+    /** The service was down: its time goes into the totals and, as live sessions, into the log. */
+    private fun replayGap(start: Long, end: Long) {
+        for (seg in segments(start, end)) {
+            accumulate(seg.pkg, seg.startMs, seg.endMs)
+            log?.session(seg.pkg, seg.startMs, seg.endMs, isLauncher(seg.pkg))
+        }
+    }
+
     /** Replays UsageEvents for [start, end) into accumulate. Returns true if any data found. */
     private fun backfillDayFromEvents(start: Long, end: Long): Boolean {
-        val events = usageStats.queryEvents(start, end)
-        val event = UsageEvents.Event()
-        val segments = mutableListOf<Seg>()
-        var lastFgPkg: String? = null
-        var lastFgTs = start
+        val found = segments(start, end)
+        for (seg in found) accumulate(seg.pkg, seg.startMs, seg.endMs)
+        return found.isNotEmpty()
+    }
 
-        while (events.getNextEvent(event)) {
-            when (event.eventType) {
-                UsageEvents.Event.MOVE_TO_FOREGROUND -> {
-                    if (lastFgPkg != null && event.timeStamp > lastFgTs)
-                        segments += Seg(lastFgPkg!!, lastFgTs, event.timeStamp)
-                    lastFgPkg = event.packageName
-                    lastFgTs = event.timeStamp
-                }
-                UsageEvents.Event.MOVE_TO_BACKGROUND,
-                UsageEvents.Event.SCREEN_NON_INTERACTIVE -> {
-                    if (lastFgPkg != null && event.timeStamp > lastFgTs) {
-                        segments += Seg(lastFgPkg!!, lastFgTs, event.timeStamp)
-                        lastFgPkg = null
-                    }
-                }
-            }
+    /** Writes each past day Android still holds events for into the session log, once per day. */
+    private fun seedLog(now: Long) {
+        val log = log ?: return
+        for (i in 1..30) {
+            val dayStart = DateUtils.dayStartMs(now, daysBack = i)
+            val date = epochToDate(dayStart)
+            if (!log.hasDay(date)) log.seed(date, segments(dayStart, dayStart + 24 * 3_600_000L), isLauncher)
         }
-        if (lastFgPkg != null && end > lastFgTs)
-            segments += Seg(lastFgPkg!!, lastFgTs, end)
+    }
 
-        if (segments.isEmpty()) return false
-        for (seg in segments) accumulate(seg.pkg, seg.startMs, seg.endMs)
-        return true
+    private fun segments(start: Long, end: Long): List<Segment> {
+        val events = usageStats.queryEvents(start, end) ?: return emptyList()
+        val event = UsageEvents.Event()
+        val stream = generateSequence {
+            if (!events.getNextEvent(event)) null
+            else UsageEvent(kindOf(event.eventType), event.packageName, event.timeStamp)
+        }
+        return UsageSegments.from(stream, start, end)
+    }
+
+    private fun kindOf(type: Int): UsageEvent.Kind = when (type) {
+        UsageEvents.Event.MOVE_TO_FOREGROUND -> UsageEvent.Kind.FOREGROUND
+        UsageEvents.Event.MOVE_TO_BACKGROUND -> UsageEvent.Kind.BACKGROUND
+        UsageEvents.Event.SCREEN_NON_INTERACTIVE -> UsageEvent.Kind.SCREEN_OFF
+        else -> UsageEvent.Kind.OTHER
     }
 
     /** Falls back to aggregated daily stats when event log has been trimmed by Android. */

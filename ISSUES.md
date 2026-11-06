@@ -41,6 +41,12 @@ so each value below holds there and is unknown elsewhere:
 Next step: a stock-Android emulator pass (Pixel image) for the first four; a second physical
 brand before the Play release.
 
+## B9 — the session at 04:00 and the time zone
+
+At the 04:00 rollover `MonitoringService.tick` drops the open session from the totals and the
+session log alike, and neither stores the time zone, so a trip re-reads past hours in the new one
+(panel 2026-11-06). Both predate the log; the fix splits the session at the boundary.
+
 ## B8 — two prune windows
 
 Dart prunes at 90 days (`storage_service_queries.dart` `pruneOldData`), Kotlin at 31
@@ -144,7 +150,7 @@ One owner and one number is the fix; the session log follows Kotlin's 31 meanwhi
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/new-look-r4 is 1 ahead of main
+- . — feature/new-look-r4 is 2 ahead of main
 
 ### Local branches already merged into their base
 

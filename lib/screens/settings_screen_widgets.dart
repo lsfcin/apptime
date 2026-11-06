@@ -119,6 +119,7 @@ extension _SettingsScreenActions on _SettingsScreenState {
     );
     if (confirmed == true && mounted) {
       await widget.storage.deleteAllData();
+      await ServiceChannel.deleteSessionLog();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.deleteAllDataDone)),

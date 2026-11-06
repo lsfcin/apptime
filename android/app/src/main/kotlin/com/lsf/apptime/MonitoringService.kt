@@ -21,6 +21,7 @@ class MonitoringService : Service() {
     private lateinit var prefs: SharedPreferences
     private lateinit var powerManager: PowerManager
     private lateinit var backfill: HistoryBackfill
+    private lateinit var sessionLog: SessionLog
 
     private var lastPackage: String? = null
     private var lastActivity: String? = null
@@ -55,9 +56,10 @@ class MonitoringService : Service() {
                     // Immediately flush the active session when screen turns off
                     val now = System.currentTimeMillis()
                     if (lastPackage != null) {
-                        accumulateDailyMs(lastPackage!!, sessionStartMs, now, updateHeartbeat = true)
+                        closeSession(lastPackage!!, now)
                         lastPackage = null
                     }
+                    sessionLog.screenOff(now)
                     // The tick stops until SCREEN_ON, so the heartbeat marks the flush itself:
                     // a restart overnight must not backfill the seconds counted just above.
                     prefs.edit()
@@ -77,6 +79,7 @@ class MonitoringService : Service() {
                 }
                 Intent.ACTION_USER_PRESENT -> {
                     lastUnlockMs = System.currentTimeMillis()
+                    sessionLog.unlock(lastUnlockMs)
                     val date = today()
                     val hour = currentHour()
                     val key = "flutter.unlock_count_${date}"
@@ -110,8 +113,10 @@ class MonitoringService : Service() {
         effectiveLaunchers = AppConstants.resolveLaunchers(packageManager)
         lastDate = today()
         migrateCorruptedDeviceDaily()
+        sessionLog = sessionLogOf(this)
         backfill = HistoryBackfill(usageStatsManager, prefs,
-            { pkg, start, end -> accumulateDailyMs(pkg, start, end) }, DateUtils::dateKey)
+            { pkg, start, end -> accumulateDailyMs(pkg, start, end) }, DateUtils::dateKey,
+            sessionLog, ::isLauncher)
         val screenFilter = IntentFilter().apply {
             addAction(Intent.ACTION_SCREEN_OFF)
             addAction(Intent.ACTION_SCREEN_ON)
@@ -189,7 +194,7 @@ class MonitoringService : Service() {
             // App switch — close previous session, open new one
             val now = System.currentTimeMillis()
             if (lastPackage != null) {
-                accumulateDailyMs(lastPackage!!, sessionStartMs, now, updateHeartbeat = true)
+                closeSession(lastPackage!!, now)
                 lastClosedPkg = lastPackage
                 lastClosedMs  = now
             }
@@ -266,6 +271,14 @@ class MonitoringService : Service() {
     }
 
     // ── Banco de sessões ──────────────────────────────────────────────────────
+
+    /** A live session ends: into the totals (and the heartbeat) and into the session log. */
+    private fun closeSession(pkg: String, now: Long) {
+        accumulateDailyMs(pkg, sessionStartMs, now, updateHeartbeat = true)
+        sessionLog.session(pkg, sessionStartMs, now, isLauncher(pkg))
+    }
+
+    private fun isLauncher(pkg: String) = AppConstants.isLauncher(pkg, effectiveLaunchers)
 
     private fun today(): String = DateUtils.today()
 
@@ -385,6 +398,7 @@ class MonitoringService : Service() {
             if (match.value <= cutoffStr) editor.remove(key)
         }
         editor.apply()
+        sessionLog.prune(cutoffStr)
     }
 
     companion object {
@@ -393,5 +407,11 @@ class MonitoringService : Service() {
         // The foreground activity's class name, beside current_pkg: the overlay guesses its theme from it.
         const val CURRENT_ACTIVITY_KEY = "flutter.current_activity"
         var isRunning = false
+
+        private val logWriter = java.util.concurrent.Executors.newSingleThreadExecutor()
+
+        /** The one session log of this process; MainActivity's delete-all reaches the same writer. */
+        fun sessionLogOf(context: Context) =
+            SessionLog(java.io.File(context.noBackupFilesDir, "sessions"), logWriter)
     }
 }

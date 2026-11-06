@@ -65,6 +65,8 @@ lib/
 | `MonitoringService.kt` | Foreground service — 1s tick, accumulateDailyMs, session tracking, overlay text, front activity |
 | `HistoryBackfill.kt` | Gap backfill (backfillGap) + 30-day history fill (backfillHistory); injectable |
 | `GapBackfill.kt` | Startup replay window and checkpoint; injectable clock, heartbeat storage and replay |
+| `UsageSegments.kt` | Pure: usage events → app segments; a background event closes only its own package |
+| `SessionLog.kt` | Raw session log: a CSV a day in `noBackupFilesDir/sessions/`, one writer thread, seeded from `queryEvents` |
 | `OverlayService.kt` | Foreground service — 500 ms poll, shared live-usage snapshot/cache, app labels, timer/message coordination |
 | `OverlayWindow.kt` | Non-touchable window lifecycle, alpha 0.8, status-bar/cutout geometry and shared rimless backgrounds |
 | `TimerOverlay.kt` | Anchored Quiet pill / accessible block text, padding per variant, measured placement; hands the text span to the feedback drawable |
@@ -112,10 +114,8 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - Screen off → `SCREEN_NON_INTERACTIVE` → immediately flush and close active session; both loops stop (no wake-ups). `SCREEN_ON` restarts MonitoringService's tick and, through `startService`, OverlayService's poll
 - System screens open inside AppTime's task, so back returns to it. Exception, MIUI 14: switching autostart **off** makes the security center force-stop AppTime (no activity, no services, no broadcasts until reopened); switching it on does not
 - OverlayService reads single keys, never `prefs.all` (a copy of the whole store, hundreds of KB, twice a second)
-- `disabledApps` stored as JSON string via `setString` (not `setStringList`) — required for cross-process read in Kotlin
 - An unmonitored app never counts in the phone's total, history included: excluded at read time, so the stored series stays whole and switching the app back on restores its past. A day spent only in unmonitored apps still counts as measured for the usual
-- Integer values stored as `Long` by the Flutter plugin on Android — Kotlin must use `getLong()`, not `getInt()`
-- SharedPreferences keys use `flutter.` prefix (Flutter plugin adds it); Kotlin reads them with that prefix
+- Storage typing (`Long`, the `flutter.` prefix, `disabledApps` as a JSON string): CONTEXT.md § Key constraints
 
 **Overlay behavior:** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Both styles use `FLAG_NOT_TOUCHABLE`, window alpha 0.8 and tabular figures; no drag or intensity modes.
 
@@ -181,6 +181,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `getStartupStatus` | Dart→Kotlin | Returns `{overlayGranted, usageGranted, isRunning}` — single startup round-trip |
 | `getAppMetadata` | Dart→Kotlin | Returns `{labels: Map<String,String>, launchers: List<String>}` — merged call |
 | `startMonitoring` | Dart→Kotlin | Starts MonitoringService + OverlayService |
+| `deleteSessionLog` | Dart→Kotlin | Deletes every session-log day; delete-all calls it after the prefs |
 | `stopMonitoring` | Dart→Kotlin | Stops both services |
 | `isRunning` | Dart→Kotlin | Returns Boolean (uses MonitoringService.isRunning static flag) |
 | `requestOverlayPermission`, `requestUsagePermission` | Dart→Kotlin | Open AppTime's own page (usage falls back to the list) |
@@ -205,7 +206,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 
 ## Visual — the design charter (Lucas, 2026-11-06)
 
-Rounds 2–3 asked for every screen and state at once and got crowded screens back; content is decided before looks, one thing at a time.
+Content before looks, one thing at a time: rounds 2–3 asked for everything at once and came back crowded.
 
 1. One question per screen; what does not answer it leaves the screen.
 2. One lead number per screen; everything else sits below it, smaller.

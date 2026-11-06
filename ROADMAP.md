@@ -166,7 +166,7 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   messages · collection · language (one row) · privacy. Permissions only when one is missing. Cut
   the separate Parar button, Mostrar borda / Mostrar fundo, and the stale "(5s)" text.
 - **Round 4 reopens structure and colour** (Lucas 2026-11-06), under the charter in SPECS § Visual:
-  structure decided on [the round 4 page](https://claude.ai/artifact/2sLGPb14xRCyTpKHvkswa6) (votes in its db):
+  structure decided on [the round 4 page](https://lucassf.pages.dev/apptime/estrutura) (votes in its db):
   Padrões is a section of Análise with its detail on tap (B, panel 9/10); "últimas 2 h", "sessões e
   desbloqueios" and "apps mais abertos" move into it. **Next: the colour page** — 5–6 hues
   near-green → near-blue against Obsidian amber, in three meanings — cyan = excess · cyan = brand with
@@ -181,8 +181,6 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   surfaces `#14161B`, text `#F3F4F6` / `#7E8594`, the usual in graphite, amber `#E5A93C` only well
   above it; no red, neon green or electric blue; Inter `tnum`, metric 40sp Light, section labels
   11sp caps; 24dp between sections, no card borders. Reference: Oura.
-- **Bugs seen** (Análise, left for its round): Y-axis labels collide in Tendência semanal; legend
-  colours repeat (Claude/Google/outros); English chips (`unlocks`, `session`).
 
 Screens via adb: `core/run tools/phone/adb shoot|prefs|sheet` (debug build only, for `prefs`). MIUI blocks `input tap` until "Depuração USB (configurações de segurança)" is on
 **and the phone is rebooted**. Shots and panel answers stay in the session scratchpad (usage data).

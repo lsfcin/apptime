@@ -128,7 +128,6 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
   - `bar` (default): 2 dp round-capped line under the time, ink spanning exactly the text width (caps included); fills left→right to the usual, then stays full.
   - `outline`: 1 dp border starts at top-centre and grows clockwise, closing at the usual.
   - `none`: no cue and no state colour (messages keep their own rule).
-  - Cut 2026-11-01 (Lucas, panel Codex · Gemini): `dots` (no progress, hollow ring unreadable at real size), `underline_delta` (`−32m` for 3 s read as a negative balance), the 80% notch, the 100% tick and the bar jumping to the top when past.
 - Every variant takes its state from `OverlayText.state` (the `UsualDaily` rule plus the 7-day floor), so shapes and messages never disagree. Progress is clamped to [0,1]; a zero usual draws a full line for any use (no division by zero).
 - Messages have a separate window, below the status bar and the Bloco, right aligned and at most 88% screen width. This avoids overlapping non-touchable windows (whose combined obscuring opacity would exceed 0.8). The timer stays anchored. Header: `<app label> · 1h 18m hoje` / `today`; on the launcher `Celular` / `Phone` with the phone total. Language follows the saved override or system language (PT fallback).
 - A message ends after 6.5 s, on a detected package change (500 ms poll), overlay hiding/disabling, or screen off. Cancellation leaves the trigger recorded as shown. Trigger evaluation remains every ~2.5 s.
@@ -193,6 +192,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 
 ## Key Invariants
 
+- **Any Android, not one vendor** (Lucas 2026-11-06): code reads public APIs first; a vendor path sits behind a check with a generic fallback, and a value tuned on one device is listed in ISSUES § B7 until another device confirms it.
 - **4am day boundary**: all date keys (`YYYY-MM-DD`) represent the 24h window starting at 04:00. `epochToDateKey()` (Kotlin) and `dayAnchor()` (Dart) implement this consistently. Cross-midnight sessions are split at the 4am boundary.
 - **Single source of truth**: `kAppMeta` is the sole source for app labels and colors.
 - **"Your usual" parity**: Dart and Kotlin both run `test/fixtures/usual_daily.json`; a rule change edits both files and adds a case there.

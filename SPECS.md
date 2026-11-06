@@ -203,6 +203,28 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 
 ---
 
+## Visual — the design charter (Lucas, 2026-11-06)
+
+Rounds 2–3 asked for every screen and state at once and got crowded screens back; content is decided before looks, one thing at a time.
+
+1. One question per screen; what does not answer it leaves the screen.
+2. One lead number per screen; everything else sits below it, smaller.
+3. Every number carries a sentence saying what it means ("1h20 acima do seu normal", not "2h41").
+4. A chart only where it answers better than a number: one per block, labelled on the marks, no legend to decode.
+5. The comparison is always with yourself — your usual, never a target.
+6. Detail on tap: the screen shows the summary.
+7. No abstract metrics ("dreno de dopamina", "índice de impulsividade"): only what the user recognises in their own day.
+
+| Screen | The question it answers |
+|--------|-------------------------|
+| Hoje | How is my day against my usual, and which app is pulling it? |
+| Per app | How and when do I use this app? |
+| Análise | Am I improving? When do I use it most? |
+| Patterns *(place open)* | Which flows are unhealthy (A → B → A, loops)? What are my triggers (entry app, hour)? Each with an intervention whose effect was measured. |
+| Ajustes | How does the overlay look for me? |
+
+A short stop on the launcher between two apps is a transition from A to B.
+
 ## Tech stack
 
 | Layer | Technology |

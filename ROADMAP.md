@@ -168,9 +168,10 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
 - **Ajustes order**: live preview · overlay (gallery, one switch per feedback, size) · per-app exceptions ·
   messages · collection · language (one row) · privacy. Permissions only when one is missing. Cut
   the separate Parar button, Mostrar borda / Mostrar fundo, and the stale "(5s)" text.
-- **Round 4 reopens structure and colour** (Lucas 2026-11-06): round 3 is the start, not the contract.
-  Cyan for lightness, modernity and an "electric" note for excess (the screen on); away from AI purple;
-  near-blue / near-green hues that wake curiosity. Compared against Obsidian Mono below, dark and light.
+- **Round 4 reopens structure and colour** (Lucas 2026-11-06), under the charter in SPECS § Visual:
+  agent wireframes first, then short per-screen briefs for Claude Design and Stitch. Colour: 5–6 hues
+  near-green → near-blue against Obsidian amber, in three meanings — cyan = excess · cyan = brand with
+  amber = excess · cyan = both; WCAG in both themes.
 - **Visual: Obsidian Mono** (Lucas, over Codex's light editorial): carbon `#0B0C0E`, borderless
   surfaces `#14161B`, text `#F3F4F6` / `#7E8594`, the usual in graphite, amber `#E5A93C` only well
   above it; no red, neon green or electric blue; Inter `tnum`, metric 40sp Light, section labels

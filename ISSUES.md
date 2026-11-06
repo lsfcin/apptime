@@ -16,6 +16,18 @@ block was removed from his data and the setting is back to 0. Keep it 0 outside 
 fix). One `DateUtils.dayStartMs(epochMs)` should serve both. Totals already inflated by B3 before
 `1d82611` were not repaired.
 
+## B5 — auto-start não inicia MonitoringService após reboot (MIUI/OEM)
+
+O `BootReceiver` não inicia o serviço sozinho no Xiaomi Redmi Note 10 Pro (MIUI). A inicialização
+após boot exige permissão explícita de "Início Automático" do OEM; incluir checagem e intent de
+abertura das configurações de autostart no onboarding de permissões.
+
+## B6 — gradle test falha no plugin url_launcher e verificação adb
+
+`./gradlew testDebugUnitTest` falha em `:url_launcher_android` (teste do plugin, não do app); o verify
+deve rodar apenas `:app:testDebugUnitTest`. No MIUI, `adb install` ocasionalmente falha com
+`INSTALL_FAILED_VERIFICATION_FAILURE`; `phone/adb` deve executar retry automático.
+
 <!-- entropy:start -->
 ## Entropy
 

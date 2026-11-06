@@ -152,8 +152,9 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   Open: Bloco keeps its 8 dp margin (only the pill's was trimmed); the Aba is still unbuilt.
 
 - **Hoje and the per-app screen are provisional** (built 2026-11-06 under the charter, `lib/screens/today/`,
-  `apps/`): round 4 redesigns the lead number and the day chart. Per-app still lacks position and
-  fullscreen/landscape controls and the "quando você costuma usar" map. Not yet seen on the phone.
+  `apps/`): round 4 redesigns the lead number and the day chart. Per-app holds the switch and pill
+  background (option Y); still lacks position, fullscreen/landscape and "quando você costuma usar".
+  Ajustes › Apps still wants search.
 - **"Your usual" shows in three places**: Hoje, the per-app screen, the overlay preview in Ajustes.
 - **Análise: 7d · 30d** (the day lives in Hoje). Cut: Custo de oportunidade, Alerta de phubbing,
   Balanço de engajamento, Padrão dos últimos 7 dias, the research bands `4–6h/dia` / `30–60/dia`.
@@ -165,12 +166,15 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   messages · collection · language (one row) · privacy. Permissions only when one is missing. Cut
   the separate Parar button, Mostrar borda / Mostrar fundo, and the stale "(5s)" text.
 - **Round 4 reopens structure and colour** (Lucas 2026-11-06), under the charter in SPECS § Visual:
-  agent wireframes first, then short per-screen briefs for Claude Design and Stitch. Colour: 5–6 hues
+  structure decided on [the round 4 page](https://claude.ai/artifact/2sLGPb14xRCyTpKHvkswa6) (votes in its db):
+  Padrões is a section of Análise with its detail on tap (B, panel 9/10); "últimas 2 h", "sessões e
+  desbloqueios" and "apps mais abertos" move into it. **Next: the colour page** — 5–6 hues
   near-green → near-blue against Obsidian amber, in three meanings — cyan = excess · cyan = brand with
-  amber = excess · cyan = both; WCAG in both themes.
+  amber = excess · cyan = both; WCAG in both themes; then Claude Design projects into the inventory.
 - **Patterns: flows and triggers** (Lucas 2026-11-06; SPECS § Visual): `SessionLog` records since
   2026-11-06. Next: define a loop on real days (start: A → B → A inside 10 min, a short launcher stop
-  counts as a transition); entry app per unlock; where the screen lives is round 4's first question.
+  counts as a transition); entry app per unlock. Wording (panel): "ciclos", "como seu uso começa",
+  "experimente" — a loop proves no harm, an entry app proves no trigger.
   No study measures feedback on flows or triggers (refs/interventions-evidence.md): each pattern
   pairs with a step that has evidence (grayscale, notification batching, a dismissable prompt).
 - **Visual: Obsidian Mono** (Lucas, over Codex's light editorial): carbon `#0B0C0E`, borderless
@@ -184,8 +188,6 @@ Screens via adb: `core/run tools/phone/adb shoot|prefs|sheet` (debug build only,
 **and the phone is rebooted**. Shots and panel answers stay in the session scratchpad (usage data).
 Outside panel: `core/run tools/panel/ask` (calls and traps in `core/agents/SPECS.md`).
 
-- 🟡 **More apps start unmonitored** (Lucas 2026-11-03): delivery (iFood and
-  similar), rides (Uber and similar), travel (Airbnb, Booking, Skyscanner and others).
 - 🟡 **Ajustes de layout e delay da pílula** (Lucas 2026-11-02): dar respiro horizontal à pílula (padding
   interno), mover o acréscimo para a esquerda consumindo o espaço até a câmera no Redmi Note 10 Pro,
   e encurtar o tempo de espera para o timer aparecer na tela inicial.

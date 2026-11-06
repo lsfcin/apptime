@@ -205,6 +205,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   // Today and per app
   @override String get todayLead => 'Hoje até agora';
   @override String todayWarmup(int day) => 'Dia $day de 7 · sem comparação ainda';
+  @override String get usualBarely => 'Quase sem uso nos últimos 30 dias';
   @override String usualCalm(String usual) => 'Seu dia normal: $usual';
   @override String usualNear(String usual) => 'Perto do seu dia normal ($usual)';
   @override String usualPast(String over, String usual) => '$over acima do seu dia normal ($usual)';
@@ -214,5 +215,9 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get todayNoApps => 'Nenhum app passou de 1 minuto hoje.';
   @override String get appOverlayTitle => 'Visor neste app';
   @override String get appsTitle => 'Apps';
-  @override String get appsSub => 'Visor e fundo da pílula, app por app';
+  @override String get appsSub => 'Quais apps contam e mostram o visor';
+  @override String get appMonitor => 'Monitorar este app';
+  @override String get appMonitorSub => 'Desligado, não conta no total nem mostra o visor';
+  @override String get pillBackground => 'Fundo da pílula';
+  @override String appsShowAll(int quiet) => 'Mostrar todos ($quiet com menos de 1 min)';
 }

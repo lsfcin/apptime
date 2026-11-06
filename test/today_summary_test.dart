@@ -43,4 +43,14 @@ void main() {
     expect(s.text, 'Dia 3 de 7 · sem comparação ainda');
     expect(s.past, isFalse);
   });
+
+  test('an app barely used in 30 days is not "above 0min": no comparison, not past', () async {
+    SharedPreferences.setMockInitialValues({..._days(30, 120 * _min, now), 'device_daily_ms_$date': 60 * _min,
+        'daily_ms_com.amazon.mShop.android.shopping_$date': 7 * _min});
+    final day = TodaySummary.of(await StorageService.init(), now);
+    final app = day.apps.single;
+    final s = dayAgainstUsual(l10n, app.todayMs, app.usual);
+    expect(s.text, 'Quase sem uso nos últimos 30 dias');
+    expect(s.past, isFalse);
+  });
 }

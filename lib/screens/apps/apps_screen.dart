@@ -16,6 +16,9 @@ class AppsScreen extends StatefulWidget {
   State<AppsScreen> createState() => _AppsScreenState();
 }
 
+/// Apps used less than this over 7 days wait behind "Mostrar todos" (round 4, option Y).
+const _kQuietBelowMs = 60 * 1000;
+
 class _AppsScreenState extends State<AppsScreen> {
   StorageService get _s => widget.storage;
 
@@ -34,39 +37,39 @@ class _AppsScreenState extends State<AppsScreen> {
     ]..sort((a, b) => b.$2.compareTo(a.$2));
   }
 
+  bool _showAll = false;
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final apps = _lastWeek();
-    final quiet = Theme.of(context).colorScheme.outline;
+    final all = _lastWeek();
+    final shown = _showAll ? all : all.where((a) => a.$2 >= _kQuietBelowMs).toList();
+    final quiet = all.length - shown.length;
+    final muted = Theme.of(context).colorScheme.outline;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.appsTitle)),
-      body: apps.isEmpty
+      body: all.isEmpty
           ? Center(child: Text(l10n.noAppsMsg, textAlign: TextAlign.center))
-          : ListView.separated(
+          : ListView(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-              itemCount: apps.length,
-              separatorBuilder: (_, _) => const Divider(height: 1, indent: AppSpacing.md),
-              itemBuilder: (_, i) {
-                final (pkg, ms) = apps[i];
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, 4),
-                  child: Column(children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
-                      leading: AppIcon(pkg),
-                      title: Text(labelForApp(pkg), maxLines: 1, overflow: TextOverflow.ellipsis),
-                      subtitle: Text(fmtDuration(ms), style: TextStyle(color: quiet)),
-                      onTap: () async {
-                        await AppScreen.open(context, _s, pkg);
-                        if (mounted) setState(() {});
-                      },
-                    ),
-                    AppOverlayControls(storage: _s, package: pkg, onChanged: () => setState(() {})),
-                  ]),
-                );
-              },
+              children: [
+                for (final (pkg, ms) in shown)
+                  ListTile(
+                    leading: AppIcon(pkg),
+                    title: Text(labelForApp(pkg), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Text(fmtDuration(ms), style: TextStyle(color: muted)),
+                      const SizedBox(width: AppSpacing.sm),
+                      AppMonitorSwitch(storage: _s, package: pkg, onChanged: () => setState(() {})),
+                    ]),
+                    onTap: () async {
+                      await AppScreen.open(context, _s, pkg);
+                      if (mounted) setState(() {});
+                    },
+                  ),
+                if (quiet > 0)
+                  TextButton(onPressed: () => setState(() => _showAll = true), child: Text(l10n.appsShowAll(quiet))),
+              ],
             ),
     );
   }

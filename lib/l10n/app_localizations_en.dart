@@ -205,6 +205,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   // Today and per app
   @override String get todayLead => 'Today so far';
   @override String todayWarmup(int day) => 'Day $day of 7 · no comparison yet';
+  @override String get usualBarely => 'Barely used in the last 30 days';
   @override String usualCalm(String usual) => 'Your usual day: $usual';
   @override String usualNear(String usual) => 'Close to your usual day ($usual)';
   @override String usualPast(String over, String usual) => '$over above your usual day ($usual)';
@@ -214,5 +215,9 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get todayNoApps => 'No app passed 1 minute today.';
   @override String get appOverlayTitle => 'Overlay in this app';
   @override String get appsTitle => 'Apps';
-  @override String get appsSub => 'Overlay and pill background, app by app';
+  @override String get appsSub => 'Which apps count and show the overlay';
+  @override String get appMonitor => 'Monitor this app';
+  @override String get appMonitorSub => 'When off, it neither counts in the total nor shows the overlay';
+  @override String get pillBackground => 'Pill background';
+  @override String appsShowAll(int quiet) => 'Show all ($quiet under 1 min)';
 }

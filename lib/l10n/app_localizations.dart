@@ -137,6 +137,7 @@ abstract class AppLocalizations {
   String get noAppsMsg;
   String get todayLead;
   String todayWarmup(int day);
+  String get usualBarely;
   String usualCalm(String usual);
   String usualNear(String usual);
   String usualPast(String over, String usual);
@@ -147,6 +148,10 @@ abstract class AppLocalizations {
   String get appOverlayTitle;
   String get appsTitle;
   String get appsSub;
+  String get appMonitor;
+  String get appMonitorSub;
+  String get pillBackground;
+  String appsShowAll(int quiet);
 
   // ── AnalyticsScreen ──────────────────────────────────────────────────────────
   String get trendIdealLabel;

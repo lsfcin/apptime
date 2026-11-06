@@ -144,7 +144,7 @@ One owner and one number is the fix; the session log follows Kotlin's 31 meanwhi
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/new-look-r4 is 2 ahead of main
+- . — feature/new-look-r4 is 3 ahead of main
 
 ### Local branches already merged into their base
 

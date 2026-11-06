@@ -5,10 +5,15 @@ import '../services/index.dart';
 import '../theme/index.dart';
 import '../utils/index.dart';
 
+/// Under this mean per day the usual reads as 0min, so there is nothing to compare against.
+const _kBarelyUsedMs = 60 * 1000;
+
 /// What [todayMs] means against [usual] (SPECS § Visual rule 3), and whether it reads as past it.
 /// Before [kUsualWarmupDays] measured days there is no comparison, only which day this is.
 ({String text, bool past}) dayAgainstUsual(AppLocalizations l10n, int todayMs, Usual usual) {
   if (usual.realDays < kUsualWarmupDays) return (text: l10n.todayWarmup(usual.realDays + 1), past: false);
+  // An app barely opened in 30 days has a usual that rounds to 0min: "above 0min" says nothing.
+  if (usual.meanMs < _kBarelyUsedMs) return (text: l10n.usualBarely, past: false);
   final usualText = fmtDuration(usual.meanMs);
   final against = againstUsual(todayMs, usual);
   return switch (against.state) {

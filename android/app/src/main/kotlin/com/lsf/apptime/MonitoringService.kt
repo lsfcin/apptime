@@ -1,9 +1,6 @@
 // Tracks foreground sessions and publishes live overlay state
 package com.lsf.apptime
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
@@ -16,7 +13,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
-import androidx.core.app.NotificationCompat
 
 class MonitoringService : Service() {
 
@@ -103,7 +99,8 @@ class MonitoringService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(NOTIF_ID, buildNotification())
+        startForeground(RhythmNotification.ID, RhythmNotification.build(this,
+            RhythmNotification.storedLevel(getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE))))
         // A second start (boot + app open, onboarding) must not double the tick or the receiver.
         if (isRunning) return START_STICKY
         isRunning = true
@@ -362,24 +359,6 @@ class MonitoringService : Service() {
         prefs.edit().putLong(hourKey, prefs.safeGetCount(hourKey) + 1).apply()
     }
 
-    // ── Notificação ───────────────────────────────────────────────────────────
-
-    private fun buildNotification(): Notification {
-        val channelId = "apptime_monitoring"
-        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        if (manager.getNotificationChannel(channelId) == null) {
-            manager.createNotificationChannel(
-                NotificationChannel(channelId, "AppTime Monitoramento",
-                    NotificationManager.IMPORTANCE_MIN)
-            )
-        }
-        return NotificationCompat.Builder(this, channelId)
-            .setContentTitle("AppTime monitorando")
-            .setSmallIcon(R.drawable.ic_stat_rhythm_0)
-            .setPriority(NotificationCompat.PRIORITY_MIN)
-            .build()
-    }
-
     /** Idempotent migration: resets device_daily_ms_{today} if it exceeds 23 hours.
      *  Safe to run on every start because the check is a no-op when data is clean.
      *  The 23h threshold catches the old rolling-24h bug where two calendar-days
@@ -409,7 +388,6 @@ class MonitoringService : Service() {
     }
 
     companion object {
-        const val NOTIF_ID = 1002
         // On the launcher: passing through it to switch apps shows nothing.
         const val HOME_DELAY_MS = 2_000L
         // The foreground activity's class name, beside current_pkg: the overlay guesses its theme from it.

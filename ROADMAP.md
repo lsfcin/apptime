@@ -107,9 +107,8 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   on the right; pie 8 dp, ECG 8 dp (Lucas 2026-11-06): "5h41" with pie + ECG fills the 52 dp slot at
   13 dp, its pie gap 2 dp. Bold (past the usual) is 2 px wider and fits one step down, pie gap
   1.5 dp, pie whole (Roboto advances on this phone's fonts, 2026-11-06; kerning not modelled).
-- 🟡 **Notification icon** (built 2026-11-06, not yet seen in the bar): the phone with a zigzag whose
-  amplitude is the whole phone's pace (`RhythmLevel`, 3 levels, LOW channel `apptime_rhythm`). Lucas
-  checks it shows on HyperOS ("show notification icons" may be off). Launcher icon now cyan (#17D1D1).
+- **Notification icon** (Lucas 2026-11-06): the phone, corners radius 5, with a zigzag whose amplitude
+  is the whole phone's pace — one notification for both services (`RhythmNotification`). Launcher icon cyan.
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style;
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
   "Grande").

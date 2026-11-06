@@ -1,9 +1,6 @@
 // Polls live usage and coordinates the anchored timer and independent message window.
 package com.lsf.apptime
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -12,7 +9,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
-import androidx.core.app.NotificationCompat
 import java.util.Locale
 
 class OverlayService : Service() {
@@ -44,8 +40,8 @@ class OverlayService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         prefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         // The watchdog restarts this every 30 s: the icon keeps the level it last showed.
-        rhythm = prefs.getLong(RHYTHM_KEY, 0L).toInt()
-        startForeground(NOTIF_ID, buildNotification(rhythm))
+        rhythm = RhythmNotification.storedLevel(prefs)
+        startForeground(RhythmNotification.ID, RhythmNotification.build(this, rhythm))
         powerManager = getSystemService(POWER_SERVICE) as PowerManager
         launchers = AppConstants.resolveLaunchers(packageManager)
         // MonitoringService's watchdog calls this every 30 s; retain message cadence and cache.
@@ -139,41 +135,11 @@ class OverlayService : Service() {
         return brand.replaceFirstChar { it.uppercase() }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Notification
-    // ─────────────────────────────────────────────────────────────────────────
-
     // The phone's recent pace, always the whole phone: the icon stays put while the apps change.
     private fun showRhythm(intensity: Float) {
         val next = RhythmLevel.of(intensity, rhythm)
         if (next == rhythm) return
         rhythm = next
-        prefs.edit().putLong(RHYTHM_KEY, next.toLong()).apply()
-        (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).notify(NOTIF_ID, buildNotification(next))
-    }
-
-    // LOW, not MIN: a MIN channel shows no icon in the status bar. A channel's importance cannot change
-    // once made, so the icon has its own channel and the old MIN one is deleted.
-    private fun buildNotification(level: Int): Notification {
-        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        manager.deleteNotificationChannel("apptime_overlay")
-        if (manager.getNotificationChannel(CHANNEL_ID) == null) {
-            manager.createNotificationChannel(
-                NotificationChannel(CHANNEL_ID, "AppTime ritmo", NotificationManager.IMPORTANCE_LOW)
-                    .apply { setShowBadge(false) }
-            )
-        }
-        return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("AppTime ativo")
-            .setSmallIcon(RhythmLevel.icon(level))
-            .setOnlyAlertOnce(true)
-            .setOngoing(true)
-            .build()
-    }
-
-    companion object {
-        const val NOTIF_ID = 1001
-        const val CHANNEL_ID = "apptime_rhythm"
-        const val RHYTHM_KEY = "flutter.rhythm_level"
+        RhythmNotification.show(this, prefs, next)
     }
 }

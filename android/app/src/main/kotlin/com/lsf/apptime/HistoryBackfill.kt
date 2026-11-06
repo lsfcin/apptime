@@ -54,15 +54,7 @@ class HistoryBackfill(
 
         Thread {
             for (i in 1..30) {
-                val cal = java.util.Calendar.getInstance().apply {
-                    timeInMillis = now
-                    add(java.util.Calendar.DATE, -i)
-                    set(java.util.Calendar.HOUR_OF_DAY, 4)
-                    set(java.util.Calendar.MINUTE, 0)
-                    set(java.util.Calendar.SECOND, 0)
-                    set(java.util.Calendar.MILLISECOND, 0)
-                }
-                val dayStart = cal.timeInMillis
+                val dayStart = DateUtils.dayStartMs(now, daysBack = i)
                 val dayEnd   = dayStart + 24 * 3_600_000L
                 val dateKey  = epochToDate(dayStart)
                 if (hasAnyDataForDate(dateKey)) continue

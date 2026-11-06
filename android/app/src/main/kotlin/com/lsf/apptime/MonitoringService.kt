@@ -398,15 +398,7 @@ class MonitoringService : Service() {
      *  This keeps storage bounded while guaranteeing 30+ days of history.
      */
     private fun pruneOldData() {
-        val cutoff = java.util.Calendar.getInstance().apply {
-            add(java.util.Calendar.DATE, -31)
-            if (get(java.util.Calendar.HOUR_OF_DAY) < 4) add(java.util.Calendar.DATE, -1)
-        }
-        val cutoffStr = "%04d-%02d-%02d".format(
-            cutoff.get(java.util.Calendar.YEAR),
-            cutoff.get(java.util.Calendar.MONTH) + 1,
-            cutoff.get(java.util.Calendar.DAY_OF_MONTH)
-        )
+        val cutoffStr = DateUtils.daysBefore(DateUtils.today(), 31)
         val dateRegex = Regex("""(\d{4}-\d{2}-\d{2})""")
         val editor = prefs.edit()
         for (key in prefs.all.keys) {

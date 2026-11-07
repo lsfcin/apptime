@@ -111,7 +111,7 @@ class TimerOverlay(context: Context) {
             feedbackDrawable.dotScale = s.dotScale
             feedbackDrawable.dotGapDp = s.dotGapDp
         }
-        pad(block, variant, thermometer, s)
+        pad(style, variant, thermometer, s)
         view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         feedbackDrawable.textLeft = view.paddingLeft.toFloat()
         // The right padding holds the thermometer, so the text (and the bar under it) ends before it.
@@ -135,7 +135,10 @@ class TimerOverlay(context: Context) {
     // outline's rounded ends ate it); the block, whose 8 dp margin already frames it, one space;
     // the filling dot sits left of the text; the bar's bottom padding holds the bar plus twice its thickness
     // below it, so the bar sits right under the digits (their font descent is the only gap above it).
-    private fun pad(block: Boolean, variant: String, thermometer: String, s: FitLadder.Step) {
+    private fun pad(style: OverlayStyle, variant: String, thermometer: String, s: FitLadder.Step) {
+        val block = style.boxed
+        feedbackDrawable.glyphBelow = style == OverlayStyle.TAB
+        if (style == OverlayStyle.TAB) return padTab(variant, thermometer)
         val outline = variant == "outline"
         val air = view.paint.measureText(if (block) " " else "0")
         // Lucas 2026-11-03: the pill's number may sit 1.5 dp closer to its edges than a digit's width + 1 dp.
@@ -161,6 +164,18 @@ class TimerOverlay(context: Context) {
         val pill = if (thermometer == "vertical") maxOf(pillRight("vertical"), pillRight("mao")) else pillRight(thermometer)
         val right = if (glyph > 0f && !block) pill else side + glyph
         view.setPadding(left.roundToInt(), vertical + extra, right.roundToInt(), bottom + extra)
+    }
+
+    // The Aba stacks the glyph under the number, with the Bloco's air all round, so it reads square, not wide.
+    private fun padTab(variant: String, thermometer: String) {
+        val unit = density * FeedbackDrawable.scale(true)
+        val side = window.dp(8) + view.paint.measureText(" ")
+        val dot = if (variant == "fill") FeedbackDrawable.fillReserve(density, true) else 0f
+        val room = ThermometerGlyph.room(thermometer) * unit
+        val glyph = if (room > 0f) room + FeedbackDrawable.BELOW_EDGE_DP * unit + window.dp(2) else 0f
+        val bar = if (variant == "bar") 3 * FeedbackDrawable.barStroke(density, true) else 0f
+        val top = window.dp(8)
+        view.setPadding((side + dot).roundToInt(), top, side.roundToInt(), (maxOf(glyph, top.toFloat()) + bar).roundToInt())
     }
 
     // The unit letters (h, m) condensed and smaller, so "1h22" plus a thermometer still fits the status bar.

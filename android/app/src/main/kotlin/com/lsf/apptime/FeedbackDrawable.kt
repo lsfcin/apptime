@@ -20,6 +20,8 @@ class FeedbackDrawable(
     var frame: OverlayFeedback.Frame? = null
         set(value) { field = value; invalidateSelf() }
     // Thermometer look and intensity, drawn right of the text; "none" draws nothing.
+    // On the Aba it sits centred under the number instead (Lucas 2026-11-06: a squarer Aba).
+    var glyphBelow = false
     var thermometerLook = "none"
     var thermometerLevel = 0f
     private val thermometerPhase = ThermometerPhase()
@@ -38,8 +40,14 @@ class FeedbackDrawable(
         background.draw(canvas)
         // Before the usual is ready the thermometer still shows, so it draws first.
         thermometerPhase.advance(thermometerLook, thermometerLevel, SystemClock.uptimeMillis())
-        ThermometerGlyph.draw(canvas, paint, thermometerLook, block, thermometerLevel, thermometerPhase, ink,
-            bounds.left + textRight + thermometerGap(thermometerLook, density, block), bounds.exactCenterY(), density * scale(block))
+        val unit = density * scale(block)
+        val room = ThermometerGlyph.room(thermometerLook) * unit
+        val x = if (glyphBelow) bounds.exactCenterX() - ThermometerGlyph.width(thermometerLook, block) * unit / 2
+            else bounds.left + textRight + thermometerGap(thermometerLook, density, block)
+        // The bar, when on, keeps the bottom edge: the glyph sits above it.
+        val bar = if (frame?.variant == "bar") 3 * barStroke(density, block) else 0f
+        val y = if (glyphBelow) bounds.bottom - bar - dp(BELOW_EDGE_DP) - room / 2 else bounds.exactCenterY()
+        ThermometerGlyph.draw(canvas, paint, thermometerLook, block, thermometerLevel, thermometerPhase, ink, x, y, unit)
         val feedback = frame ?: return
         if (!feedback.hasUsual) return
         when (feedback.variant) {
@@ -110,6 +118,8 @@ class FeedbackDrawable(
     override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
 
     companion object {
+        /** The Aba's glyph: its distance from the bottom edge, in dp at the boxed scale. */
+        const val BELOW_EDGE_DP = 5f
         const val FILL_GAP_DP = 3f
         fun scale(block: Boolean) = if (block) 1.25f else 1f
         fun barStroke(density: Float, block: Boolean) = 2f * density * scale(block)

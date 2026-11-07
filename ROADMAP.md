@@ -153,15 +153,11 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   cost needs its own run. 2026-11-04 (`e16f583`): vertical 1.5× wider, bulb rebuilt, 1 dp stroke
   like the outline, pill as wide as the ▼ one. **Next**: Lucas checks the new vertical; the morning
   starts calm (after 04:00); battery, vertical first; a better name than "Mão única" for the ▼ look; avaliar granularidade (3 estágios vs 7 estágios vs escala linear contínua) para feedback mais imediato sem perda de performance (INBOX 2026-11-03).
-  Open: Bloco keeps its 8 dp margin (only the pill's was trimmed); the Aba is still unbuilt.
+  Aba built 2026-11-06 on the side edges (drag snaps; glyph under the number). Open: drop per app; the bar sits under the glyph.
 
 - **Per-app screen** still lacks position, fullscreen/landscape and "quando você costuma usar".
 - **Ajustes** (built 2026-11-06, one row per choice, options in a sheet): still wants the live preview on
-  top, a size control, the messages' switches and Apps › search. **Next** (Lucas 2026-11-06): style,
-  "comparação com seu habitual" and thermometer each become a horizontal visual selector — one
-  geometric drawing per option (pill, Bloco, Aba: filled or outlined), the picked one selected — and
-  each needs a better name than "Estilo do visor" etc.; amber colours shown as a sample with and
-  without, tap to pick. Brief Claude Design / Stitch first if it helps.
+  top, a size control, the messages' switches and Apps › search. Rows of drawings built 2026-11-06; Lucas checks them on the phone.
 - **Hábitos** (built 2026-11-06; Lucas, panel 9/10 over Padrões inside Análise): "Como seu uso está
   mudando?" — the peak hour leads ([apptime/padroes](https://lucassf.pages.dev/apptime/padroes) votes),
   then 7/30 days, night, the entry app. Rule for every block (Lucas): the harm said plainly but

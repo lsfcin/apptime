@@ -6,9 +6,9 @@
 
 | File | Interface | Description |
 |------|-----------|-------------|
-| [`index.dart`](index.dart) | [`index.dart.api`](index.dart.api) | **facade** — Facade for services/: storage, analytics, platform channel, "your usual" and the thermometer |
-| [`analytics_service.dart`](analytics_service.dart) | [`analytics_service.dart.api`](analytics_service.dart.api) | AnalyticsService: computes daily/weekly/monthly usage aggregates from StorageService data |
+| [`index.dart`](index.dart) | [`index.dart.api`](index.dart.api) | **facade** — Facade for services/: storage, the Análise period, platform channel, "your usual" and the thermometer |
 | [`app_info_service.dart`](app_info_service.dart) | [`app_info_service.dart.api`](app_info_service.dart.api) | AppInfoService: fetches app labels and launcher packages from the native platform channel |
+| [`period_summary.dart`](period_summary.dart) | [`period_summary.dart.api`](period_summary.dart.api) | PeriodSummary: the last N complete days against the N days before them, and the use between 22h and 6h |
 | [`service_channel.dart`](service_channel.dart) | [`service_channel.dart.api`](service_channel.dart.api) | ServiceChannel: MethodChannel bridge to Kotlin OverlayService and MonitoringService |
 | [`setup_check.dart`](setup_check.dart) | [`setup_check.dart.api`](setup_check.dart.api) | SetupCheck: which of the six system settings AppTime needs are on, and how to open each |
 | [`storage_service.dart`](storage_service.dart) | [`storage_service.dart.api`](storage_service.dart.api) | StorageService: typed SharedPreferences wrapper for screen time and settings |

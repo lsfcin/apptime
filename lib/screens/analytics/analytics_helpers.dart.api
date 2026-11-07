@@ -1,9 +1,0 @@
-// analytics_helpers.dart
-class AppAgg
-  AppAgg(this.packageName);
-  int ms = 0;
-  int opens = 0;
-class LegendDot extends StatelessWidget
-  Widget build(BuildContext context)
-class LegendItem extends StatelessWidget
-  Widget build(BuildContext context)

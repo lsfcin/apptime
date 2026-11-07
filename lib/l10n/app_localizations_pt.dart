@@ -8,8 +8,6 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get navSettings => 'Ajustes';
 
   @override String get cancel => 'Cancelar';
-  @override String get noData => 'Sem dados ainda.';
-  @override String get collectingData => 'Coletando dados — volte mais tarde.';
 
   @override String get permFloatingWindow => 'Janela flutuante';
   @override String get permUsageStats => 'Estatísticas de uso';
@@ -104,7 +102,6 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get overlayThermometerNoneSub => 'Sem termômetro';
   @override String fontSize(int size) => 'Tamanho da fonte: ${size}sp';
   @override String get sectionBehavior => 'Comportamento';
-  @override String get perAppControlTitle => 'Definições por app';
   @override String get monitorLauncherTitle => 'Monitorar tela inicial';
   @override String get monitorLauncherSub => 'Mostrar o visor ao voltar para a tela inicial';
   @override String get sectionLanguage => 'Idioma';
@@ -115,56 +112,20 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get noAppsMsg =>
       'Nenhum app registrado nos últimos 7 dias.\n'
       'Inicie o monitoramento e use o celular normalmente.';
-  @override String get trendIdealLabel => '2h ideal';
-  @override String get trendCriticalLabel => '4h crítico';
   @override String get analysisTitle => 'Análise';
   @override String get tab7d => '7 dias';
   @override String get tab30d => '30 dias';
-  @override String get statTotalUsage => 'Uso total';
-  @override String get statUnlocks => 'Desbloqueios';
-  @override String get dailyUsageLabel => 'Uso diário';
-  @override String get passive => 'Passivo';
-  @override String get active => 'Ativo';
-  @override String get prevWeekLabel => 'semana anterior';
-
-  @override String get blockDopamineTitle => 'Dreno de dopamina';
-  @override String blockDopamineText(String app, int opens) =>
-      'O app "$app" foi seu maior gatilho: $opens aberturas em 7 dias. '
-      'Apps de scroll infinito são projetados como "caça-níqueis" — '
-      'recompensa intermitente que cria ciclos compulsivos difíceis de quebrar.';
-  @override String get blockDopamineNoData => 'Nenhum dado ainda.';
-  @override String get blockEngagementTitle => 'Balanço de engajamento';
-  @override String blockEngagementText(int pct) =>
-      'Seu uso foi $pct% passivo no período. '
-      'O consumo passivo de feed (sem interagir) está ligado a ruminação '
-      'e sintomas de depressão, enquanto o uso ativo (mensagens reais) '
-      'pode ter efeito protetor na saúde mental.';
-  @override String get blockEngagementNoData => 'Sem dados ainda.';
-  @override String get blockEngagementClassification =>
-      'Passivo: redes sociais, vídeo, notícias.\nAtivo: todos os demais.';
-  @override String get blockTrendTitle => 'Tendência semanal';
-  @override String blockTrendReduced(int pct) =>
-      'Você reduziu seu uso em $pct% vs. a semana anterior. '
-      'Manter essa tendência por 21 dias é o marco científico '
-      'para a reformulação de hábitos neurais.';
-  @override String blockTrendIncreased(int pct) =>
-      'Seu uso aumentou $pct% vs. a semana anterior. '
-      'Tente identificar os gatilhos que levaram ao aumento.';
-  @override String get yesterdayPatternOther => 'outros';
-  @override String get blockLastDaysPatternTitle => 'Padrão dos últimos 7 dias';
-  @override String get blockLastDaysPatternText =>
-      'Barras horizontais empilhadas — cada linha é uma hora, agrupada por dia. '
-      'Toque no ícone de zoom para alternar entre visão de 2,5 dias e semana completa.';
+  @override String get periodLead => 'Média por dia';
+  @override String periodBelow(String diff, String before, int days) => '$diff abaixo dos $days dias anteriores ($before)';
+  @override String periodAbove(String diff, String before, int days) => '$diff acima dos $days dias anteriores ($before)';
+  @override String periodSame(String before, int days) => 'Igual aos $days dias anteriores ($before)';
+  @override String periodNoBefore(int days) => 'Ainda não há $days dias anteriores para comparar';
+  @override String periodLine(int days) => 'linha: os $days dias anteriores';
+  @override String get nightTitle => 'À noite';
+  @override String nightText(String avg) => '$avg por noite, entre 22h e 6h';
 
 
-  @override String blockSummaryTitle(String period) => 'Visão geral — $period';
-  @override String get block30dChartTitle => 'Tendência de uso — 30 dias';
-  @override String get block30dChartText =>
-      'Tempo de tela total por dia (linha branca grossa) com tendência linear (cinza tracejado). '
-      'Os 3 apps mais usados aparecem como linhas coloridas finas. '
-      'Limiares: 2h recomendado (APA/Common Sense Media) e '
-      '4h crítico — Twenge et al. (2018), "Increases in Depressive Symptoms", '
-      'Clinical Psychological Science.';
+
 
   // Today and per app
   @override String get todayLead => 'Hoje até agora';

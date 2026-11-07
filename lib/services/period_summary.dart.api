@@ -1,0 +1,15 @@
+// period_summary.dart
+typedef PeriodSummary = (
+  int avgMs,
+  int beforeAvgMs,
+  int measuredBefore,
+  int nightAvgMs,
+  List<int> dailyMs,
+  required DateTime today,
+  required int days,
+  required int Function(String date) deviceDailyMs,
+  required List<int> Function(String date) deviceHourly,
+  String dateBack(int back)
+  int mean(List<String> dates, int Function(String) ms)
+  int nightMs(String date)
+  return (

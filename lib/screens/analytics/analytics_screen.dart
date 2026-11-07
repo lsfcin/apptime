@@ -2,8 +2,7 @@
 import 'package:flutter/material.dart';
 import '../../l10n/index.dart';
 import '../../services/index.dart';
-import 'tab_month.dart';
-import 'tab_week.dart';
+import 'period_view.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key, required this.storage, required this.appInfo});
@@ -16,13 +15,11 @@ class AnalyticsScreen extends StatefulWidget {
 
 class _AnalyticsScreenState extends State<AnalyticsScreen>
     with SingleTickerProviderStateMixin {
-  late final AnalyticsService _analytics;
   late final TabController _tabs;
 
   @override
   void initState() {
     super.initState();
-    _analytics = AnalyticsService(widget.storage);
     _tabs = TabController(length: 2, vsync: this);
   }
 
@@ -49,8 +46,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
       body: TabBarView(
         controller: _tabs,
         children: [
-          Tab7d(storage: widget.storage, analytics: _analytics),
-          Tab30d(storage: widget.storage, analytics: _analytics),
+          PeriodView(storage: widget.storage, days: 7),
+          PeriodView(storage: widget.storage, days: 30),
         ],
       ),
     );

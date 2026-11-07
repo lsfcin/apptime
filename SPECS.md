@@ -14,11 +14,9 @@ lib/
 │
 ├── screens/
 │   ├── analytics/
-│   │   ├── analytics_screen.dart    # Shell: TabController + Tab7d/Tab30d
-│   │   ├── analytics_helpers.dart   # Shared widgets: AppAgg, DonutChart, analysisCard()…
-│   │   ├── classification_message.dart  # classificationMessage() — 5×4 level matrix
-│   │   ├── tab_month.dart           # Tab30d + UsageTrend30d charts
-│   │   └── tab_week.dart            # Tab7d + 7-day pattern + trend bars
+│   │   ├── analytics_screen.dart    # Shell: 7 dias · 30 dias, one PeriodView each
+│   │   ├── period_view.dart         # Mean per day vs the days before, DailyBars, night 22h–6h
+│   │   └── daily_bars.dart          # One bar per day, the days-before mean as a dashed line
 │   │
 │   ├── apps/                        # AppScreen (one app vs its usual) · AppsScreen (Ajustes > Apps)
 │   │                                #   · AppOverlayControls (switch + pill background)
@@ -27,7 +25,7 @@ lib/
 │   └── settings_screen_sections.dart # Overlay style/feedback selectors, data/privacy and language sections
 │
 ├── services/
-│   ├── analytics_service.dart       # AnalyticsService — builds DaySummary list (30 days)
+│   ├── period_summary.dart          # periodSummary() — N complete days vs the N before, night use
 │   ├── app_info_service.dart        # AppInfoService — loads labels + launchers once
 │   ├── service_channel.dart         # ServiceChannel — MethodChannel bridge to Kotlin
 │   ├── storage_service.dart         # StorageService — SharedPreferences wrapper

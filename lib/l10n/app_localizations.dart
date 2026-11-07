@@ -38,8 +38,6 @@ abstract class AppLocalizations {
 
   // ── Common ───────────────────────────────────────────────────────────────────
   String get cancel;
-  String get noData;
-  String get collectingData;
 
   // ── Settings: checklist, monitoring ──────────────────────────────────────────
   String get permFloatingWindow;
@@ -124,7 +122,6 @@ abstract class AppLocalizations {
   String get overlayThermometerNoneSub;
   String fontSize(int size);
   String get sectionBehavior;
-  String get perAppControlTitle;
   // Level chip / popup strings (per-app monitoring level selector)
   String get monitorLauncherTitle;
   String get monitorLauncherSub;
@@ -154,36 +151,20 @@ abstract class AppLocalizations {
   String appsShowAll(int quiet);
 
   // ── AnalyticsScreen ──────────────────────────────────────────────────────────
-  String get trendIdealLabel;
-  String get trendCriticalLabel;
   String get analysisTitle;
   String get tab7d;
   String get tab30d;
-  String get statTotalUsage;
-  String get statUnlocks;
-  String get dailyUsageLabel;
-  String get passive;
-  String get active;
-  String get prevWeekLabel;
+  String get periodLead;
+  String periodBelow(String diff, String before, int days);
+  String periodAbove(String diff, String before, int days);
+  String periodSame(String before, int days);
+  String periodNoBefore(int days);
+  String periodLine(int days);
+  String get nightTitle;
+  String nightText(String avg);
 
-  String get blockDopamineTitle;
-  String blockDopamineText(String app, int opens);
-  String get blockDopamineNoData;
-  String get blockEngagementTitle;
-  String blockEngagementText(int pct);
-  String get blockEngagementNoData;
-  String get blockEngagementClassification;
-  String get blockTrendTitle;
-  String blockTrendReduced(int pct);
-  String blockTrendIncreased(int pct);
-  String get yesterdayPatternOther;
-  String get blockLastDaysPatternTitle;
-  String get blockLastDaysPatternText;
 
   // ── Tab30d ───────────────────────────────────────────────────────────────────
-  String blockSummaryTitle(String period);
-  String get block30dChartTitle;
-  String get block30dChartText;
   // ── Data / Privacy ───────────────────────────────────────────────────────────
   String get sectionData;
   String get deleteAllDataTitle;

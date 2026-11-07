@@ -31,21 +31,6 @@ part 'app_info_meta.dart';
 
 Color colorForApp(String pkg) => kAppMeta[pkg]?.color ?? const Color(0xFFB0BEC5);
 
-// ─── Passive app heuristic ────────────────────────────────────────────────────
-// Canonical list — single source of truth for both analytics and insights screens.
-// Dating apps included: passive consumption context (swiping = dopamine scroll).
-const kPassivePatterns = [
-  'instagram', 'tiktok', 'youtube', 'netflix', 'twitter', 'facebook',
-  'reddit', 'pinterest', 'snapchat', 'twitch', 'hulu', 'disneyplus',
-  'kwai', 'likee', 'reels', 'shorts',
-  'tinder', 'bumble', 'hinge', 'badoo', 'happn', 'okcupid', 'grindr',
-];
-
-bool isPassiveApp(String pkg) {
-  final lower = pkg.toLowerCase();
-  return kPassivePatterns.any(lower.contains);
-}
-
 // ─── Label lookup ─────────────────────────────────────────────────────────────
 
 // Segments that carry no brand information and should be stripped when

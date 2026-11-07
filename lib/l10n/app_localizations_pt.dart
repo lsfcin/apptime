@@ -11,13 +11,8 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
 
   @override String get permFloatingWindow => 'Janela flutuante';
   @override String get permUsageStats => 'Estatísticas de uso';
-  @override String get monitoringActive => 'Ativo — contador mostrando uso em tempo real.';
-  @override String get monitoringInactive => 'Inativo. Toque em Iniciar.';
-  @override String get monitoringNoPerms => 'Conceda as permissões acima para iniciar.';
-  @override String get monitoringDesc =>
-      'O visor exibe o tempo de hoje no app aberto.';
+  @override String get monitoringInactive => 'O visor está parado.';
   @override String get actionStart => 'Iniciar';
-  @override String get actionStop => 'Parar';
 
   static const _enable = 'Na próxima tela de configuração que vai abrir, habilite o AppTime.';
   @override List<String> get setupWelcome =>
@@ -68,7 +63,6 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get setupAdjust => 'Ajustar';
 
   @override String get settingsTitle => 'Ajustes';
-  @override String get sectionMonitoring => 'Monitoramento';
   @override String get sectionOverlay => 'Visor flutuante';
   @override String get showOverlay => 'Exibir visor de uso';
   @override String get showOverlaySub => 'Mostra o contador flutuante ao usar apps. O monitoramento (coleta de dados) continua independentemente.';
@@ -91,7 +85,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get chipAuto => 'Fundo da pílula: automático';
   @override String get chipLight => 'Fundo da pílula: claro';
   @override String get chipDark => 'Fundo da pílula: escuro';
-  @override String get overlayThermometer => 'Termômetro: as últimas 2 h vs o seu ritmo';
+  @override String get overlayThermometer => 'Termômetro: suas últimas 2 h';
   @override String get overlayThermometerVertical => 'Termômetro vertical';
   @override String get overlayThermometerVerticalSub => 'O líquido sobe e ferve quando hoje passa de ontem até esta hora';
   @override String get overlayThermometerEcg => 'ECG';
@@ -124,6 +118,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get nightTitle => 'À noite';
   @override String nightText(String avg) => '$avg por noite, entre 22h e 6h';
   @override String get peakLead => 'Hora de maior uso';
+  @override String get hourFull => 'hora inteira';
   @override String peakHour(int hour) => '${hour}h';
   @override String peakSentence(String peakMs, double ratio) =>
       '$peakMs em média nessa hora, ${ratio.toStringAsFixed(1).replaceAll('.', ',')}× uma hora comum';

@@ -1,5 +1,54 @@
-// Settings screen section widgets: overlay, behavior, data/privacy, language
+// Settings screen sections, under the charter: the overlay, then data/privacy; each choice is one row whose options open on tap
 part of 'settings_screen.dart';
+
+// ── One choice, one row ────────────────────────────────────────────────────────
+
+/// A setting shown as its title and current value; the options open in a sheet (charter rule 6).
+class _ChoiceRow<T> extends StatelessWidget {
+  const _ChoiceRow({required this.title, required this.value, required this.choices,
+      required this.onSelect, this.enabled = true});
+  final String title;
+  final T value;
+
+  /// (value, label, one-line explanation or null).
+  final List<(T, String, String?)> choices;
+  final void Function(T) onSelect;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    final current = choices.firstWhere((c) => c.$1 == value, orElse: () => choices.first);
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      enabled: enabled,
+      title: Text(title),
+      subtitle: Text(current.$2),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => showModalBottomSheet<void>(
+        context: context,
+        showDragHandle: true,
+        // Any tap picks and closes, the current option included (a RadioGroup ignores that one).
+        builder: (sheet) => SafeArea(
+          child: SingleChildScrollView(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              for (final (v, label, sub) in choices)
+                ListTile(
+                  leading: Icon(v == value ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                      color: v == value ? Theme.of(context).colorScheme.primary : null),
+                  title: Text(label),
+                  subtitle: sub == null ? null : Text(sub),
+                  onTap: () {
+                    onSelect(v);
+                    Navigator.of(sheet).pop();
+                  },
+                ),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 // ── Overlay section ────────────────────────────────────────────────────────────
 
@@ -12,84 +61,52 @@ class _OverlaySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = storage;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(l10n.sectionOverlay),
-        Card(
-          child: Column(
-            children: [
-              SwitchListTile(
-                title: Text(l10n.showOverlay),
-                subtitle: Text(l10n.showOverlaySub),
-                value: s.overlayEnabled,
-                onChanged: (v) { s.overlayEnabled = v; onChanged(); },
-              ),
-              const Divider(height: 1, indent: 16),
-              ListTile(title: Text(l10n.overlayStyle)),
-              RadioGroup<String>(
-                groupValue: s.overlayStyle,
-                onChanged: (value) {
-                  if (s.overlayEnabled && value != null) {
-                    s.overlayStyle = value;
-                    onChanged();
-                  }
-                },
-                child: Column(
-                  children: [
-                    RadioListTile<String>(
-                      title: Text(l10n.overlayStylePill),
-                      subtitle: Text(l10n.overlayStylePillSub),
-                      value: 'pill',
-                      enabled: s.overlayEnabled,
-                    ),
-                    RadioListTile<String>(
-                      title: Text(l10n.overlayStyleBlock),
-                      subtitle: Text(l10n.overlayStyleBlockSub),
-                      value: 'block',
-                      enabled: s.overlayEnabled,
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(height: 1, indent: 16),
-              ..._radioChoices(
-                title: l10n.overlayFeedback,
-                value: s.overlayFeedback,
-                enabled: s.overlayEnabled,
-                onSelect: (v) { s.overlayFeedback = v; onChanged(); },
-                choices: [
-                  ('fill', l10n.overlayFeedbackFill, l10n.overlayFeedbackFillSub),
-                  ('bar', l10n.overlayFeedbackBar, l10n.overlayFeedbackBarSub),
-                  ('outline', l10n.overlayFeedbackOutline, l10n.overlayFeedbackOutlineSub),
-                  ('none', l10n.overlayFeedbackNone, l10n.overlayFeedbackNoneSub),
-                ],
-              ),
-              SwitchListTile(
-                title: Text(l10n.overlayAmber),
-                subtitle: Text(l10n.overlayAmberSub),
-                value: s.overlayAmber,
-                onChanged: s.overlayEnabled ? (v) { s.overlayAmber = v; onChanged(); } : null,
-              ),
-              const Divider(height: 1, indent: 16),
-              ..._radioChoices(
-                title: l10n.overlayThermometer,
-                value: s.overlayThermometer,
-                enabled: s.overlayEnabled,
-                onSelect: (v) { s.overlayThermometer = v; onChanged(); },
-                choices: [
-                  ('vertical', l10n.overlayThermometerVertical, l10n.overlayThermometerVerticalSub),
-                  ('ecg', l10n.overlayThermometerEcg, l10n.overlayThermometerEcgSub),
-                  ('mao', l10n.overlayThermometerMao, l10n.overlayThermometerMaoSub),
-                  ('none', l10n.overlayThermometerNone, l10n.overlayThermometerNoneSub),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: AppSpacing.md),
-      ],
-    );
+    final on = s.overlayEnabled;
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      SectionHeader(l10n.sectionOverlay),
+      SwitchListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(l10n.showOverlay),
+        subtitle: Text(l10n.showOverlaySub),
+        value: on,
+        onChanged: (v) { s.overlayEnabled = v; onChanged(); },
+      ),
+      _ChoiceRow<String>(
+        title: l10n.overlayStyle, value: s.overlayStyle, enabled: on,
+        onSelect: (v) { s.overlayStyle = v; onChanged(); },
+        choices: [
+          ('pill', l10n.overlayStylePill, l10n.overlayStylePillSub),
+          ('block', l10n.overlayStyleBlock, l10n.overlayStyleBlockSub),
+        ],
+      ),
+      _ChoiceRow<String>(
+        title: l10n.overlayFeedback, value: s.overlayFeedback, enabled: on,
+        onSelect: (v) { s.overlayFeedback = v; onChanged(); },
+        choices: [
+          ('fill', l10n.overlayFeedbackFill, l10n.overlayFeedbackFillSub),
+          ('bar', l10n.overlayFeedbackBar, l10n.overlayFeedbackBarSub),
+          ('outline', l10n.overlayFeedbackOutline, l10n.overlayFeedbackOutlineSub),
+          ('none', l10n.overlayFeedbackNone, l10n.overlayFeedbackNoneSub),
+        ],
+      ),
+      _ChoiceRow<String>(
+        title: l10n.overlayThermometer, value: s.overlayThermometer, enabled: on,
+        onSelect: (v) { s.overlayThermometer = v; onChanged(); },
+        choices: [
+          ('vertical', l10n.overlayThermometerVertical, l10n.overlayThermometerVerticalSub),
+          ('ecg', l10n.overlayThermometerEcg, l10n.overlayThermometerEcgSub),
+          ('mao', l10n.overlayThermometerMao, l10n.overlayThermometerMaoSub),
+          ('none', l10n.overlayThermometerNone, l10n.overlayThermometerNoneSub),
+        ],
+      ),
+      SwitchListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(l10n.overlayAmber),
+        subtitle: Text(l10n.overlayAmberSub),
+        value: s.overlayAmber,
+        onChanged: on ? (v) { s.overlayAmber = v; onChanged(); } : null,
+      ),
+    ]);
   }
 }
 
@@ -102,110 +119,25 @@ class _DataSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(l10n.sectionData),
-        Card(
-          child: Column(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.policy_outlined),
-                title: Text(l10n.privacyPolicyTitle),
-                subtitle: Text(l10n.privacyPolicySub),
-                trailing: const Icon(Icons.open_in_new, size: 16),
-                onTap: () => launchUrl(
-                  Uri.parse('https://lsfcin.github.io/apptime/privacy_policy.html'),
-                  mode: LaunchMode.externalApplication,
-                ),
-              ),
-              const Divider(height: 1),
-              ListTile(
-                leading: const Icon(Icons.info_outline),
-                title: Text(l10n.disclaimerTitle),
-                subtitle: Text(l10n.disclaimerBody),
-              ),
-              const Divider(height: 1),
-              ListTile(
-                leading: const Icon(Icons.delete_outline, color: Colors.redAccent),
-                title: Text(l10n.deleteAllDataTitle,
-                    style: const TextStyle(color: Colors.redAccent)),
-                subtitle: Text(l10n.deleteAllDataSub),
-                onTap: onDeleteAll,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: AppSpacing.md),
-      ],
-    );
-  }
-}
-
-// ── Language section ───────────────────────────────────────────────────────────
-
-class _LanguageSection extends StatelessWidget {
-  const _LanguageSection({
-    required this.l10n,
-    required this.currentCode,
-    required this.onChanged,
-  });
-  final AppLocalizations l10n;
-  final String? currentCode;
-  final void Function(String?) onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(l10n.sectionLanguage),
-        Card(
-          child: RadioGroup<String?>(
-            groupValue: currentCode,
-            onChanged: onChanged,
-            child: Column(
-              children: [
-                RadioListTile<String?>(
-                  title: Text(l10n.languageSystem),
-                  value: null,
-                ),
-                RadioListTile<String?>(
-                  title: Text(l10n.languagePtBr),
-                  value: 'pt',
-                ),
-                RadioListTile<String?>(
-                  title: Text(l10n.languageEn),
-                  value: 'en',
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// A titled radio list for one overlay setting; disabled choices ignore taps.
-List<Widget> _radioChoices({
-  required String title,
-  required String value,
-  required bool enabled,
-  required void Function(String) onSelect,
-  required List<(String, String, String)> choices,
-}) => [
-      ListTile(title: Text(title)),
-      RadioGroup<String>(
-        groupValue: value,
-        onChanged: (v) {
-          if (enabled && v != null) onSelect(v);
-        },
-        child: Column(
-          children: [
-            for (final (v, label, sub) in choices)
-              RadioListTile<String>(title: Text(label), subtitle: Text(sub), value: v, enabled: enabled),
-          ],
+    final quiet = Theme.of(context).colorScheme.outline;
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      SectionHeader(l10n.sectionData),
+      Text(l10n.disclaimerBody, style: TextStyle(color: quiet)),
+      ListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(l10n.privacyPolicyTitle),
+        trailing: const Icon(Icons.open_in_new, size: 16),
+        onTap: () => launchUrl(
+          Uri.parse('https://lsfcin.github.io/apptime/privacy_policy.html'),
+          mode: LaunchMode.externalApplication,
         ),
       ),
-    ];
+      ListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(l10n.deleteAllDataTitle, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+        subtitle: Text(l10n.deleteAllDataSub),
+        onTap: onDeleteAll,
+      ),
+    ]);
+  }
+}

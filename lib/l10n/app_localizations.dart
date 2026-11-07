@@ -42,12 +42,8 @@ abstract class AppLocalizations {
   // ── Settings: checklist, monitoring ──────────────────────────────────────────
   String get permFloatingWindow;
   String get permUsageStats;
-  String get monitoringActive;
   String get monitoringInactive;
-  String get monitoringNoPerms;
-  String get monitoringDesc;
   String get actionStart;
-  String get actionStop;
 
   // ── Setup flow (OnboardingScreen) — one sentence per screen ─────────────────
   List<String> get setupWelcome;
@@ -88,7 +84,6 @@ abstract class AppLocalizations {
 
   // ── SettingsScreen ───────────────────────────────────────────────────────────
   String get settingsTitle;
-  String get sectionMonitoring;
   String get sectionOverlay;
   String get showOverlay;
   String get showOverlaySub;
@@ -154,6 +149,7 @@ abstract class AppLocalizations {
   // ── HabitsScreen ─────────────────────────────────────────────────────────────
   String get habitsTitle;
   String get peakLead;
+  String get hourFull;
   String peakHour(int hour);
   String peakSentence(String peakMs, double ratio);
   String peakWarmup(int day);
@@ -199,7 +195,5 @@ abstract class AppLocalizations {
   String get deleteAllDataConfirm;
   String get deleteAllDataDone;
   String get privacyPolicyTitle;
-  String get privacyPolicySub;
-  String get disclaimerTitle;
   String get disclaimerBody;
 }

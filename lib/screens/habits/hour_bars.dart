@@ -1,9 +1,17 @@
-// HourBars: 24 bars, one per clock hour, the peak drawn in full ink and labelled on its mark
+// HourBars: 24 bars, one per clock hour, on a fixed scale up to the whole hour; the peak in full ink, labelled on its mark
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+/// The scale never moves: a full bar is an hour spent entirely on the phone, so heights compare
+/// across every weekday and the mean of all days (Lucas 2026-11-06).
+const _kHourMs = 60 * 60 * 1000;
+
 class HourBars extends StatelessWidget {
-  const HourBars({super.key, required this.hourMs, required this.peakHour, required this.peakLabel});
+  const HourBars({super.key, required this.hourMs, required this.peakHour, required this.peakLabel,
+      required this.fullLabel});
+
+  /// Labels the dashed line at the top of the scale ("hora inteira").
+  final String fullLabel;
 
   /// One mean per clock hour, 0–23.
   final List<int> hourMs;
@@ -18,11 +26,18 @@ class HourBars extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final small = Theme.of(context).textTheme.labelSmall;
-    final top = hourMs.fold<int>(0, (m, v) => v > m ? v : m);
     return SizedBox(
       height: 140,
       child: BarChart(BarChartData(
-        maxY: top == 0 ? 1 : top * 1.25,
+        maxY: _kHourMs * 1.2,
+        extraLinesData: ExtraLinesData(horizontalLines: [
+          HorizontalLine(
+            y: _kHourMs.toDouble(), color: scheme.outline, strokeWidth: 1, dashArray: const [4, 4],
+            label: HorizontalLineLabel(
+              show: true, alignment: Alignment.topLeft, labelResolver: (_) => fullLabel,
+              style: small?.copyWith(color: scheme.outline)),
+          ),
+        ]),
         barGroups: [
           for (final (h, ms) in hourMs.indexed)
             BarChartGroupData(x: h, showingTooltipIndicators: h == peakHour ? const [0] : const [], barRods: [

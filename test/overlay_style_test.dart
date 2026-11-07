@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'service_channel_mock.dart';
+import 'settings_pick.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -32,16 +33,11 @@ void main() {
       await tester.pumpAndSettle();
       final block = lang == 'pt' ? 'Bloco' : 'Block';
       final pill = lang == 'pt' ? 'Pílula' : 'Pill';
-      await tester.ensureVisible(find.text(block));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(block));
-      await tester.pumpAndSettle();
+      final row = settingsL10n(tester).overlayStyle;
+      await pickChoice(tester, row, block);
       expect(storage.overlayStyle, 'block');
       expect((await SharedPreferences.getInstance()).getString('overlay_style'), 'block');
-      await tester.ensureVisible(find.text(pill));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(pill));
-      await tester.pumpAndSettle();
+      await pickChoice(tester, row, pill);
       expect(storage.overlayStyle, 'pill');
       expect((await SharedPreferences.getInstance()).getString('overlay_style'), 'pill');
     });

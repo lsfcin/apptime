@@ -1,4 +1,4 @@
-// App settings screen: permissions, monitoring controls, overlay, behavior, data privacy, language
+// App settings screen (Ajustes): how the overlay looks for me — overlay, apps, language, data; setup only while something is off
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../l10n/index.dart';
@@ -29,7 +29,7 @@ class _SettingsScreenState extends State<SettingsScreen>
     with WidgetsBindingObserver {
   StorageService get _s => widget.storage;
 
-  bool _isRunning = false;
+  bool _isRunning = true;
   SetupCheck? _check;
 
   @override
@@ -72,20 +72,16 @@ class _SettingsScreenState extends State<SettingsScreen>
     await _refreshStatus();
   }
 
-  Future<void> _toggleMonitoring() async {
-    if (!_allGranted) return;
-    if (_isRunning) {
-      await ServiceChannel.stopMonitoring();
-    } else {
-      await ServiceChannel.startMonitoring();
-    }
+  /// No Parar button (ROADMAP § Ajustes order): a stopped timer is a step to finish, offered as a banner.
+  Future<void> _startMonitoring() async {
+    await ServiceChannel.startMonitoring();
     await _refreshStatus();
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final currentCode = _s.languageCode;
+    const gap = SizedBox(height: AppSpacing.lg);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
@@ -94,119 +90,68 @@ class _SettingsScreenState extends State<SettingsScreen>
         children: [
           if (_check?.stopped ?? false) ...[
             _SetupBanner(text: l10n.setupBanner, action: l10n.setupRelaunch, onTap: _openSetupFlow),
-            const SizedBox(height: AppSpacing.md),
+            gap,
+          ] else if (_allGranted && !_isRunning) ...[
+            _SetupBanner(text: l10n.monitoringInactive, action: l10n.actionStart, onTap: _startMonitoring),
+            gap,
           ] else if (_check?.autostartOff ?? false) ...[
             _SetupBanner(
               text: l10n.setupBannerAutostart,
               action: l10n.setupAdjust,
               onTap: () => SetupCheck.open(SetupItem.autostart),
             ),
-            const SizedBox(height: AppSpacing.md),
+            gap,
           ],
-          // ── Running: shown only while something is off ─────────────────
+          // ── Setup: shown only while something is off ───────────────────
           if (_check != null && _check!.missing.isNotEmpty) ...[
             SectionHeader('${l10n.sectionSetup} · '
                 '${l10n.setupProgress(_check!.items.length - _check!.missing.length, _check!.items.length)}'),
-            Card(
-              child: Column(children: [
-                for (final item in _check!.items)
-                  _SetupTile(
-                    label: _setupLabel(l10n, item),
-                    on: _check!.isOn(item),
-                    status: _check!.isConfirmedOnly(item) && _check!.isOn(item)
-                        ? l10n.setupConfirmed
-                        : _check!.isOn(item) ? l10n.setupOn : l10n.setupOff,
-                    adjustLabel: l10n.setupAdjust,
-                    onAdjust: () => SetupCheck.open(item),
-                  ),
-              ]),
-            ),
-            const SizedBox(height: AppSpacing.md),
+            for (final item in _check!.items)
+              _SetupTile(
+                label: _setupLabel(l10n, item),
+                on: _check!.isOn(item),
+                status: _check!.isConfirmedOnly(item) && _check!.isOn(item)
+                    ? l10n.setupConfirmed
+                    : _check!.isOn(item) ? l10n.setupOn : l10n.setupOff,
+                adjustLabel: l10n.setupAdjust,
+                onAdjust: () => SetupCheck.open(item),
+              ),
+            gap,
           ],
 
-          // ── Monitoring start/stop ──────────────────────────────────────
-          SectionHeader(l10n.sectionMonitoring),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _isRunning
-                        ? l10n.monitoringActive
-                        : _allGranted
-                            ? l10n.monitoringInactive
-                            : l10n.monitoringNoPerms,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    l10n.monitoringDesc,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  FilledButton.icon(
-                    onPressed: _allGranted ? _toggleMonitoring : null,
-                    icon: Icon(_isRunning ? Icons.stop : Icons.play_arrow),
-                    label:
-                        Text(_isRunning ? l10n.actionStop : l10n.actionStart),
-                    style: _isRunning
-                        ? FilledButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.error,
-                          )
-                        : null,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
+          _OverlaySection(storage: _s, l10n: l10n, onChanged: () => setState(() {})),
+          gap,
 
-          // ── Overlay ────────────────────────────────────────────────────
-          _OverlaySection(
-            storage: _s,
-            l10n: l10n,
-            onChanged: () => setState(() {}),
-          ),
-
-          // ── Behavior ──────────────────────────────────────────────────
+          // ── Apps: per-app exceptions, then the launcher ───────────────
           SectionHeader(l10n.sectionBehavior),
-          Card(
-            child: Column(children: [
-              // Per-app exceptions moved here from the Monit. tab (ROADMAP § Ajustes order).
-              ListTile(
-                title: Text(l10n.appsTitle),
-                subtitle: Text(l10n.appsSub),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => AppsScreen(storage: _s))),
-              ),
-              SwitchListTile(
-                title: Text(l10n.monitorLauncherTitle),
-                subtitle: Text(l10n.monitorLauncherSub),
-                value: _s.monitorLauncher,
-                onChanged: (v) => setState(() => _s.monitorLauncher = v),
-              ),
-            ]),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.appsTitle),
+            subtitle: Text(l10n.appsSub),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => AppsScreen(storage: _s))),
           ),
-          const SizedBox(height: AppSpacing.md),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.monitorLauncherTitle),
+            subtitle: Text(l10n.monitorLauncherSub),
+            value: _s.monitorLauncher,
+            onChanged: (v) => setState(() => _s.monitorLauncher = v),
+          ),
+          _ChoiceRow<String?>(
+            title: l10n.sectionLanguage,
+            value: _s.languageCode,
+            onSelect: (code) => _changeLocale(code, l10n),
+            choices: [
+              (null, l10n.languageSystem, null),
+              ('pt', l10n.languagePtBr, null),
+              ('en', l10n.languageEn, null),
+            ],
+          ),
+          gap,
 
-          // ── Data & Privacy ────────────────────────────────────────────
-          _DataSection(
-            l10n: l10n,
-            onDeleteAll: () => _confirmDeleteAll(l10n),
-          ),
-
-          // ── Language ──────────────────────────────────────────────────
-          _LanguageSection(
-            l10n: l10n,
-            currentCode: currentCode,
-            onChanged: (code) => _changeLocale(code, l10n),
-          ),
+          _DataSection(l10n: l10n, onDeleteAll: () => _confirmDeleteAll(l10n)),
         ],
       ),
     );

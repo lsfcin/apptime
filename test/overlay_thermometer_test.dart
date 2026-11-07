@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'service_channel_mock.dart';
+import 'settings_pick.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -40,12 +41,9 @@ void main() {
       final labels = lang == 'pt'
           ? ['Termômetro vertical', 'ECG', 'Mão única', 'Desligado']
           : ['Vertical thermometer', 'ECG', 'One way', 'Off'];
+      final row = settingsL10n(tester).overlayThermometer;
       for (var i = 0; i < labels.length; i++) {
-        final label = find.text(labels[i]);
-        await tester.ensureVisible(label);
-        await tester.pumpAndSettle();
-        await tester.tap(label);
-        await tester.pumpAndSettle();
+        await pickChoice(tester, row, labels[i]);
         expect(storage.overlayThermometer, StorageService.overlayThermometerLooks[i]);
         expect(storage.overlayFeedback, 'bar');
       }

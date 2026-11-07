@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'service_channel_mock.dart';
+import 'settings_pick.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -41,28 +42,20 @@ void main() {
       final labels = lang == 'pt'
           ? ['Ponto que enche', 'Barra', 'Contorno', 'Nenhuma']
           : ['Filling dot', 'Bar', 'Outline', 'None'];
+      final row = settingsL10n(tester).overlayFeedback;
       for (var i = 0; i < labels.length; i++) {
-        final label = find.text(labels[i]);
-        await tester.ensureVisible(label);
-        await tester.pumpAndSettle();
-        await tester.tap(label);
-        await tester.pumpAndSettle();
+        await pickChoice(tester, row, labels[i]);
         final variant = StorageService.overlayFeedbackVariants[i];
         expect(storage.overlayFeedback, variant);
         expect((await SharedPreferences.getInstance()).getString('overlay_feedback'), variant);
         expect(storage.overlayStyle, 'pill');
-        final radio = tester.widget<RadioGroup<String>>(find.byType(RadioGroup<String>).at(1));
-        expect(radio.groupValue, variant);
       }
       // Disabling the overlay also disables feedback changes.
       await tester.ensureVisible(find.byType(SwitchListTile).first);
       await tester.pumpAndSettle();
       await tester.tap(find.byType(SwitchListTile).first);
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text(labels.first));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(labels.first));
-      await tester.pumpAndSettle();
+      await pickChoice(tester, row, labels.first);
       expect(storage.overlayFeedback, 'none');
     });
   }

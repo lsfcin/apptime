@@ -12,13 +12,8 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
 
   @override String get permFloatingWindow => 'Floating window';
   @override String get permUsageStats => 'Usage statistics';
-  @override String get monitoringActive => 'Active — overlay showing real-time usage.';
-  @override String get monitoringInactive => 'Inactive. Tap Start.';
-  @override String get monitoringNoPerms => 'Grant the permissions above to start.';
-  @override String get monitoringDesc =>
-      "The overlay shows today's time in the open app.";
+  @override String get monitoringInactive => 'The overlay is stopped.';
   @override String get actionStart => 'Start';
-  @override String get actionStop => 'Stop';
 
   static const _enable = 'On the settings screen that opens next, turn AppTime on.';
   @override List<String> get setupWelcome =>
@@ -69,7 +64,6 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get setupAdjust => 'Adjust';
 
   @override String get settingsTitle => 'Settings';
-  @override String get sectionMonitoring => 'Monitoring';
   @override String get sectionOverlay => 'Overlay';
   @override String get showOverlay => 'Show usage overlay';
   @override String get showOverlaySub => 'Display the floating counter while using apps. Monitoring (data collection) continues regardless.';
@@ -92,7 +86,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get chipAuto => 'Pill background: automatic';
   @override String get chipLight => 'Pill background: light';
   @override String get chipDark => 'Pill background: dark';
-  @override String get overlayThermometer => 'Thermometer: the last 2 h vs your pace';
+  @override String get overlayThermometer => 'Thermometer: your last 2 h';
   @override String get overlayThermometerVertical => 'Vertical thermometer';
   @override String get overlayThermometerVerticalSub => 'The liquid rises and boils when today passes yesterday by this hour';
   @override String get overlayThermometerEcg => 'ECG';
@@ -125,6 +119,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get nightTitle => 'At night';
   @override String nightText(String avg) => '$avg a night, between 10 pm and 6 am';
   @override String get peakLead => 'Busiest hour';
+  @override String get hourFull => 'whole hour';
   @override String peakHour(int hour) => '${hour.toString().padLeft(2, '0')}:00';
   @override String peakSentence(String peakMs, double ratio) =>
       '$peakMs on average in this hour, ${ratio.toStringAsFixed(1)}× a typical hour';

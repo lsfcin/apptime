@@ -22,7 +22,8 @@ class WayOut extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
         child: Row(children: [
-          Expanded(child: Text(l10n.tryThis(what), style: TextStyle(color: brand))),
+          // Italic: a suggestion, not a section title (Lucas 2026-11-06).
+          Expanded(child: Text(l10n.tryThis(what), style: TextStyle(color: brand, fontStyle: FontStyle.italic))),
           Icon(Icons.chevron_right, color: brand, size: 20),
         ]),
       ),

@@ -39,8 +39,8 @@ void main() {
       ));
       await tester.pumpAndSettle();
       final labels = lang == 'pt'
-          ? ['Vertical', 'Onda', 'Seta', 'Nada']
-          : ['Vertical', 'Wave', 'Arrow', 'None'];
+          ? ['termômetro', 'onda', 'seta', 'nada']
+          : ['thermometer', 'wave', 'arrow', 'none'];
       final row = settingsL10n(tester).overlayThermometer;
       for (var i = 0; i < labels.length; i++) {
         await pickChoice(tester, row, labels[i]);

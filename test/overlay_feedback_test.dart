@@ -40,8 +40,8 @@ void main() {
       ));
       await tester.pumpAndSettle();
       final labels = lang == 'pt'
-          ? ['Ponto que enche', 'Barra', 'Contorno', 'Nada']
-          : ['Filling dot', 'Bar', 'Outline', 'None'];
+          ? ['pizza', 'barra', 'contorno', 'nada']
+          : ['pie', 'bar', 'outline', 'none'];
       final row = settingsL10n(tester).overlayFeedback;
       for (var i = 0; i < labels.length; i++) {
         await pickChoice(tester, row, labels[i]);

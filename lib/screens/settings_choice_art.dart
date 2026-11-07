@@ -64,12 +64,12 @@ class _ArtPainter extends CustomPainter {
         canvas.drawLine(Offset(mid.dx - 16, y), Offset(mid.dx + 4, y), _stroke(ink, 2));
       case ChoiceArtKind.outline:
         _number(canvas, mid, ink);
-        final box = RRect.fromRectAndRadius(Rect.fromCenter(center: mid, width: 44, height: 22), const Radius.circular(11));
+        final box = RRect.fromRectAndRadius(Rect.fromCenter(center: mid, width: 44, height: 24), const Radius.circular(6));
         canvas.drawRRect(box, _stroke(quiet, 1));
         final metric = (Path()..addRRect(box)).computeMetrics().first;
         canvas.drawPath(metric.extractPath(0, metric.length * 0.65), _stroke(ink, 1.5));
       case ChoiceArtKind.noFeedback || ChoiceArtKind.noThermometer:
-        _number(canvas, mid, kind == ChoiceArtKind.noFeedback ? ink : quiet);
+        _number(canvas, mid, ink);
       case ChoiceArtKind.vertical:
         final tube = RRect.fromRectAndRadius(Rect.fromCenter(center: mid - const Offset(0, 4), width: 7, height: 22),
             const Radius.circular(3.5));
@@ -77,12 +77,13 @@ class _ArtPainter extends CustomPainter {
         canvas.drawCircle(mid + const Offset(0, 10), 5, _fill(ink));
         canvas.drawLine(mid + const Offset(0, 6), mid - const Offset(0, 4), _stroke(ink, 3));
       case ChoiceArtKind.ecg:
+        // Straight segments, as the overlay's own wave.
         final p = Path()..moveTo(mid.dx - 24, mid.dy);
         for (var i = 0; i < 6; i++) {
-          final x = mid.dx - 24 + i * 8.0;
-          p.quadraticBezierTo(x + 4, mid.dy + (i.isEven ? -10 : 10), x + 8, mid.dy);
+          p.lineTo(mid.dx - 20 + i * 8.0, mid.dy + (i.isEven ? -9 : 9));
         }
-        canvas.drawPath(p, _stroke(ink));
+        p.lineTo(mid.dx + 24, mid.dy);
+        canvas.drawPath(p, _stroke(ink)..strokeJoin = StrokeJoin.miter);
       case ChoiceArtKind.mao:
         final p = Path()
           ..moveTo(mid.dx - 8, mid.dy - 6)

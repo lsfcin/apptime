@@ -31,13 +31,13 @@ void main() {
         home: SettingsScreen(storage: storage, onLocaleChange: (_) {}),
       ));
       await tester.pumpAndSettle();
-      final block = lang == 'pt' ? 'Bloco' : 'Block';
-      final pill = lang == 'pt' ? 'Pílula' : 'Pill';
+      final block = lang == 'pt' ? 'bloco' : 'block';
+      final pill = lang == 'pt' ? 'pílula' : 'pill';
       final row = settingsL10n(tester).overlayStyle;
       await pickChoice(tester, row, block);
       expect(storage.overlayStyle, 'block');
       expect((await SharedPreferences.getInstance()).getString('overlay_style'), 'block');
-      await pickChoice(tester, row, lang == 'pt' ? 'Aba' : 'Tab');
+      await pickChoice(tester, row, lang == 'pt' ? 'aba' : 'tab');
       expect(storage.overlayStyle, 'tab');
       await pickChoice(tester, row, pill);
       expect(storage.overlayStyle, 'pill');

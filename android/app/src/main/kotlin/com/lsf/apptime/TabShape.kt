@@ -12,7 +12,7 @@ import android.graphics.drawable.Drawable
 
 /**
  * Drawn for the right edge and mirrored for the left. The body spans [flare] below the window's top to
- * [flare] above its bottom; the inverted corners fill that band where the body meets the edge, like a
+ * [flare] above its bottom (twice the corner radius); the inverted corners fill that band where the body meets the edge, like a
  * browser tab turned on its side (Lucas 2026-11-06).
  */
 class TabShape(private val radius: Float, val flare: Float, private val color: Int) : Drawable() {
@@ -22,18 +22,21 @@ class TabShape(private val radius: Float, val flare: Float, private val color: I
 
     override fun draw(canvas: Canvas) = canvas.drawPath(mirrored(body(RectF(bounds))), paint)
 
-    /** The edge-free three sides, from the bottom by the edge, round the screen side, to the top by the edge. */
+    /** The three free sides, from the joint at the bottom, round the screen side, to the joint at the top. */
     fun outline(rect: RectF): Path {
-        val w = rect.right - flare
+        val edge = rect.right
+        val w = edge - flare
         val top = rect.top + flare
         val bottom = rect.bottom - flare
         val path = Path().apply {
-            moveTo(w, bottom)
+            moveTo(edge, rect.bottom)
+            arcTo(RectF(edge - 2 * flare, rect.bottom - flare, edge, rect.bottom + flare), 0f, -90f)
             lineTo(rect.left + radius, bottom)
             arcTo(RectF(rect.left, bottom - 2 * radius, rect.left + 2 * radius, bottom), 90f, 90f)
             lineTo(rect.left, top + radius)
             arcTo(RectF(rect.left, top, rect.left + 2 * radius, top + 2 * radius), 180f, 90f)
             lineTo(w, top)
+            arcTo(RectF(edge - 2 * flare, rect.top - flare, edge, rect.top + flare), 90f, -90f)
         }
         return mirrored(path, rect)
     }

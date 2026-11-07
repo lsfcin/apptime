@@ -30,6 +30,8 @@ class FeedbackDrawable(
     // Horizontal span of the time text inside the view; the bar matches it like an underline.
     var textLeft = 0f
     var textRight = 0f
+    // Where the number ends below: on the Aba the bar sits right under it, above the glyph (Lucas 2026-11-07).
+    var textBottom = 0f
     // The filling dot's size and gap, as the pill's fit ladder sets them.
     var dotScale = 1f
     var dotGapDp = FILL_GAP_DP
@@ -46,9 +48,7 @@ class FeedbackDrawable(
         val room = ThermometerGlyph.room(thermometerLook) * unit
         val x = if (glyphBelow) bounds.exactCenterX() - ThermometerGlyph.width(thermometerLook, block) * unit / 2
             else bounds.left + textRight + thermometerGap(thermometerLook, density, block)
-        // The bar, when on, keeps the bottom edge: the glyph sits above it.
-        val bar = if (frame?.variant == "bar") 3 * barStroke(density, block) else 0f
-        val y = if (glyphBelow) bounds.bottom - (tab?.flare ?: 0f) - bar - dp(BELOW_EDGE_DP) - room / 2 else bounds.exactCenterY()
+        val y = if (glyphBelow) bounds.bottom - (tab?.flare ?: 0f) - dp(BELOW_EDGE_DP) - room / 2 else bounds.exactCenterY()
         ThermometerGlyph.draw(canvas, paint, thermometerLook, block, thermometerLevel, thermometerPhase, ink, x, y, unit)
         val feedback = frame ?: return
         if (!feedback.hasUsual) return
@@ -65,8 +65,8 @@ class FeedbackDrawable(
 
     private fun drawBar(canvas: Canvas, progress: Float) {
         val width = barStroke(density, block)
-        // Twice the bar's thickness stays free between it and the bottom edge.
-        val y = bounds.bottom - (tab?.flare ?: 0f) - 2 * width - width / 2
+        // Twice the bar's thickness stays free between it and the bottom edge; on the Aba it hugs the number.
+        val y = if (tab != null) bounds.top + textBottom + width / 2 else bounds.bottom - 2 * width - width / 2
         val start = bounds.left + textLeft
         val end = bounds.left + textRight
         OverlayFeedback.barSpan(start, end, width, 1f)?.let { (l, r) -> canvas.drawLine(l, y, r, y, stroke(track, width)) }

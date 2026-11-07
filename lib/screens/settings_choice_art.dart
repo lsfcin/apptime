@@ -112,10 +112,20 @@ class _ArtPainter extends CustomPainter {
         final r = Rect.fromLTWH(4, bar + 4, 30, 16);
         canvas.drawRRect(RRect.fromRectAndRadius(r, const Radius.circular(3)), _fill(ink));
       default:
-        final r = Rect.fromLTWH(s.width - 26, bar + 8, 26, 14);
-        canvas.drawRRect(
-            RRect.fromRectAndCorners(r, topLeft: const Radius.circular(4), bottomLeft: const Radius.circular(4)),
-            _fill(ink));
+        // Joined to the edge by inverted corners twice the body's radius, as the overlay's Aba.
+        const r = 3.0, f = 6.0, w = 24.0;
+        final right = s.width, left = right - w, top = bar + 10, bottom = top + 14;
+        final p = Path()
+          ..moveTo(right, top - f)
+          ..arcToPoint(Offset(right - f, top), radius: const Radius.circular(f))
+          ..lineTo(left + r, top)
+          ..arcToPoint(Offset(left, top + r), radius: const Radius.circular(r), clockwise: false)
+          ..lineTo(left, bottom - r)
+          ..arcToPoint(Offset(left + r, bottom), radius: const Radius.circular(r), clockwise: false)
+          ..lineTo(right - f, bottom)
+          ..arcToPoint(Offset(right, bottom + f), radius: const Radius.circular(f))
+          ..close();
+        canvas.drawPath(p, _fill(ink));
     }
   }
 

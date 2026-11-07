@@ -62,7 +62,8 @@ class TimerOverlay(context: Context) {
         // A drop is saved, then placed at once by the same render (the Aba snaps to its edge).
         again = { render(app, style, totalMs, feedback, thermometer, level, visible, chip, amber) }
         window.onDrop = { drops.save(style, app, it); again() }
-        window.onSide = { tab?.onLeft = it }
+        // The joint flips the moment the edge does, not on the drop (Lucas 2026-11-07).
+        window.onSide = { tab?.onLeft = it; feedbackDrawable.invalidateSelf() }
         window.touchable(block)
         // The Bloco is always its 96% black, so only the pill follows the theme guess.
         val shade = if (block) Shade.DARK else chip
@@ -76,7 +77,7 @@ class TimerOverlay(context: Context) {
             view.setTextColor(ink)
             // The pill has no fill: the bar follows the app, so the ink alone follows the theme guess (Lucas 2026-11-04).
             tab = if (style == OverlayStyle.TAB)
-                TabShape(window.dp(8).toFloat(), window.dp(8).toFloat(), Color.argb(245, 0, 0, 0)) else null
+                TabShape(window.dp(8).toFloat(), window.dp(16).toFloat(), Color.argb(245, 0, 0, 0)) else null
             val box = tab ?: if (block) window.background(style) else null
             feedbackDrawable = FeedbackDrawable(box ?: ColorDrawable(Color.TRANSPARENT),
                 density, block, ink)
@@ -123,6 +124,7 @@ class TimerOverlay(context: Context) {
         feedbackDrawable.textLeft = view.paddingLeft.toFloat()
         // The right padding holds the thermometer, so the text (and the bar under it) ends before it.
         feedbackDrawable.textRight = (view.measuredWidth - view.paddingRight).toFloat()
+        feedbackDrawable.textBottom = (view.measuredHeight - view.paddingBottom).toFloat()
         return OverlayPlacement.timer(Build.VERSION.SDK_INT, bounds.cutoutRight, bounds.statusBarHeight,
             bounds.width, view.measuredWidth, view.measuredHeight, window.dp(OverlayPlacement.PILL_SLOT_DP),
             window.dp(8), window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), style, cutoutGap = 0,
@@ -179,7 +181,7 @@ class TimerOverlay(context: Context) {
     // its inverted corners take a flare above and below the body.
     private fun padTab(variant: String, thermometer: String) {
         val unit = density * FeedbackDrawable.scale(true)
-        val flare = window.dp(8)
+        val flare = window.dp(16)
         val side = window.dp(8) + view.paint.measureText(" ")
         feedbackDrawable.dotScale = FeedbackDrawable.TAB_PIE_SCALE
         val pie = if (variant == "fill")

@@ -1,8 +1,7 @@
-// Analytics screen: tabbed view of daily, weekly, and monthly usage statistics
+// Analytics screen: 7-day and 30-day views of usage against your usual
 import 'package:flutter/material.dart';
 import '../../l10n/index.dart';
 import '../../services/index.dart';
-import 'tab_day.dart';
 import 'tab_month.dart';
 import 'tab_week.dart';
 
@@ -24,7 +23,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
   void initState() {
     super.initState();
     _analytics = AnalyticsService(widget.storage);
-    _tabs = TabController(length: 3, vsync: this);
+    _tabs = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -42,7 +41,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
         bottom: TabBar(
           controller: _tabs,
           tabs: [
-            Tab(text: l10n.tab1d),
             Tab(text: l10n.tab7d),
             Tab(text: l10n.tab30d),
           ],
@@ -51,7 +49,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
       body: TabBarView(
         controller: _tabs,
         children: [
-          Tab1d(storage: widget.storage, analytics: _analytics),
           Tab7d(storage: widget.storage, analytics: _analytics),
           Tab30d(storage: widget.storage, analytics: _analytics),
         ],

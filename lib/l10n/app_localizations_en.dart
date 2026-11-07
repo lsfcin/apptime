@@ -119,47 +119,15 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get trendIdealLabel => '2h ideal';
   @override String get trendCriticalLabel => '4h critical';
   @override String get analysisTitle => 'Analysis';
-  @override String get tab1d => '1 day';
   @override String get tab7d => '7 days';
   @override String get tab30d => '30 days';
-  @override String get dayBoundaryNote =>
-      'The "day" starts at 4 AM — usage between midnight and 4 AM counts toward the previous day.';
   @override String get statTotalUsage => 'Total usage';
   @override String get statUnlocks => 'Unlocks';
-  @override String get noSessions => 'No sessions recorded yet.';
   @override String get dailyUsageLabel => 'Daily usage';
   @override String get passive => 'Passive';
   @override String get active => 'Active';
   @override String get prevWeekLabel => 'previous week';
-  @override String pagesLabel(int n) => '$n pages';
-  @override String kmLabel(int n) => '${n}km';
-  @override String sleepCyclesLabel(int n) => '$n cycles';
 
-  @override String get blockSleepTitle => 'Sleep hygiene';
-  @override String blockSleepText(int pct) =>
-      'Your usage between 10 PM and 6 AM accounts for $pct% of total time. '
-      'Blue light during this period can delay melatonin release '
-      'by up to 30 minutes, impairing REM sleep.';
-  @override String get blockImpulsivityTitle => 'Impulsivity index';
-  @override String blockImpulsivityText(int unlocks) =>
-      'You unlocked your phone $unlocks times today. '
-      'Unlock frequency is a stronger predictor of anxiety '
-      'and poor sleep quality than total screen time.';
-  @override String get blockFocusTitle => 'Focus fragmentation';
-  @override String blockFocusText(int pct) =>
-      '$pct% of your sessions lasted less than 60 seconds. '
-      'This "checking habit" fragments attention and prevents the '
-      'deep focus state (Flow). Users with high fragmentation take up to '
-      '20% longer to complete complex tasks.';
-  @override String get blockOpportunityTitle => 'Opportunity cost';
-  @override String get blockOpportunityText =>
-      'Every hour of passive use is an hour that could be spent '
-      'on restorative sleep, exercise, or in-person connection.';
-  @override String get blockPhubbingTitle => 'Phubbing alert';
-  @override String blockPhubbingText(int unlocks) =>
-      'You unlocked your phone $unlocks times during lunch and dinner hours. '
-      'Phubbing — ignoring those present to check your phone — weakens '
-      'social bonds and increases feelings of loneliness over time.';
   @override String get blockDopamineTitle => 'Dopamine drain';
   @override String blockDopamineText(String app, int opens) =>
       '"$app" was your biggest trigger: $opens opens in 7 days. '
@@ -183,9 +151,6 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String blockTrendIncreased(int pct) =>
       'Your usage increased $pct% vs. last week. '
       'Try to identify the triggers that led to the increase.';
-  @override String get blockYesterdayPatternTitle => 'Yesterday pattern';
-  @override String get blockYesterdayPatternText =>
-      'Horizontal stacked bars by app — each row is one hour of yesterday.';
   @override String get yesterdayPatternOther => 'other';
   @override String get blockLastDaysPatternTitle => 'Last 7 days pattern';
   @override String get blockLastDaysPatternText =>

@@ -23,7 +23,7 @@ Roadmap and pending milestones → [ROADMAP.md](ROADMAP.md)
 
 - Overlay: non-touchable pill (default, always inside the status bar, tightened to fit) or block (17 sp); daily app timer + selectable usual feedback (`bar` default, `fill`, `outline`, `none`) after 7 real days, settings in PT/EN, alpha 0.8; hidden on unmonitored apps and (optionally) the launcher
 - Messages: three triggers — session ≥20 min, app past its usual, phone past its usual — each once a day, ≥90 min apart; separate 6.5 s message with app/phone total header; app switching cancels it
-- Analytics: 1d/7d/30d tabs; hourly stacked-bar pattern charts (yesterday + last 7 days); sleep hygiene, focus fragmentation, engagement balance, dopamine drain, weekly trend, 30-day trend
+- Analytics: 7d/30d tabs; last-7-days hourly pattern, engagement balance, most opened apps, weekly trend, 30-day trend
 - Insights screen: 40+ research-backed bilingual (PT+EN) cards in Alerts and Solutions tabs
 - Per-app control: enable/disable overlay per app
 - Storage: SharedPreferences via Flutter plugin (`FlutterSharedPreferences` namespace); data auto-pruned after 90 days; delete-all action in Settings

@@ -14,10 +14,9 @@ lib/
 │
 ├── screens/
 │   ├── analytics/
-│   │   ├── analytics_screen.dart    # Shell: TabController + Tab1d/Tab7d/Tab30d
+│   │   ├── analytics_screen.dart    # Shell: TabController + Tab7d/Tab30d
 │   │   ├── analytics_helpers.dart   # Shared widgets: AppAgg, DonutChart, analysisCard()…
 │   │   ├── classification_message.dart  # classificationMessage() — 5×4 level matrix
-│   │   ├── tab_day.dart             # Tab1d + hourly/session/opportunity charts
 │   │   ├── tab_month.dart           # Tab30d + UsageTrend30d charts
 │   │   └── tab_week.dart            # Tab7d + 7-day pattern + trend bars
 │   │

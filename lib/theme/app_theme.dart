@@ -8,7 +8,6 @@ abstract final class AppColors {
   static const surfaceLight = Color(0xFFF7F8FC);
   static const surfaceDark = Color(0xFF1A1D2E);
   static const cardDark = Color(0xFF242740);
-  static const success = Color(0xFF34D399);
   static const error = Color(0xFFF87171);
 
   /// Amber marks only what is past the user's usual (ROADMAP § Visual: Obsidian dark, round 3 light).

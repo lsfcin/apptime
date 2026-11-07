@@ -22,6 +22,8 @@ class FeedbackDrawable(
     // Thermometer look and intensity, drawn right of the text; "none" draws nothing.
     // On the Aba it sits centred under the number instead (Lucas 2026-11-06: a squarer Aba).
     var glyphBelow = false
+    // The Aba's body, when this draws one: the pie then sits centred above the number, the outline on 3 sides.
+    var tab: TabShape? = null
     var thermometerLook = "none"
     var thermometerLevel = 0f
     private val thermometerPhase = ThermometerPhase()
@@ -46,7 +48,7 @@ class FeedbackDrawable(
             else bounds.left + textRight + thermometerGap(thermometerLook, density, block)
         // The bar, when on, keeps the bottom edge: the glyph sits above it.
         val bar = if (frame?.variant == "bar") 3 * barStroke(density, block) else 0f
-        val y = if (glyphBelow) bounds.bottom - bar - dp(BELOW_EDGE_DP) - room / 2 else bounds.exactCenterY()
+        val y = if (glyphBelow) bounds.bottom - (tab?.flare ?: 0f) - bar - dp(BELOW_EDGE_DP) - room / 2 else bounds.exactCenterY()
         ThermometerGlyph.draw(canvas, paint, thermometerLook, block, thermometerLevel, thermometerPhase, ink, x, y, unit)
         val feedback = frame ?: return
         if (!feedback.hasUsual) return
@@ -64,7 +66,7 @@ class FeedbackDrawable(
     private fun drawBar(canvas: Canvas, progress: Float) {
         val width = barStroke(density, block)
         // Twice the bar's thickness stays free between it and the bottom edge.
-        val y = bounds.bottom - 2 * width - width / 2
+        val y = bounds.bottom - (tab?.flare ?: 0f) - 2 * width - width / 2
         val start = bounds.left + textLeft
         val end = bounds.left + textRight
         OverlayFeedback.barSpan(start, end, width, 1f)?.let { (l, r) -> canvas.drawLine(l, y, r, y, stroke(track, width)) }
@@ -73,8 +75,9 @@ class FeedbackDrawable(
 
     private fun drawFill(canvas: Canvas, progress: Float) {
         val radius = dotRadius(density, block) * dotScale
-        val cx = bounds.left + textLeft - dotGapDp * density * scale(block) - radius
-        val cy = bounds.exactCenterY()
+        val tab = tab
+        val cx = if (tab != null) bounds.exactCenterX() else bounds.left + textLeft - dotGapDp * density * scale(block) - radius
+        val cy = if (tab != null) bounds.top + tab.flare + dp(PIE_TOP_DP) + radius else bounds.exactCenterY()
         canvas.drawCircle(cx, cy, radius - density / 2, stroke(track, density))
         paint.style = Paint.Style.FILL
         paint.color = ink
@@ -88,8 +91,8 @@ class FeedbackDrawable(
         val inset = width / 2
         val rect = RectF(bounds).apply { inset(inset, inset) }
         val radius = minOf(outlineRadius(rect.height(), density, block), rect.width() / 2).coerceAtLeast(0f)
-        // Explicit clockwise rounded path starts at top-centre (addRoundRect starts elsewhere).
-        val path = Path().apply {
+        // Explicit clockwise path from the top-centre; the Aba's skips its edge and climbs from the bottom.
+        val path = tab?.outline(rect) ?: Path().apply {
             moveTo(rect.centerX(), rect.top)
             lineTo(rect.right - radius, rect.top)
             arcTo(RectF(rect.right - 2 * radius, rect.top, rect.right, rect.top + 2 * radius), -90f, 90f)
@@ -120,6 +123,11 @@ class FeedbackDrawable(
     companion object {
         /** The Aba's glyph: its distance from the bottom edge, in dp at the boxed scale. */
         const val BELOW_EDGE_DP = 5f
+        /** The Aba's pie: its distance from the body's top, in dp at the boxed scale. */
+        const val PIE_TOP_DP = 5f
+        /** The boxed looks' pie is larger than the pill's (Lucas 2026-11-06), the Aba's most. */
+        const val BLOCK_PIE_SCALE = 1.25f
+        const val TAB_PIE_SCALE = 1.5f
         const val FILL_GAP_DP = 3f
         fun scale(block: Boolean) = if (block) 1.25f else 1f
         fun barStroke(density: Float, block: Boolean) = 2f * density * scale(block)

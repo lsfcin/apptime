@@ -37,11 +37,31 @@ class OverlayWindow(private val context: Context, private val view: View) {
 
     /** Called with where a Bloco or Aba was let go; the timer then places it for real. */
     var onDrop: (Drop) -> Unit = {}
+    /** Called while an Aba is dragged, when it changes edge: true for the left one. */
+    var onSide: (Boolean) -> Unit = {}
+    private var edgeLocked = false
+    private var onLeft = false
     private val drag = OverlayDrag({ params.x to params.y }, { x, y ->
         params.x = x
         params.y = y
         if (isAdded) try { manager.updateViewLayout(view, params) } catch (_: Exception) {}
-    }, { onDrop(it) })
+    }, { onDrop(it) }, ::edgeX)
+
+    /** The Aba keeps to its edge while dragged; only its height follows the finger (panel 2026-11-07, 8/10). */
+    fun lockToEdge(on: Boolean, left: Boolean) {
+        edgeLocked = on
+        if (!drag.dragging) onLeft = left
+    }
+
+    // Crossing the screen's middle by more than a band moves it to the other edge, so a tremor never flips it.
+    private fun edgeX(rawX: Float): Int? {
+        if (!edgeLocked) return null
+        val w = bounds().width
+        val band = w * EDGE_SWITCH_BAND
+        if (!onLeft && rawX < w / 2f - band) { onLeft = true; onSide(true) }
+        if (onLeft && rawX > w / 2f + band) { onLeft = false; onSide(false) }
+        return if (onLeft) (w - params.width).coerceAtLeast(0) else 0
+    }
 
     /** Only a boxed look takes the touch (Lucas 2026-11-03: dragging them is worth it); the pill never does. */
     fun touchable(on: Boolean) {
@@ -96,16 +116,12 @@ class OverlayWindow(private val context: Context, private val view: View) {
     fun background(style: OverlayStyle): GradientDrawable = GradientDrawable().apply {
         val block = style.boxed
         cornerRadius = dp(if (block) 8 else 12).toFloat()
-        if (style == OverlayStyle.TAB) tabCorners(this, onLeft = false)
         // With window alpha 0.8 the pill still has >45% effective black.
         setColor(Color.argb(if (block) 245 else 180, 0, 0, 0))
     }
 
-    /** The Aba's side against the edge is straight, the side facing the screen rounded. */
-    fun tabCorners(shape: GradientDrawable, onLeft: Boolean) {
-        val r = dp(8).toFloat()
-        shape.cornerRadii = if (onLeft) floatArrayOf(0f, 0f, r, r, r, r, 0f, 0f)
-            else floatArrayOf(r, r, 0f, 0f, 0f, 0f, r, r)
+    private companion object {
+        const val EDGE_SWITCH_BAND = 0.08f // of the screen's width, each side of its middle
     }
 }
 

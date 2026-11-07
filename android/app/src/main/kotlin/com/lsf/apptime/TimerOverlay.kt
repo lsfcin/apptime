@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.provider.Settings
 import android.text.SpannableString
@@ -29,8 +28,9 @@ class TimerOverlay(context: Context) {
     }
     private val window = OverlayWindow(context, view)
     private val drops = OverlayDropStore(context)
-    private var box: GradientDrawable? = null
+    private var tab: TabShape? = null
     private var again: () -> Unit = {}
+    private var lastApp: String? = null
     private val density = view.resources.displayMetrics.density
     private var lastAppearance: List<Any>? = null
     private var lastText: String? = null
@@ -53,13 +53,16 @@ class TimerOverlay(context: Context) {
         private set
     val isAdded get() = window.isAdded
 
-    fun render(style: OverlayStyle, totalMs: Long, feedback: OverlayFeedback.Frame, thermometer: String, level: Float,
+    /** [app] is the front app: a Bloco or Aba dropped there stays there for that app only (Lucas 2026-11-06). */
+    fun render(app: String?, style: OverlayStyle, totalMs: Long, feedback: OverlayFeedback.Frame, thermometer: String, level: Float,
                visible: Boolean, chip: Shade, amber: Boolean) {
         val state = feedback.state
         val block = style.boxed
+        lastApp = app
         // A drop is saved, then placed at once by the same render (the Aba snaps to its edge).
-        again = { render(style, totalMs, feedback, thermometer, level, visible, chip, amber) }
-        window.onDrop = { drops.save(style, it); again() }
+        again = { render(app, style, totalMs, feedback, thermometer, level, visible, chip, amber) }
+        window.onDrop = { drops.save(style, app, it); again() }
+        window.onSide = { tab?.onLeft = it }
         window.touchable(block)
         // The Bloco is always its 96% black, so only the pill follows the theme guess.
         val shade = if (block) Shade.DARK else chip
@@ -72,9 +75,12 @@ class TimerOverlay(context: Context) {
             val ink = OverlayInk.ink(state, shade, amber)
             view.setTextColor(ink)
             // The pill has no fill: the bar follows the app, so the ink alone follows the theme guess (Lucas 2026-11-04).
-            box = if (block) window.background(style) else null
+            tab = if (style == OverlayStyle.TAB)
+                TabShape(window.dp(8).toFloat(), window.dp(8).toFloat(), Color.argb(245, 0, 0, 0)) else null
+            val box = tab ?: if (block) window.background(style) else null
             feedbackDrawable = FeedbackDrawable(box ?: ColorDrawable(Color.TRANSPARENT),
                 density, block, ink)
+            feedbackDrawable.tab = tab
             view.background = feedbackDrawable
             lastText = null
         }
@@ -92,7 +98,8 @@ class TimerOverlay(context: Context) {
         feedbackDrawable.thermometerLook = thermometer
         feedbackDrawable.frame = feedback
         val slot = fit(style, feedback.variant, thermometer, step, bounds)
-        if (style == OverlayStyle.TAB) box?.let { window.tabCorners(it, slot.onLeft) }
+        tab?.onLeft = slot.onLeft
+        window.lockToEdge(style == OverlayStyle.TAB, slot.onLeft)
         view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         val x = slot.x + if (slot.inStatusBar) 0 else bounds.rightInset
         window.place(view.measuredWidth, view.measuredHeight, x, slot.y, slot.inStatusBar)
@@ -119,7 +126,7 @@ class TimerOverlay(context: Context) {
         return OverlayPlacement.timer(Build.VERSION.SDK_INT, bounds.cutoutRight, bounds.statusBarHeight,
             bounds.width, view.measuredWidth, view.measuredHeight, window.dp(OverlayPlacement.PILL_SLOT_DP),
             window.dp(8), window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), style, cutoutGap = 0,
-            drop = drops.read(style))
+            drop = drops.read(style, lastApp))
     }
 
     private fun animate(delayMs: Long) {
@@ -143,7 +150,9 @@ class TimerOverlay(context: Context) {
         val air = view.paint.measureText(if (block) " " else "0")
         // Lucas 2026-11-03: the pill's number may sit 1.5 dp closer to its edges than a digit's width + 1 dp.
         val side = (if (block) window.dp(8).toFloat() else (-0.5f - s.sideTrimDp) * density) + air
-        val dot = if (variant == "fill") FeedbackDrawable.fillReserve(density, block, s.dotScale, s.dotGapDp) else 0f
+        if (block) feedbackDrawable.dotScale = FeedbackDrawable.BLOCK_PIE_SCALE
+        val pie = if (block) FeedbackDrawable.BLOCK_PIE_SCALE else s.dotScale
+        val dot = if (variant == "fill") FeedbackDrawable.fillReserve(density, block, pie, s.dotGapDp) else 0f
         // On the pill the pie is the left-hand air, as the glyph is the right-hand one: both sit PILL_EDGE_DP
         // from their edge (Codex panel 2026-11-05, 9/10), so the pie keeps its size at 13 dp.
         val left = if (dot > 0f && !block) PILL_EDGE_DP * density + dot else side + dot
@@ -166,16 +175,22 @@ class TimerOverlay(context: Context) {
         view.setPadding(left.roundToInt(), vertical + extra, right.roundToInt(), bottom + extra)
     }
 
-    // The Aba stacks the glyph under the number, with the Bloco's air all round, so it reads square, not wide.
+    // The Aba stacks pie, number and glyph, with the Bloco's air all round, so it reads square, not wide;
+    // its inverted corners take a flare above and below the body.
     private fun padTab(variant: String, thermometer: String) {
         val unit = density * FeedbackDrawable.scale(true)
+        val flare = window.dp(8)
         val side = window.dp(8) + view.paint.measureText(" ")
-        val dot = if (variant == "fill") FeedbackDrawable.fillReserve(density, true) else 0f
+        feedbackDrawable.dotScale = FeedbackDrawable.TAB_PIE_SCALE
+        val pie = if (variant == "fill")
+            2 * FeedbackDrawable.dotRadius(density, true) * FeedbackDrawable.TAB_PIE_SCALE + (FeedbackDrawable.PIE_TOP_DP + 2) * unit
+            else 0f
         val room = ThermometerGlyph.room(thermometer) * unit
         val glyph = if (room > 0f) room + FeedbackDrawable.BELOW_EDGE_DP * unit + window.dp(2) else 0f
         val bar = if (variant == "bar") 3 * FeedbackDrawable.barStroke(density, true) else 0f
-        val top = window.dp(8)
-        view.setPadding((side + dot).roundToInt(), top, side.roundToInt(), (maxOf(glyph, top.toFloat()) + bar).roundToInt())
+        val air = window.dp(6).toFloat()
+        view.setPadding(side.roundToInt(), (flare + maxOf(pie, air)).roundToInt(), side.roundToInt(),
+            (flare + maxOf(glyph, air) + bar).roundToInt())
     }
 
     // The unit letters (h, m) condensed and smaller, so "1h22" plus a thermometer still fits the status bar.

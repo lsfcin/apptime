@@ -11,6 +11,8 @@ class OverlayDrag(
     private val position: () -> Pair<Int, Int>,
     private val moveTo: (Int, Int) -> Unit,
     private val onDrop: (Drop) -> Unit,
+    /** The x to hold while dragging, or null to follow the finger (the Aba keeps to its edge). */
+    private val lockX: (rawX: Float) -> Int? = { null },
 ) : View.OnTouchListener {
     var dragging = false
         private set
@@ -28,7 +30,8 @@ class OverlayDrag(
                 downY = e.rawY
                 position().let { fromX = it.first; fromY = it.second }
             }
-            MotionEvent.ACTION_MOVE -> moveTo(fromX - (e.rawX - downX).roundToInt(), fromY + (e.rawY - downY).roundToInt())
+            MotionEvent.ACTION_MOVE ->
+                moveTo(lockX(e.rawX) ?: (fromX - (e.rawX - downX).roundToInt()), fromY + (e.rawY - downY).roundToInt())
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 dragging = false
                 position().let { onDrop(Drop(it.first, it.second)) }

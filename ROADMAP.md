@@ -153,11 +153,11 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   cost needs its own run. 2026-11-04 (`e16f583`): vertical 1.5× wider, bulb rebuilt, 1 dp stroke
   like the outline, pill as wide as the ▼ one. **Next**: Lucas checks the new vertical; the morning
   starts calm (after 04:00); battery, vertical first; a better name than "Mão única" for the ▼ look; avaliar granularidade (3 estágios vs 7 estágios vs escala linear contínua) para feedback mais imediato sem perda de performance (INBOX 2026-11-03).
-  Aba built 2026-11-06 on the side edges (drag snaps; glyph under the number). Open: drop per app; the bar sits under the glyph.
+  Aba built 2026-11-07: side edges only, drag keeps the edge (B, panel), drop per app.
 
 - **Per-app screen** still lacks position, fullscreen/landscape and "quando você costuma usar".
 - **Ajustes** (built 2026-11-06, one row per choice, options in a sheet): still wants the live preview on
-  top, a size control, the messages' switches and Apps › search. Rows of drawings built 2026-11-06; Lucas checks them on the phone.
+  top, a size control, the messages' switches and Apps › search.
 - **Hábitos** (built 2026-11-06; Lucas, panel 9/10 over Padrões inside Análise): "Como seu uso está
   mudando?" — the peak hour leads ([apptime/padroes](https://lucassf.pages.dev/apptime/padroes) votes),
   then 7/30 days, night, the entry app. Rule for every block (Lucas): the harm said plainly but
@@ -197,6 +197,7 @@ These files belong here, not on the root roadmap; entropy counts regenerate in `
 
 ## Rejected
 
+- The Aba hanging from the status bar: it cannot match the bar's colour, so it reads as a stray box (Lucas 2026-11-06).
 - A fixed "healthy limit" line (3 h, or OCDE's 5 h) where Hábitos has no days before: no adult threshold is validated, so the chart says "Sem histórico para comparar" (panel 1–4/10 vs 9/10, Lucas 2026-11-06).
 - Session log written inside `accumulateDailyMs` — file and prefs are no transaction and the history backfill would log twice (Codex 4/10, 2026-11-06).
 - Padrões: a sentence list, unlocks or short openings as lead, a 7 × 24 grid (Lucas 2026-11-06).

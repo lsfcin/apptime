@@ -76,7 +76,7 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   phone-wide, like the timer; under 10 min in the window it stays calm. It heats under use and cools
   in a pause, where progress only warns when the bar bursts. Measured sleep (the longest run of
   empty hours) is a later refinement if 7 h misleads. Panel `outputs/apptime-panel-icon-thermo.md`. Built in `thermometer.dart` · `Thermometer.kt`, held equal by
-  `test/fixtures/thermometer.json`. Next: Hoje, beside "hoje até agora" (phone-wide). Holes: none
+  `test/fixtures/thermometer.json`. On Hoje the last 2 h show as a plain fact, no pace (Lucas 2026-11-06). Holes: none
   in real data (`HistoryBackfill` covers stops); if one shows up, borrow the hour from an earlier day.
 - **"Your usual" = mean daily total over the 30 days before today** (Lucas, 2026-10-31, replacing
   "by this hour"): measured zero days count, since not opening an app can be a choice; days
@@ -162,24 +162,16 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
 - **"Your usual" shows in three places**: Hoje, the per-app screen, the overlay preview in Ajustes.
 - **Análise copy**: `classification_message.dart` still cites the debunked "~23 min per
   interruption" and research bands; cut per [refs/interventions-evidence.md](refs/interventions-evidence.md).
-- **Ajustes order**: live preview · overlay (gallery, one switch per feedback, size) · per-app exceptions ·
-  messages · collection · language (one row) · privacy. Permissions only when one is missing. Cut
-  the separate Parar button, Mostrar borda / Mostrar fundo, and the stale "(5s)" text.
-- **Round 4 reopens structure and colour** (Lucas 2026-11-06), under the charter in SPECS § Visual:
-  structure decided on [the round 4 page](https://lucassf.pages.dev/apptime/estrutura):
-  Padrões is a section of Análise with its detail on tap (B, panel 9/10). Colour decided on
-  [apptime/cor](https://lucassf.pages.dev/apptime/cor): SPECS § Visual. Análise is cut to mean per day, daily
-  bars and night (panel, Lucas 2026-11-06). Cyan is in the code; the surfaces are still the old navy,
-  not Obsidian carbon. **Next: code Padrões** as voted on
-  [apptime/padroes](https://lucassf.pages.dev/apptime/padroes) (Lucas 2026-11-06): one pattern in the
-  lead on Análise + "Ver padrões"; the Padrões screen leads with the peak hour (panel had unlocks);
-  hours as 24 bars, peak labelled, tap for a weekday; amber only past `max(15 min, 10%)` of the
-  usual, "perto do seu normal" inside it, ±5 min "igual". Title: "Como seu uso começa e se repete?".
-  Rule for every block (Lucas): say the harm plainly, then a way out with evidence (a study or a
-  real case; old Insights only after review). 40 unlocks earns the lead only with both.
-  Night (22h–6h) stays its own Análise block, over the panel's cut: sleep hygiene (Lucas).
-  Entry app is on the channel (`getEntryApps`). Loops wait for real `SessionLog` days.
-  Then Claude Design projects.
+- **Ajustes** (built 2026-11-06, one row per choice, options in a sheet): still wants the live preview on
+  top, the gallery, a size control, the messages' switches and Apps search.
+- **Hábitos** (built 2026-11-06; Lucas, panel 9/10 over Padrões inside Análise): "Como seu uso está
+  mudando?" — the peak hour leads ([apptime/padroes](https://lucassf.pages.dev/apptime/padroes) votes),
+  then 7/30 days, night, the entry app. Rule for every block (Lucas): the harm said plainly but
+  conditionally, then a way out with evidence, its limits on tap; old Insights only after review.
+  The peak-hour text replaces a due message's inside the trusted peak hour, never a 4th message.
+  **Next**: Lucas approves the three harm lines (morning, afternoon, night); measure the peak
+  message by later use and annoyance, not taps; surfaces are still the old navy, not Obsidian
+  carbon; then Claude Design projects. Loops wait for real `SessionLog` days.
 - **Patterns: flows and triggers** (Lucas 2026-11-06; SPECS § Visual): `SessionLog` records since
   2026-11-06. Next: define a loop on real days (start: A → B → A inside 10 min, a short launcher stop
   counts as a transition). Wording (panel): "ciclos", "como seu uso começa",
@@ -218,6 +210,8 @@ These files belong here, not on the root roadmap; entropy counts regenerate in `
 - Análise: unlocks and the 5×4 grade in the lead, both trends, passive/active (panel 2–5/10).
 - Padrões before slimming Análise (3/10); loops "forming" before the rule meets real days (4/10).
 - Padrões as a 4th tab (panel 7/10) or spread over Hoje and the app screen (4/10); Apps list in two groups — the row jumps on toggle (Lucas 2026-11-06).
+- Padrões placement (2026-11-06): renaming the tab alone (8/10), a 4th message near the peak (5/10), both (7/10). Peak way out: batched notifications 6, phone out of reach 6, a plan made in advance 4 (RCT null, 10.1016/j.chb.2025.108624). Entry app: a folder 6, badges off 6, its notifications batched 5. Peak window: the hour before + peak 7, ±1 h 5.
+- Hoje's "acima do seu ritmo (41 min)": the 2-hour share of 17 assumed awake hours reads as a habit it is not (panel 2026-11-06); the line states the last 2 h plainly.
 
 - Thermometer: extrapolating the current hour (`60/m ×` its minutes) — up to 60× noise at the start of each hour (Lucas 2026-11-03).
 - Thermometer: the last 24 h vs the 24 h before — at the first unlock it compares yesterday with the day before, agitated before any use today (Lucas 2026-11-03).

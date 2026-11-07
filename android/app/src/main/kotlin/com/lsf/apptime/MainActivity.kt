@@ -31,7 +31,13 @@ class MainActivity : FlutterActivity() {
                         MonitoringService.sessionLogOf(this).deleteAll()
                         result.success(null)
                     }
-                    "isRunning" -> result.success(isServiceRunning(MonitoringService::class.java))
+                    "getEntryApps" -> Thread {
+                        val c = EntryApps.over(MonitoringService.sessionLogOf(this).days())
+                        val out = mapOf("firstDate" to c.firstDate, "lastDate" to c.lastDate, "days" to c.days,
+                            "unlocks" to c.count.unlocks, "none" to c.count.none, "apps" to c.count.apps)
+                        runOnUiThread { result.success(out) }
+                    }.start()
+                    "isRunning" ->result.success(isServiceRunning(MonitoringService::class.java))
                     "requestOverlayPermission" -> {
                         SystemSettings.openOverlay(this)
                         result.success(null)

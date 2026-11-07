@@ -15,7 +15,7 @@ class _OverlaySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(l10n.sectionOverlay),
+        SectionHeader(l10n.sectionOverlay),
         Card(
           child: Column(
             children: [
@@ -105,7 +105,7 @@ class _DataSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(l10n.sectionData),
+        SectionHeader(l10n.sectionData),
         Card(
           child: Column(
             children: [
@@ -159,7 +159,7 @@ class _LanguageSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(l10n.sectionLanguage),
+        SectionHeader(l10n.sectionLanguage),
         Card(
           child: RadioGroup<String?>(
             groupValue: currentCode,

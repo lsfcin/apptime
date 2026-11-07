@@ -60,7 +60,8 @@ lib/
 | `HistoryBackfill.kt` | Gap backfill (backfillGap) + 30-day history fill (backfillHistory); injectable |
 | `GapBackfill.kt` | Startup replay window and checkpoint; injectable clock, heartbeat storage and replay |
 | `UsageSegments.kt` | Pure: usage events → app segments; a background event closes only its own package |
-| `SessionLog.kt` | Raw session log: a CSV a day in `noBackupFilesDir/sessions/`, one writer thread, seeded from `queryEvents` |
+| `SessionLog.kt` | Raw session log: a CSV a day in `noBackupFilesDir/sessions/`, one writer thread, seeded with unlocks from `queryEvents` |
+| `EntryApps.kt` | Pure: entry app per unlock from log lines, and the days that know their unlocks |
 | `OverlayService.kt` | Foreground service — 500 ms poll, shared live-usage snapshot/cache, app labels, timer/message coordination |
 | `OverlayWindow.kt` | Non-touchable window lifecycle, alpha 0.8, status-bar/cutout geometry and shared rimless backgrounds |
 | `TimerOverlay.kt` | Anchored Quiet pill / accessible block text, padding per variant, measured placement; hands the text span to the feedback drawable |
@@ -176,6 +177,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `getAppMetadata` | Dart→Kotlin | Returns `{labels: Map<String,String>, launchers: List<String>}` — merged call |
 | `startMonitoring` | Dart→Kotlin | Starts MonitoringService + OverlayService |
 | `deleteSessionLog` | Dart→Kotlin | Deletes every session-log day; delete-all calls it after the prefs |
+| `getEntryApps` | Dart→Kotlin | Entry app per unlock, and the days covered |
 | `stopMonitoring` | Dart→Kotlin | Stops both services |
 | `isRunning` | Dart→Kotlin | Returns Boolean (uses MonitoringService.isRunning static flag) |
 | `requestOverlayPermission`, `requestUsagePermission` | Dart→Kotlin | Open AppTime's own page (usage falls back to the list) |
@@ -232,5 +234,5 @@ A short stop on the launcher between two apps is a transition from A to B.
 | Charts | fl_chart ^0.70.2 |
 | Icons (dev) | flutter_launcher_icons ^0.14.3 |
 
-**Theme:** primary #4F6EF7 · surface #F7F8FC / #1A1D2E · card white / #242740 · success #34D399 · error #F87171  
+**Theme:** cyan and amber in § Visual · surface #F7F8FC / #1A1D2E · card white / #242740 · error #F87171  
 **Spacing:** XS=4 SM=8 MD=16 LG=24 XL=32 · Radius: SM=8 MD=12 LG=16 XL=24 · Material3, light/dark auto

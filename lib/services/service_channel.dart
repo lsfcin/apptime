@@ -3,6 +3,16 @@ import 'package:flutter/services.dart';
 
 const kServiceChannel = 'apptime/service';
 
+/// Which app each unlock led to; [none] are unlocks that opened no app. Covers [days] days only.
+typedef EntryApps = ({
+  String? firstDate,
+  String? lastDate,
+  int days,
+  int unlocks,
+  int none,
+  Map<String, int> apps,
+});
+
 /// Bridge para o MethodChannel Kotlin — OverlayService e MonitoringService.
 class ServiceChannel {
   static const _channel = MethodChannel(kServiceChannel);
@@ -11,6 +21,18 @@ class ServiceChannel {
   static Future<void> stopMonitoring() => _channel.invokeMethod('stopMonitoring');
   /// Erases the session log (Kotlin files, outside SharedPreferences): delete-all's other half.
   static Future<void> deleteSessionLog() => _channel.invokeMethod('deleteSessionLog');
+  /// Entry app per unlock over the days the session log knows its unlocks (EntryApps.kt).
+  static Future<EntryApps> entryApps() async {
+    final m = await _channel.invokeMapMethod<String, Object?>('getEntryApps') ?? const {};
+    return (
+      firstDate: m['firstDate'] as String?,
+      lastDate: m['lastDate'] as String?,
+      days: m['days'] as int? ?? 0,
+      unlocks: m['unlocks'] as int? ?? 0,
+      none: m['none'] as int? ?? 0,
+      apps: (m['apps'] as Map?)?.cast<String, int>() ?? const {},
+    );
+  }
   static Future<bool> isRunning() async =>
       await _channel.invokeMethod<bool>('isRunning') ?? false;
 

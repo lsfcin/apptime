@@ -2,8 +2,10 @@
 import 'package:flutter/material.dart';
 
 abstract final class AppColors {
-  static const primary = Color(0xFF4F6EF7);
-static const surfaceLight = Color(0xFFF7F8FC);
+  /// Cyan is the brand: active tab, switch, selection (SPECS § Visual).
+  static Color brand(Brightness b) =>
+      b == Brightness.dark ? const Color(0xFF14B8C4) : const Color(0xFF007B87);
+  static const surfaceLight = Color(0xFFF7F8FC);
   static const surfaceDark = Color(0xFF1A1D2E);
   static const cardDark = Color(0xFF242740);
   static const success = Color(0xFF34D399);
@@ -36,13 +38,14 @@ abstract final class AppTheme {
 
   static ThemeData _build(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
+    final brand = AppColors.brand(brightness);
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: AppColors.primary,
+      seedColor: brand,
       brightness: brightness,
       surface: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
       error: AppColors.error,
     ).copyWith(
-      primary: AppColors.primary,
+      primary: brand,
     );
 
     return ThemeData(
@@ -62,7 +65,7 @@ abstract final class AppTheme {
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
-        indicatorColor: AppColors.primary.withValues(alpha: 0.15),
+        indicatorColor: brand.withValues(alpha: 0.15),
       ),
     );
   }

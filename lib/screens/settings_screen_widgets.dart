@@ -1,4 +1,4 @@
-// SettingsScreen helper widgets and private action methods: permission tile, section header, dialogs
+// SettingsScreen helper widgets and private action methods: permission tile, dialogs
 part of 'settings_screen.dart';
 
 // ── Setup checklist ────────────────────────────────────────────────────────────
@@ -71,26 +71,6 @@ class _SetupBanner extends StatelessWidget {
 }
 
 // ── Section header ─────────────────────────────────────────────────────────────
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader(this.title);
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          const EdgeInsets.only(left: AppSpacing.sm, bottom: AppSpacing.sm),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: AppColors.primary,
-              fontWeight: FontWeight.w600,
-            ),
-      ),
-    );
-  }
-}
 
 // ── _SettingsScreenState action helpers ────────────────────────────────────────
 

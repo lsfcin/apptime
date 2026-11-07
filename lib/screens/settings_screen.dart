@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../l10n/index.dart';
 import '../services/index.dart';
 import '../theme/index.dart';
+import '../widgets/index.dart';
 import 'apps/index.dart';
 import 'onboarding_screen.dart';
 
@@ -104,7 +105,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           ],
           // ── Running: shown only while something is off ─────────────────
           if (_check != null && _check!.missing.isNotEmpty) ...[
-            _SectionHeader('${l10n.sectionSetup} · '
+            SectionHeader('${l10n.sectionSetup} · '
                 '${l10n.setupProgress(_check!.items.length - _check!.missing.length, _check!.items.length)}'),
             Card(
               child: Column(children: [
@@ -124,7 +125,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           ],
 
           // ── Monitoring start/stop ──────────────────────────────────────
-          _SectionHeader(l10n.sectionMonitoring),
+          SectionHeader(l10n.sectionMonitoring),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
@@ -173,7 +174,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           ),
 
           // ── Behavior ──────────────────────────────────────────────────
-          _SectionHeader(l10n.sectionBehavior),
+          SectionHeader(l10n.sectionBehavior),
           Card(
             child: Column(children: [
               // Per-app exceptions moved here from the Monit. tab (ROADMAP § Ajustes order).

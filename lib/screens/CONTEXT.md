@@ -17,5 +17,5 @@
 | [`onboarding_screen_steps.dart`](onboarding_screen_steps.dart) | [`onboarding_screen_steps.dart.api`](onboarding_screen_steps.dart.api) | Step widget for OnboardingScreen: one large sentence, its buttons appearing after a short pause |
 | [`settings_screen.dart`](settings_screen.dart) | [`settings_screen.dart.api`](settings_screen.dart.api) | App settings screen: permissions, monitoring controls, overlay, behavior, data privacy, language |
 | [`settings_screen_sections.dart`](settings_screen_sections.dart) | [`settings_screen_sections.dart.api`](settings_screen_sections.dart.api) | Settings screen section widgets: overlay, behavior, data/privacy, language |
-| [`settings_screen_widgets.dart`](settings_screen_widgets.dart) | [`settings_screen_widgets.dart.api`](settings_screen_widgets.dart.api) | SettingsScreen helper widgets and private action methods: permission tile, section header, dialogs |
+| [`settings_screen_widgets.dart`](settings_screen_widgets.dart) | [`settings_screen_widgets.dart.api`](settings_screen_widgets.dart.api) | SettingsScreen helper widgets and private action methods: permission tile, dialogs |
 <!-- routing:end -->

@@ -11,8 +11,9 @@ import java.util.concurrent.Executor
  * and loops are derived when read, so their definitions can change without losing data.
  *
  * Lines: `s,<start>,<end>,<pkg>` app · `l,<start>,<end>,<pkg>` launcher · `u,<ms>` unlock ·
- * `o,<ms>` screen off. The first line names the format and the source: `# v1 live` or `# v1 seed`;
- * a seeded day has no `u` lines, which means unknown, never zero.
+ * `o,<ms>` screen off. The first line names the format and the source: `# v2 live` or `# v2 seed`.
+ * A v2 seed takes its `u` lines from Android's keyguard-hidden events; a `# v1 seed` day has none,
+ * which means unknown, never zero, and is seeded again while Android still holds its events.
  */
 class SessionLog(private val dir: File, private val writer: Executor) {
 
@@ -25,12 +26,14 @@ class SessionLog(private val dir: File, private val writer: Executor) {
 
     fun screenOff(ms: Long) = append(ms, "o,$ms")
 
-    /** Writes a past day from Android's event history, only when that day has no file yet. */
-    fun seed(date: String, segments: List<Segment>, isLauncher: (String) -> Boolean) = writer.execute {
+    /** Writes a past day from Android's event history, in time order, when [needsSeed] says so. */
+    fun seed(date: String, segments: List<Segment>, unlocks: List<Long>, isLauncher: (String) -> Boolean) = writer.execute {
         val file = fileFor(date)
-        if (file.exists() || segments.isEmpty()) return@execute
+        if (!needsSeed(date) || segments.isEmpty()) return@execute
         dir.mkdirs()
-        val body = segments.joinToString("") { sessionLine(it.pkg, it.startMs, it.endMs, isLauncher(it.pkg)) + "\n" }
+        val lines = segments.map { it.startMs to sessionLine(it.pkg, it.startMs, it.endMs, isLauncher(it.pkg)) } +
+            unlocks.map { it to "u,$it" }
+        val body = lines.sortedBy { it.first }.joinToString("") { it.second + "\n" }
         val tmp = File(dir, "$date.tmp")
         tmp.writeText("$HEADER seed\n$body")
         tmp.renameTo(file)
@@ -45,6 +48,17 @@ class SessionLog(private val dir: File, private val writer: Executor) {
 
     fun hasDay(date: String): Boolean = fileFor(date).exists()
 
+    /** No file yet, or a v1 seed, which carries no unlocks. A live day is never replaced. */
+    fun needsSeed(date: String): Boolean {
+        val file = fileFor(date)
+        return !file.exists() || file.bufferedReader().use { it.readLine() } == V1_SEED
+    }
+
+    /** Every day on file, oldest first, as its lines without the header. */
+    fun days(): List<Pair<String, List<String>>> =
+        dir.listFiles { f -> f.name.endsWith(".csv") }.orEmpty().sortedBy { it.name }
+            .map { it.name.take(DATE_LENGTH) to it.readLines().drop(1) }
+
     private fun append(ms: Long, line: String) = writer.execute {
         val file = fileFor(DateUtils.dateKey(ms))
         dir.mkdirs()
@@ -55,7 +69,8 @@ class SessionLog(private val dir: File, private val writer: Executor) {
     private fun fileFor(date: String) = File(dir, "$date.csv")
 
     companion object {
-        const val HEADER = "# v1"
+        const val HEADER = "# v2"
+        private const val V1_SEED = "# v1 seed"
         private const val DATE_LENGTH = 10
 
         fun sessionLine(pkg: String, startMs: Long, endMs: Long, launcher: Boolean): String =

@@ -5,7 +5,7 @@ data class Segment(val pkg: String, val startMs: Long, val endMs: Long)
 
 /** One usage event, decoupled from `UsageEvents.Event` so the rule is testable on the JVM. */
 data class UsageEvent(val type: Kind, val pkg: String, val ms: Long) {
-    enum class Kind { FOREGROUND, BACKGROUND, SCREEN_OFF, OTHER }
+    enum class Kind { FOREGROUND, BACKGROUND, SCREEN_OFF, UNLOCK, OTHER }
 }
 
 object UsageSegments {
@@ -28,7 +28,7 @@ object UsageSegments {
             UsageEvent.Kind.FOREGROUND -> { close(e.ms); openPkg = e.pkg; openMs = e.ms }
             UsageEvent.Kind.BACKGROUND -> if (e.pkg == openPkg) close(e.ms)
             UsageEvent.Kind.SCREEN_OFF -> close(e.ms)
-            UsageEvent.Kind.OTHER -> {}
+            UsageEvent.Kind.UNLOCK, UsageEvent.Kind.OTHER -> {}
         }
         close(end)
         return out

@@ -156,10 +156,6 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   background (option Y); still lacks position, fullscreen/landscape and "quando você costuma usar".
   Ajustes › Apps still wants search.
 - **"Your usual" shows in three places**: Hoje, the per-app screen, the overlay preview in Ajustes.
-- **Análise: 7d · 30d** (the day lives in Hoje). Cut: Custo de oportunidade, Alerta de phubbing,
-  Balanço de engajamento, Padrão dos últimos 7 dias, the research bands `4–6h/dia` / `30–60/dia`.
-  Merge Uso diário + Tendência semanal; Fragmentação do foco + Índice de impulsividade → "Sessões e
-  desbloqueios"; Dreno de dopamina → "Apps mais abertos" (no thresholds). 30-day trend: total + average only.
 - **Análise copy**: `classification_message.dart` still cites the debunked "~23 min per
   interruption" and research bands; cut per [refs/interventions-evidence.md](refs/interventions-evidence.md).
 - **Ajustes order**: live preview · overlay (gallery, one switch per feedback, size) · per-app exceptions ·
@@ -170,16 +166,20 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   Padrões is a section of Análise with its detail on tap (B, panel 9/10); "últimas 2 h", "sessões e
   desbloqueios" and "apps mais abertos" move into it. Colour decided on
   [apptime/cor](https://lucassf.pages.dev/apptime/cor): SPECS § Visual. Análise is cut to mean per day, daily
-  bars and night (panel, Lucas 2026-11-06). **Next: Padrões** in it, with what has history: entry app
-  over the days UsageStats really holds, sessions and unlocks, most opened, the hour × day map (no
-  stacking), the last 2 h; loops wait until the rule is checked on real `SessionLog` days.
-  Open: amber past the usual, or past a set margin (panel). Then Claude Design projects.
+  bars and night (panel, Lucas 2026-11-06). Cyan is in the code; the surfaces are still the old navy,
+  not Obsidian carbon. **Next: code Padrões** as voted on
+  [apptime/padroes](https://lucassf.pages.dev/apptime/padroes) (Lucas 2026-11-06): one pattern in the
+  lead on Análise + "Ver padrões"; the Padrões screen leads with the peak hour (panel had unlocks);
+  hours as 24 bars, peak labelled, tap for a weekday; amber only past `max(15 min, 10%)` of the
+  usual, "perto do seu normal" inside it, ±5 min "igual". Title: "Como seu uso começa e se repete?".
+  Rule for every block (Lucas): say the harm plainly, then a way out with evidence (a study or a
+  real case; old Insights only after review). 40 unlocks earns the lead only with both.
+  Entry app is on the channel (`getEntryApps`). Loops wait for real `SessionLog` days.
+  Then Claude Design projects.
 - **Patterns: flows and triggers** (Lucas 2026-11-06; SPECS § Visual): `SessionLog` records since
   2026-11-06. Next: define a loop on real days (start: A → B → A inside 10 min, a short launcher stop
-  counts as a transition); entry app per unlock. Wording (panel): "ciclos", "como seu uso começa",
+  counts as a transition). Wording (panel): "ciclos", "como seu uso começa",
   "experimente" — a loop proves no harm, an entry app proves no trigger.
-  No study measures feedback on flows or triggers (refs/interventions-evidence.md): each pattern
-  pairs with a step that has evidence (grayscale, notification batching, a dismissable prompt).
 - **Visual: Obsidian Mono** (Lucas, over Codex's light editorial): carbon `#0B0C0E`, borderless
   surfaces `#14161B`, text `#F3F4F6` / `#7E8594`, the usual in graphite, amber `#E5A93C` only well
   above it; no red, neon green or electric blue; Inter `tnum`, metric 40sp Light, section labels

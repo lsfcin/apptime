@@ -23,6 +23,7 @@ class HistoryBackfill(
         // Key used to persist the last-alive timestamp so gap detection survives
         // process death (service killed, device reboot, crash, etc.)
         const val HEARTBEAT_KEY = "flutter.monitoring_heartbeat_ms"
+        private const val KEYGUARD_HIDDEN = 18
     }
 
     private val gapBackfill = GapBackfill(
@@ -91,24 +92,31 @@ class HistoryBackfill(
         for (i in 1..30) {
             val dayStart = DateUtils.dayStartMs(now, daysBack = i)
             val date = epochToDate(dayStart)
-            if (!log.hasDay(date)) log.seed(date, segments(dayStart, dayStart + 24 * 3_600_000L), isLauncher)
+            if (!log.needsSeed(date)) continue
+            val events = events(dayStart, dayStart + 24 * 3_600_000L)
+            val unlocks = events.filter { it.type == UsageEvent.Kind.UNLOCK }.map { it.ms }
+            log.seed(date, UsageSegments.from(events.asSequence(), dayStart, dayStart + 24 * 3_600_000L), unlocks, isLauncher)
         }
     }
 
-    private fun segments(start: Long, end: Long): List<Segment> {
+    private fun segments(start: Long, end: Long): List<Segment> =
+        UsageSegments.from(events(start, end).asSequence(), start, end)
+
+    private fun events(start: Long, end: Long): List<UsageEvent> {
         val events = usageStats.queryEvents(start, end) ?: return emptyList()
         val event = UsageEvents.Event()
-        val stream = generateSequence {
+        return generateSequence {
             if (!events.getNextEvent(event)) null
             else UsageEvent(kindOf(event.eventType), event.packageName, event.timeStamp)
-        }
-        return UsageSegments.from(stream, start, end)
+        }.toList()
     }
 
     private fun kindOf(type: Int): UsageEvent.Kind = when (type) {
         UsageEvents.Event.MOVE_TO_FOREGROUND -> UsageEvent.Kind.FOREGROUND
         UsageEvents.Event.MOVE_TO_BACKGROUND -> UsageEvent.Kind.BACKGROUND
         UsageEvents.Event.SCREEN_NON_INTERACTIVE -> UsageEvent.Kind.SCREEN_OFF
+        // The keyguard went away: Android's own record of an unlock (API 28+, the constant's value).
+        KEYGUARD_HIDDEN -> UsageEvent.Kind.UNLOCK
         else -> UsageEvent.Kind.OTHER
     }
 

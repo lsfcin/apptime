@@ -7,10 +7,7 @@ lib/
 ├── main.dart                        # App entry point, AppTimeApp, _AppTimeAppState
 ├── main_screen.dart                 # MainScreen — 3 tabs: Hoje (landing) · Análise · Ajustes
 │
-├── l10n/
-│   ├── app_localizations.dart       # Abstract base — all l10n keys
-│   ├── app_localizations_en.dart    # English implementations
-│   └── app_localizations_pt.dart    # Portuguese implementations
+├── l10n/                          # Abstract base + en/pt implementations
 │
 ├── screens/
 │   ├── analytics/
@@ -194,6 +191,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - **Single source of truth**: `kAppMeta` is the sole source for app labels and colors.
 - **"Your usual" parity**: Dart and Kotlin both run `test/fixtures/usual_daily.json`; a rule change edits both files and adds a case there.
 - **Thermometer parity and continuity**: the last 2 h against the 30-day daily mean × 2 / 17 awake hours; the hour 2 h back splits by the minute, so the window moves without a jump at an hour turn; `test/fixtures/thermometer.json` checks it on both sides. The open session is added hour by hour, since buckets fill only when it ends.
+- **Peak-hour parity**: `test/fixtures/peak_hour.json` checks `peak_hour.dart` and `PeakHour.kt` (the rule is in their doc comments).
 - **Daily total == sum of hourly values**: `accumulateDailyMs` accumulates daily totals within the hourly walk loop.
 - **Restart replay checkpoint**: advance the heartbeat after successful gap replay, even with no events, and atomically with live-session flushes. Short skipped gaps stay pending. The 30s watchdog and screen-off flush also advance it; a restart must not replay time already stored.
 

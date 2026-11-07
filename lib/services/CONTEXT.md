@@ -6,8 +6,9 @@
 
 | File | Interface | Description |
 |------|-----------|-------------|
-| [`index.dart`](index.dart) | [`index.dart.api`](index.dart.api) | **facade** — Facade for services/: storage, the Análise period, platform channel, "your usual" and the thermometer |
+| [`index.dart`](index.dart) | [`index.dart.api`](index.dart.api) | **facade** — Facade for services/: storage, the Hábitos period and peak hour, platform channel, "your usual" and the thermometer |
 | [`app_info_service.dart`](app_info_service.dart) | [`app_info_service.dart.api`](app_info_service.dart.api) | AppInfoService: fetches app labels and launcher packages from the native platform channel |
+| [`peak_hour.dart`](peak_hour.dart) | [`peak_hour.dart.api`](peak_hour.dart.api) | Peak hour: the clock hour with the most mean phone use over the measured days among the 30 before today |
 | [`period_summary.dart`](period_summary.dart) | [`period_summary.dart.api`](period_summary.dart.api) | PeriodSummary: the last N complete days against the N days before them, and the use between 22h and 6h |
 | [`service_channel.dart`](service_channel.dart) | [`service_channel.dart.api`](service_channel.dart.api) | ServiceChannel: MethodChannel bridge to Kotlin OverlayService and MonitoringService |
 | [`setup_check.dart`](setup_check.dart) | [`setup_check.dart.api`](setup_check.dart.api) | SetupCheck: which of the six system settings AppTime needs are on, and how to open each |

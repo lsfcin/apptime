@@ -1,0 +1,54 @@
+{
+  "_about": "Cases for the peak hour, run by test/peak_hour_test.dart and android/app/src/test/kotlin/com/lsf/apptime/PeakHourTest.kt so both sides stay equal. A day missing from dates reads as default. A day's hours are sparse: an hour not listed reads as rest (0 when absent).",
+  "peak": [
+    {
+      "name": "nothing measured: no peak, not trusted",
+      "today": "2026-10-31",
+      "deviceMs": {"default": 0, "dates": {}},
+      "hourly": {"default": {"21": 600000}, "dates": {}},
+      "hour": 0, "peakMs": 0, "meanHourMs": 0, "realDays": 0, "trusted": false
+    },
+    {
+      "name": "six real days are one too few to name the peak",
+      "today": "2026-10-31",
+      "deviceMs": {"default": 0, "dates": {"2026-10-25": 900000, "2026-10-26": 900000, "2026-10-27": 900000, "2026-10-28": 900000, "2026-10-29": 900000, "2026-10-30": 900000}},
+      "hourly": {"default": {"9": 300000, "21": 600000}, "dates": {}},
+      "hour": 21, "peakMs": 600000, "meanHourMs": 37500, "realDays": 6, "trusted": false
+    },
+    {
+      "name": "seven real days with one clear peak at 21h",
+      "today": "2026-10-31",
+      "deviceMs": {"default": 0, "dates": {"2026-10-24": 900000, "2026-10-25": 900000, "2026-10-26": 900000, "2026-10-27": 900000, "2026-10-28": 900000, "2026-10-29": 900000, "2026-10-30": 900000}},
+      "hourly": {"default": {"9": 300000, "21": 600000}, "dates": {}},
+      "hour": 21, "peakMs": 600000, "meanHourMs": 37500, "realDays": 7, "trusted": true
+    },
+    {
+      "name": "today and an unmeasured day add nothing, however big their hours",
+      "today": "2026-10-31",
+      "deviceMs": {"default": 0, "dates": {"2026-10-23": 0, "2026-10-24": 900000, "2026-10-25": 900000, "2026-10-26": 900000, "2026-10-27": 900000, "2026-10-28": 900000, "2026-10-29": 900000, "2026-10-30": 900000, "2026-10-31": 900000}},
+      "hourly": {"default": {"9": 300000, "21": 600000}, "dates": {"2026-10-31": {"3": 99999999}, "2026-10-23": {"3": 99999999}}},
+      "hour": 21, "peakMs": 600000, "meanHourMs": 37500, "realDays": 7, "trusted": true
+    },
+    {
+      "name": "two hours tie: the first is reported, neither is named",
+      "today": "2026-10-31",
+      "deviceMs": {"default": 1200000, "dates": {}},
+      "hourly": {"default": {"20": 600000, "21": 600000}, "dates": {}},
+      "hour": 20, "peakMs": 600000, "meanHourMs": 50000, "realDays": 30, "trusted": false
+    },
+    {
+      "name": "a flat day: the peak under 1.25 times the mean hour is not named",
+      "today": "2026-10-31",
+      "deviceMs": {"default": 24200, "dates": {}},
+      "hourly": {"default": {"rest": 1000, "21": 1200}, "dates": {}},
+      "hour": 21, "peakMs": 1200, "meanHourMs": 1008, "realDays": 30, "trusted": false
+    },
+    {
+      "name": "exactly 1.25 times the mean hour is named",
+      "today": "2026-10-31",
+      "deviceMs": {"default": 1, "dates": {}},
+      "hourly": {"default": {"rest": 91000, "21": 115000}, "dates": {}},
+      "hour": 21, "peakMs": 115000, "meanHourMs": 92000, "realDays": 30, "trusted": true
+    }
+  ]
+}

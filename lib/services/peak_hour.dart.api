@@ -1,0 +1,16 @@
+// peak_hour.dart
+typedef PeakHour = (
+  int hour,
+  int peakMs,
+  int meanHourMs,
+  int realDays,
+  bool trusted,
+  List<int> hourMeansMs,
+  required DateTime today,
+  required int Function(String date) deviceDailyMs,
+  required List<int> Function(String date) deviceHourly,
+  var realDays = 0;
+  for (var back = 1; back <= kUsualWindowDays; back++)
+  var hour = 0;
+  for (var h = 1; h < 24; h++)
+  return (

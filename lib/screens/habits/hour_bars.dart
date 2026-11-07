@@ -1,4 +1,4 @@
-// HourBars: 24 bars, one per clock hour, on a fixed scale up to the whole hour; the peak in full ink, labelled on its mark
+// HourBars: 24 bars, one per clock hour, on a fixed scale up to the whole hour, a dashed line at half an hour; the peak in full ink, labelled on its mark
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -8,10 +8,10 @@ const _kHourMs = 60 * 60 * 1000;
 
 class HourBars extends StatelessWidget {
   const HourBars({super.key, required this.hourMs, required this.peakHour, required this.peakLabel,
-      required this.fullLabel});
+      required this.halfLabel});
 
-  /// Labels the dashed line at the top of the scale ("hora inteira").
-  final String fullLabel;
+  /// Labels the dashed line at half the scale ("meia hora", Lucas 2026-11-06).
+  final String halfLabel;
 
   /// One mean per clock hour, 0–23.
   final List<int> hourMs;
@@ -32,9 +32,9 @@ class HourBars extends StatelessWidget {
         maxY: _kHourMs * 1.2,
         extraLinesData: ExtraLinesData(horizontalLines: [
           HorizontalLine(
-            y: _kHourMs.toDouble(), color: scheme.outline, strokeWidth: 1, dashArray: const [4, 4],
+            y: _kHourMs / 2, color: scheme.outline, strokeWidth: 1, dashArray: const [4, 4],
             label: HorizontalLineLabel(
-              show: true, alignment: Alignment.topLeft, labelResolver: (_) => fullLabel,
+              show: true, alignment: Alignment.topLeft, labelResolver: (_) => halfLabel,
               style: small?.copyWith(color: scheme.outline)),
           ),
         ]),

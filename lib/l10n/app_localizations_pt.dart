@@ -118,7 +118,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get nightTitle => 'À noite';
   @override String nightText(String avg) => '$avg por noite, entre 22h e 6h';
   @override String get peakLead => 'Hora de maior uso';
-  @override String get hourFull => 'hora inteira';
+  @override String get hourHalf => 'meia hora';
   @override String peakHour(int hour) => '${hour}h';
   @override String peakSentence(String peakMs, double ratio) =>
       '$peakMs em média nessa hora, ${ratio.toStringAsFixed(1).replaceAll('.', ',')}× uma hora comum';

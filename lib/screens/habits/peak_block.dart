@@ -49,7 +49,7 @@ class _PeakBlockState extends State<PeakBlock> {
       LeadNumber(label: l10n.peakLead, value: peak.trusted ? hourText : '—', sentence: _sentence(l10n, peak)),
       const SizedBox(height: AppSpacing.lg),
       HourBars(hourMs: bars, peakHour: peak.trusted && weekday == null ? peak.hour : null, peakLabel: hourText,
-          fullLabel: l10n.hourFull),
+          halfLabel: l10n.hourHalf),
       const SizedBox(height: AppSpacing.sm),
       _weekdays(l10n),
       if (peak.trusted) ...[

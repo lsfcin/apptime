@@ -149,7 +149,7 @@ abstract class AppLocalizations {
   // ── HabitsScreen ─────────────────────────────────────────────────────────────
   String get habitsTitle;
   String get peakLead;
-  String get hourFull;
+  String get hourHalf;
   String peakHour(int hour);
   String peakSentence(String peakMs, double ratio);
   String peakWarmup(int day);

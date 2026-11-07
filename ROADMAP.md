@@ -155,21 +155,22 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   starts calm (after 04:00); battery, vertical first; a better name than "Mão única" for the ▼ look; avaliar granularidade (3 estágios vs 7 estágios vs escala linear contínua) para feedback mais imediato sem perda de performance (INBOX 2026-11-03).
   Open: Bloco keeps its 8 dp margin (only the pill's was trimmed); the Aba is still unbuilt.
 
-- **Hoje and the per-app screen are provisional** (built 2026-11-06 under the charter, `lib/screens/today/`,
-  `apps/`): round 4 redesigns the lead number and the day chart. Per-app holds the switch and pill
-  background (option Y); still lacks position, fullscreen/landscape and "quando você costuma usar".
-  Ajustes › Apps still wants search.
-- **"Your usual" shows in three places**: Hoje, the per-app screen, the overlay preview in Ajustes.
-- **Análise copy**: `classification_message.dart` still cites the debunked "~23 min per
-  interruption" and research bands; cut per [refs/interventions-evidence.md](refs/interventions-evidence.md).
+- **Per-app screen** still lacks position, fullscreen/landscape and "quando você costuma usar".
 - **Ajustes** (built 2026-11-06, one row per choice, options in a sheet): still wants the live preview on
-  top, the gallery, a size control, the messages' switches and Apps search.
+  top, a size control, the messages' switches and Apps › search. **Next** (Lucas 2026-11-06): style,
+  "comparação com seu habitual" and thermometer each become a horizontal visual selector — one
+  geometric drawing per option (pill, Bloco, Aba: filled or outlined), the picked one selected — and
+  each needs a better name than "Estilo do visor" etc.; amber colours shown as a sample with and
+  without, tap to pick. Brief Claude Design / Stitch first if it helps.
 - **Hábitos** (built 2026-11-06; Lucas, panel 9/10 over Padrões inside Análise): "Como seu uso está
   mudando?" — the peak hour leads ([apptime/padroes](https://lucassf.pages.dev/apptime/padroes) votes),
   then 7/30 days, night, the entry app. Rule for every block (Lucas): the harm said plainly but
   conditionally, then a way out with evidence, its limits on tap; old Insights only after review.
   The peak-hour text replaces a due message's inside the trusted peak hour, never a 4th message.
-  **Next**: Lucas approves the three harm lines (morning, afternoon, night); measure the peak
+  Harm lines approved (Lucas 2026-11-06). **Next** (Lucas): section titles 2 pt smaller; the hour
+  bars' dashed line at "meia hora", not the whole hour (scale stays fixed); the 30-day view shows the
+  30 days before as the 7-day one does — check why it is missing (the line is drawn only when a day
+  of the 30 before was measured, so likely < 60 days of data: then say so); measure the peak
   message by later use and annoyance, not taps; surfaces are still the old navy, not Obsidian
   carbon; then Claude Design projects. Loops wait for real `SessionLog` days.
 - **Patterns: flows and triggers** (Lucas 2026-11-06; SPECS § Visual): `SessionLog` records since

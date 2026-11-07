@@ -2,7 +2,9 @@
 package com.lsf.apptime
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MessageRulesTest {
@@ -71,5 +73,26 @@ class MessageRulesTest {
             t += MessageRules.MIN_GAP_MS
         }
         assertEquals(Trigger.entries.toList(), shown)
+    }
+
+    @Test
+    fun peakTextOnlyInsideTheTrustedPeakHour() {
+        val peak = Peak(hour = 21, peakMs = 40 * min, meanHourMs = 5 * min, realDays = 30, trusted = true)
+        assertEquals(true, MessageRules.atPeak(peak, 21))
+        assertEquals(false, MessageRules.atPeak(peak, 20))
+        assertEquals(false, MessageRules.atPeak(peak, 22))
+        assertEquals(false, MessageRules.atPeak(peak.copy(trusted = false), 21))
+    }
+
+    @Test
+    fun peakTextReplacesEveryTriggerWithinFifteenWords() {
+        for (lang in listOf("pt", "en")) {
+            val peakText = PmMessages.forTrigger(Trigger.LONG_SESSION, lang, atPeak = true)
+            assertTrue(peakText.split(" ").size <= 15)
+            for (trigger in Trigger.entries) {
+                assertEquals(peakText, PmMessages.forTrigger(trigger, lang, atPeak = true))
+                assertNotEquals(peakText, PmMessages.forTrigger(trigger, lang))
+            }
+        }
     }
 }

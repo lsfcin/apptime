@@ -72,14 +72,15 @@ lib/
 | `PhoneTotal.kt` | Pure: a day's or an hour's phone total minus unmonitored apps (the launcher thermometer reads the hour), mirrored by `getDeviceDailyMs`/`getDeviceHourlyMs` in Dart |
 | `MessageDisplay.kt` | Pure: 6.5 s message lifetime and foreground-package cancellation |
 | `FeedbackEngine.kt` | Consumes shared live usage, asks MessageRules, schedules 6.5 s display; cadence persisted before display and retained on cancellation |
-| `MessageRules.kt` | Pure: three triggers (session ≥20 min, app past usual, phone past usual), each once a day, ≥90 min apart |
+| `MessageRules.kt` | Pure: three triggers (session ≥20 min, app past usual, phone past usual), each once a day, ≥90 min apart; `atPeak` swaps the text in the peak hour |
+| `PeakHour.kt` · `PeakCache.kt` | Peak hour — mirror of `peak_hour.dart` · cached per day |
 | `Thermometer.kt` | Thermometer — mirror of `thermometer.dart`, held equal by `test/fixtures/thermometer.json` |
 | `Thermometer{Level,Motion,Glyph,Source}.kt` | Intensity and look · clock-based motion · drawing · cached hour buckets |
 | `RhythmLevel.kt` · `RhythmNotification.kt` | Pure: the whole phone's pace in 3 steps with a down margin · the one notification (id 1001, LOW channel `apptime_rhythm`) both foreground services share |
 | `UsualDaily.kt` | "Your usual" — mirror of `usual_daily.dart`, held equal by `test/fixtures/usual_daily.json` |
 | `AppConstants.kt` | Shared launcher resolution/classification, parseDisabledApps(), CHANNEL constant |
 | `DateUtils.kt` | today(), dateKey(epochMs), currentHour(), daysBefore(), safeGetCount() extension |
-| `PmMessages.kt` | Message text (PT/EN) per trigger |
+| `PmMessages.kt` | Message text (PT/EN) per trigger + peak |
 | `BootReceiver.kt` | Resumes monitoring after reboot or reinstall when `monitoring_enabled`; MIUI drops both broadcasts without autostart |
 | `MonitoringSwitch.kt` | Starts/stops both services and persists `monitoring_enabled` |
 | `SystemSettings.kt` | Opens each system screen on AppTime's own page (fallback: the list); reads battery exemption and MIUI autostart (appop 10008, hidden API) |

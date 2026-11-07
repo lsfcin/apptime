@@ -1,13 +1,19 @@
+// Message text, PT and EN, at most 15 words: one per trigger, and the peak-hour text that replaces any of them
 package com.lsf.apptime
 
 /**
- * Message text, PT and EN — 15 words at most. The header above it names the app and today's total,
- * so the text repeats neither. Texts approved by Lucas, 2026-11-01.
+ * The header above the text names the app and today's total, so the text repeats neither.
+ * Trigger texts approved by Lucas 2026-11-01; the peak text 2026-11-06.
  */
 object PmMessages {
 
-    fun forTrigger(trigger: Trigger, lang: String): String {
+    /** [atPeak] ([MessageRules.atPeak]) swaps the trigger's text for the peak's; the trigger still counts as shown. */
+    fun forTrigger(trigger: Trigger, lang: String, atPeak: Boolean = false): String {
         val en = lang == "en"
+        if (atPeak) {
+            return if (en) "Your busiest hour is usually now. Try a grayscale screen."
+                   else "Seu maior uso costuma ser agora. Experimente a tela em escala de cinza."
+        }
         return when (trigger) {
             Trigger.APP_PAST_USUAL ->
                 if (en) "You're already past your usual here today. Short break?"

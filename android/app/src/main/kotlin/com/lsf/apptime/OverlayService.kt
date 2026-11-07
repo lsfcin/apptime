@@ -15,6 +15,7 @@ class OverlayService : Service() {
     private lateinit var prefs: SharedPreferences
     private lateinit var powerManager: PowerManager
     private lateinit var usualCache: UsualCache
+    private lateinit var peakCache: PeakCache
     private lateinit var thermometerSource: ThermometerSource
     private lateinit var phoneThermometer: ThermometerSource
     private var rhythm = RhythmLevel.CALM
@@ -47,6 +48,7 @@ class OverlayService : Service() {
         // MonitoringService's watchdog calls this every 30 s; retain message cadence and cache.
         if (feedbackEngine == null) {
             usualCache = UsualCache { key -> prefs.getLong(key, 0L) }
+            peakCache = PeakCache { key -> prefs.getLong(key, 0L) }
             thermometerSource = ThermometerSource(prefs::safeGetCount)
             phoneThermometer = ThermometerSource(prefs::safeGetCount)
             timer = TimerOverlay(this)
@@ -98,7 +100,8 @@ class OverlayService : Service() {
             if (allowed && timer.isAdded) {
                 val lang = prefs.getString("flutter.language_code", null) ?: Locale.getDefault().language
                 val header = OverlayText.header(if (inApp) resolveAppLabel(pkg!!) else null, total, lang)
-                feedbackEngine?.evaluate(pkg, usage, today, now, lang, header)
+                feedbackEngine?.evaluate(pkg, usage, today, now, lang, header,
+                    MessageRules.atPeak(peakCache.get(today, disabled), DateUtils.currentHour()))
             }
         }
         message.reposition(timer.bottom)

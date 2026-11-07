@@ -45,6 +45,12 @@ object MessageRules {
         return Cadence(today, shownToday + trigger, nowMs)
     }
 
+    /**
+     * Whether a due message speaks of the peak instead (Lucas 2026-11-06, panel 9/10): only inside the
+     * peak hour itself, and only a trusted peak. It replaces the text, never adds a message.
+     */
+    fun atPeak(peak: Peak, hourOfDay: Int): Boolean = peak.trusted && peak.hour == hourOfDay
+
     private fun isPast(todayMs: Long, usual: Usual): Boolean =
         usual.realDays >= MIN_REAL_DAYS && UsualDaily.state(todayMs, usual.meanMs) == UsualState.PAST
 }

@@ -26,14 +26,16 @@ class FeedbackEngine(
         if (!allowed || display?.isActive(pkg, now) == false) cancel()
     }
 
-    fun evaluate(pkg: String?, usage: Usage, today: String, now: Long, lang: String, header: String) {
+    /** [atPeak] ([MessageRules.atPeak]) changes only the text shown, never which trigger fires or the cadence. */
+    fun evaluate(pkg: String?, usage: Usage, today: String, now: Long, lang: String, header: String,
+                 atPeak: Boolean = false) {
         if (display != null) return
         val prefs = getPrefs()
         val cadence = loadCadence(prefs)
         val trigger = MessageRules.next(usage, cadence, today, now) ?: return
         saveCadence(prefs, MessageRules.record(cadence, trigger, today, now))
         display = MessageDisplay(pkg, now)
-        showMessage(header, PmMessages.forTrigger(trigger, lang))
+        showMessage(header, PmMessages.forTrigger(trigger, lang, atPeak))
         handler.postDelayed(expiry, PM_SHOW_MS)
     }
 

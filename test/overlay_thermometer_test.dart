@@ -39,8 +39,8 @@ void main() {
       ));
       await tester.pumpAndSettle();
       final labels = lang == 'pt'
-          ? ['Termômetro vertical', 'ECG', 'Mão única', 'Desligado']
-          : ['Vertical thermometer', 'ECG', 'One way', 'Off'];
+          ? ['Vertical', 'Onda', 'Seta', 'Nada']
+          : ['Vertical', 'Wave', 'Arrow', 'None'];
       final row = settingsL10n(tester).overlayThermometer;
       for (var i = 0; i < labels.length; i++) {
         await pickChoice(tester, row, labels[i]);

@@ -1,0 +1,4 @@
+// settings_choice_art.dart
+enum ChoiceArtKind
+class ChoiceArt extends StatelessWidget
+  Widget build(BuildContext context)

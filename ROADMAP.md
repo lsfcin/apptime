@@ -163,8 +163,7 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   the separate Parar button, Mostrar borda / Mostrar fundo, and the stale "(5s)" text.
 - **Round 4 reopens structure and colour** (Lucas 2026-11-06), under the charter in SPECS § Visual:
   structure decided on [the round 4 page](https://lucassf.pages.dev/apptime/estrutura):
-  Padrões is a section of Análise with its detail on tap (B, panel 9/10); "últimas 2 h", "sessões e
-  desbloqueios" and "apps mais abertos" move into it. Colour decided on
+  Padrões is a section of Análise with its detail on tap (B, panel 9/10). Colour decided on
   [apptime/cor](https://lucassf.pages.dev/apptime/cor): SPECS § Visual. Análise is cut to mean per day, daily
   bars and night (panel, Lucas 2026-11-06). Cyan is in the code; the surfaces are still the old navy,
   not Obsidian carbon. **Next: code Padrões** as voted on
@@ -174,6 +173,7 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   usual, "perto do seu normal" inside it, ±5 min "igual". Title: "Como seu uso começa e se repete?".
   Rule for every block (Lucas): say the harm plainly, then a way out with evidence (a study or a
   real case; old Insights only after review). 40 unlocks earns the lead only with both.
+  Night (22h–6h) stays its own Análise block, over the panel's cut: sleep hygiene (Lucas).
   Entry app is on the channel (`getEntryApps`). Loops wait for real `SessionLog` days.
   Then Claude Design projects.
 - **Patterns: flows and triggers** (Lucas 2026-11-06; SPECS § Visual): `SessionLog` records since
@@ -216,6 +216,7 @@ components that its own milestones had deliberately unwired and planned to reuse
 ## Rejected
 
 - Session log written inside `accumulateDailyMs` — file and prefs are no transaction and the history backfill would log twice (Codex 4/10, 2026-11-06).
+- Padrões: a sentence list, unlocks or short openings as lead, a 7 × 24 grid (Lucas 2026-11-06).
 - Round 4 mockups recoloured from the round 3 canvases — Lucas finds them crowded and hard to absorb; agent wireframes from the charter instead (2026-11-06).
 - Cyan for above-usual (panel 6/10) or for both (4/10); hues `#12A8D0` 8, `#00C1C1` 7, `#00C1A0` 6 (reads as health), `#2A90E0` 5 (Lucas 2026-11-06).
 - Análise: unlocks and the 5×4 grade in the lead, both trends, passive/active (panel 2–5/10).

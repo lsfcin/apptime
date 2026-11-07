@@ -112,8 +112,8 @@ class _ArtPainter extends CustomPainter {
         final r = Rect.fromLTWH(4, bar + 4, 30, 16);
         canvas.drawRRect(RRect.fromRectAndRadius(r, const Radius.circular(3)), _fill(ink));
       default:
-        // Joined to the edge by inverted corners twice the body's radius, as the overlay's Aba.
-        const r = 3.0, f = 6.0, w = 24.0;
+        // Joined to the edge by inverted corners 1.4× the body's radius, as the overlay's Aba.
+        const r = 3.0, f = 4.2, w = 24.0;
         final right = s.width, left = right - w, top = bar + 10, bottom = top + 14;
         final p = Path()
           ..moveTo(right, top - f)

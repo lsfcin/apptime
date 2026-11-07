@@ -77,7 +77,7 @@ class TimerOverlay(context: Context) {
             view.setTextColor(ink)
             // The pill has no fill: the bar follows the app, so the ink alone follows the theme guess (Lucas 2026-11-04).
             tab = if (style == OverlayStyle.TAB)
-                TabShape(window.dp(8).toFloat(), window.dp(16).toFloat(), Color.argb(245, 0, 0, 0)) else null
+                TabShape(window.dp(8).toFloat(), window.dp(TAB_FLARE_DP).toFloat(), Color.argb(245, 0, 0, 0)) else null
             val box = tab ?: if (block) window.background(style) else null
             feedbackDrawable = FeedbackDrawable(box ?: ColorDrawable(Color.TRANSPARENT),
                 density, block, ink)
@@ -181,7 +181,7 @@ class TimerOverlay(context: Context) {
     // its inverted corners take a flare above and below the body.
     private fun padTab(variant: String, thermometer: String) {
         val unit = density * FeedbackDrawable.scale(true)
-        val flare = window.dp(16)
+        val flare = window.dp(TAB_FLARE_DP)
         val side = window.dp(8) + view.paint.measureText(" ")
         feedbackDrawable.dotScale = FeedbackDrawable.TAB_PIE_SCALE
         val pie = if (variant == "fill")
@@ -210,5 +210,6 @@ class TimerOverlay(context: Context) {
     private companion object {
         const val UNIT_SIZE = 0.72f
         const val PILL_EDGE_DP = 2f   // a glyph's distance from the pill's edge, pie or thermometer
+        const val TAB_FLARE_DP = 11   // the Aba's inverted corners: twice its radius, less 30% (Lucas 2026-11-07)
     }
 }

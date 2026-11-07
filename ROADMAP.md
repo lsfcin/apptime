@@ -167,10 +167,7 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   then 7/30 days, night, the entry app. Rule for every block (Lucas): the harm said plainly but
   conditionally, then a way out with evidence, its limits on tap; old Insights only after review.
   The peak-hour text replaces a due message's inside the trusted peak hour, never a 4th message.
-  Harm lines approved (Lucas 2026-11-06). **Next** (Lucas): section titles 2 pt smaller; the hour
-  bars' dashed line at "meia hora", not the whole hour (scale stays fixed); the 30-day view shows the
-  30 days before as the 7-day one does — check why it is missing (the line is drawn only when a day
-  of the 30 before was measured, so likely < 60 days of data: then say so); measure the peak
+  Harm lines approved (Lucas 2026-11-06). **Next** (Lucas): measure the peak
   message by later use and annoyance, not taps; surfaces are still the old navy, not Obsidian
   carbon; then Claude Design projects. Loops wait for real `SessionLog` days.
 - **Patterns: flows and triggers** (Lucas 2026-11-06; SPECS § Visual): `SessionLog` records since
@@ -204,6 +201,7 @@ These files belong here, not on the root roadmap; entropy counts regenerate in `
 
 ## Rejected
 
+- A fixed "healthy limit" line (3 h, or OCDE's 5 h) where Hábitos has no days before: no adult threshold is validated, so the chart says "Sem histórico para comparar" (panel 1–4/10 vs 9/10, Lucas 2026-11-06).
 - Session log written inside `accumulateDailyMs` — file and prefs are no transaction and the history backfill would log twice (Codex 4/10, 2026-11-06).
 - Padrões: a sentence list, unlocks or short openings as lead, a 7 × 24 grid (Lucas 2026-11-06).
 - Round 4 mockups recoloured from the round 3 canvases — Lucas finds them crowded and hard to absorb; agent wireframes from the charter instead (2026-11-06).

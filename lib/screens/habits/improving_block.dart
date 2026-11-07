@@ -56,7 +56,10 @@ class _ImprovingBlockState extends State<ImprovingBlock> {
       Text('${l10n.periodLead}: ${fmtDuration(s.avgMs)}'),
       Text(against.text, style: TextStyle(color: against.past ? AppColors.past(context) : quiet)),
       const SizedBox(height: AppSpacing.md),
-      DailyBars(dailyMs: s.dailyMs, lineMs: s.beforeAvgMs, lineLabel: l10n.periodLine(_days)),
+      DailyBars(dailyMs: s.dailyMs, lineMs: s.beforeAvgMs, emptyLabel: l10n.periodNoHistory,
+          lineLabel: s.measuredBefore < _days
+              ? l10n.periodLinePartial(s.measuredBefore, _days)
+              : l10n.periodLine(_days)),
       const SizedBox(height: AppSpacing.lg),
       SectionHeader(l10n.nightTitle),
       Text(l10n.nightText(fmtDuration(s.nightAvgMs)), style: TextStyle(color: quiet)),

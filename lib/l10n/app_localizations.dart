@@ -183,6 +183,8 @@ abstract class AppLocalizations {
   String periodSame(String before, int days);
   String periodNoBefore(int days);
   String periodLine(int days);
+  String periodLinePartial(int measured, int days);
+  String get periodNoHistory;
   String get nightTitle;
   String nightText(String avg);
 

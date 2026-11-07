@@ -8,7 +8,7 @@
 | File | Interface | Description |
 |------|-----------|-------------|
 | [`index.dart`](index.dart) | [`index.dart.api`](index.dart.api) | **facade** — Facade for screens/habits/: the Hábitos tab |
-| [`daily_bars.dart`](daily_bars.dart) | [`daily_bars.dart.api`](daily_bars.dart.api) | DailyBars: one bar per day, oldest first, with the days-before mean as a labelled dashed line |
+| [`daily_bars.dart`](daily_bars.dart) | [`daily_bars.dart.api`](daily_bars.dart.api) | DailyBars: one bar per day, oldest first, with the days-before mean as a labelled dashed line, or a label saying there is none |
 | [`entry_block.dart`](entry_block.dart) | [`entry_block.dart.api`](entry_block.dart.api) | EntryBlock: the app opened first after an unlock, how often, and a way out; hidden until the log knows an unlock |
 | [`habits_screen.dart`](habits_screen.dart) | [`habits_screen.dart.api`](habits_screen.dart.api) | HabitsScreen (Hábitos): how your use is changing — the busiest hour leads, then the period, night and how use starts |
 | [`hour_bars.dart`](hour_bars.dart) | [`hour_bars.dart.api`](hour_bars.dart.api) | HourBars: 24 bars, one per clock hour, on a fixed scale up to the whole hour, a dashed line at half an hour; the peak in full ink, labelled on its mark |

@@ -115,6 +115,8 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String periodSame(String before, int days) => 'Igual aos $days dias anteriores ($before)';
   @override String periodNoBefore(int days) => 'Ainda não há $days dias anteriores para comparar';
   @override String periodLine(int days) => 'linha: os $days dias anteriores';
+  @override String periodLinePartial(int measured, int days) => 'linha: $measured dos $days dias anteriores';
+  @override String get periodNoHistory => 'Sem histórico para comparar';
   @override String get nightTitle => 'À noite';
   @override String nightText(String avg) => '$avg por noite, entre 22h e 6h';
   @override String get peakLead => 'Hora de maior uso';

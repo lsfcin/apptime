@@ -7,6 +7,7 @@
 
 | File | Interface | Description |
 |------|-----------|-------------|
+| [`daily_bars_test.dart`](daily_bars_test.dart) | [`daily_bars_test.dart.api`](daily_bars_test.dart.api) | Hábitos daily bars: with no days before measured, a label says so instead of any fixed line |
 | [`default_unmonitored_test.dart`](default_unmonitored_test.dart) | [`default_unmonitored_test.dart.api`](default_unmonitored_test.dart.api) | Verifies which apps start unmonitored, that each is switched off only once, and that the user's choice stands. |
 | [`fixtures/peak_hour.json`](fixtures/peak_hour.json) | — | Cases for the peak hour that the Dart test and the Kotlin JUnit test both run: too few days, today left out, ties and a flat day. |
 | [`fixtures/thermometer.json`](fixtures/thermometer.json) | — | Cases for the thermometer that the Dart test and the Kotlin JUnit test both run: window sums, the open session, the hour turn and bucket keys. |

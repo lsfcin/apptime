@@ -40,7 +40,9 @@ class OverlayWindow(private val context: Context, private val view: View) {
     /** Called while an Aba is dragged, when it changes edge: true for the left one. */
     var onSide: (Boolean) -> Unit = {}
     private var edgeLocked = false
-    private var onLeft = false
+    /** Which edge the Aba is on: the one truth its drawing follows, kept by the finger while it drags. */
+    var onLeft = false
+        private set
     private val drag = OverlayDrag({ params.x to params.y }, { x, y ->
         params.x = x
         params.y = y

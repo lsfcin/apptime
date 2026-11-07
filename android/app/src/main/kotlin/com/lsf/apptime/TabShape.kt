@@ -16,8 +16,8 @@ import android.graphics.drawable.Drawable
  * browser tab turned on its side (Lucas 2026-11-06).
  */
 class TabShape(private val radius: Float, val flare: Float, private val color: Int) : Drawable() {
+    /** Set only through TimerOverlay.joinEdge, which redraws the view: this drawable has no callback of its own. */
     var onLeft = false
-        set(value) { field = value; invalidateSelf() }
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = this@TabShape.color }
 
     override fun draw(canvas: Canvas) = canvas.drawPath(mirrored(body(RectF(bounds))), paint)

@@ -63,7 +63,7 @@ class TimerOverlay(context: Context) {
         again = { render(app, style, totalMs, feedback, thermometer, level, visible, chip, amber) }
         window.onDrop = { drops.save(style, app, it); again() }
         // The joint flips the moment the edge does, not on the drop (Lucas 2026-11-07).
-        window.onSide = { tab?.onLeft = it; feedbackDrawable.invalidateSelf() }
+        window.onSide = ::joinEdge
         window.touchable(block)
         // The Bloco is always its 96% black, so only the pill follows the theme guess.
         val shade = if (block) Shade.DARK else chip
@@ -99,8 +99,9 @@ class TimerOverlay(context: Context) {
         feedbackDrawable.thermometerLook = thermometer
         feedbackDrawable.frame = feedback
         val slot = fit(style, feedback.variant, thermometer, step, bounds)
-        tab?.onLeft = slot.onLeft
+        // A poll during a drag must not flip the joint back to the saved side: the window decides.
         window.lockToEdge(style == OverlayStyle.TAB, slot.onLeft)
+        joinEdge(window.onLeft)
         view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         val x = slot.x + if (slot.inStatusBar) 0 else bounds.rightInset
         window.place(view.measuredWidth, view.measuredHeight, x, slot.y, slot.inStatusBar)
@@ -175,6 +176,15 @@ class TimerOverlay(context: Context) {
         val pill = if (thermometer == "vertical") maxOf(pillRight("vertical"), pillRight("mao")) else pillRight(thermometer)
         val right = if (glyph > 0f && !block) pill else side + glyph
         view.setPadding(left.roundToInt(), vertical + extra, right.roundToInt(), bottom + extra)
+    }
+
+    // The only way the Aba changes side: a moved window keeps its old pixels, so the joint is redrawn here
+    // every time, or it stays on the screen side after an app switch (Lucas 2026-11-07).
+    private fun joinEdge(left: Boolean) {
+        val shape = tab ?: return
+        if (shape.onLeft == left) return
+        shape.onLeft = left
+        feedbackDrawable.invalidateSelf()
     }
 
     // The Aba stacks pie, number and glyph, with the Bloco's air all round, so it reads square, not wide;

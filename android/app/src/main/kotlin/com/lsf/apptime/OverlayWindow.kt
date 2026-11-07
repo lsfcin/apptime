@@ -1,4 +1,4 @@
-// Owns a non-touchable overlay window and reads screen/cutout geometry.
+// Owns the overlay window — touch passes through the pill, the Bloco and Aba drag — and reads screen/cutout geometry.
 package com.lsf.apptime
 
 import android.content.Context
@@ -35,6 +35,24 @@ class OverlayWindow(private val context: Context, private val view: View) {
     var isAdded = false
         private set
 
+    /** Called with where a Bloco or Aba was let go; the timer then places it for real. */
+    var onDrop: (Drop) -> Unit = {}
+    private val drag = OverlayDrag({ params.x to params.y }, { x, y ->
+        params.x = x
+        params.y = y
+        if (isAdded) try { manager.updateViewLayout(view, params) } catch (_: Exception) {}
+    }, { onDrop(it) })
+
+    /** Only a boxed look takes the touch (Lucas 2026-11-03: dragging them is worth it); the pill never does. */
+    fun touchable(on: Boolean) {
+        val flags = if (on) params.flags and WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE.inv()
+            else params.flags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        view.setOnTouchListener(if (on) drag else null)
+        if (flags == params.flags) return
+        params.flags = flags
+        if (isAdded) try { manager.updateViewLayout(view, params) } catch (_: Exception) {}
+    }
+
     fun dp(value: Int): Int = (value * context.resources.displayMetrics.density).roundToInt()
 
     fun bounds(): OverlayBounds {
@@ -53,6 +71,7 @@ class OverlayWindow(private val context: Context, private val view: View) {
     }
 
     fun place(width: Int, height: Int, x: Int, y: Int, inStatusBar: Boolean = false) {
+        if (drag.dragging) return // the finger owns the window until it lets go
         val gravity = Gravity.TOP or if (inStatusBar) Gravity.START else Gravity.RIGHT
         val changed = params.width != width || params.height != height || params.x != x ||
             params.y != y || params.gravity != gravity
@@ -74,13 +93,19 @@ class OverlayWindow(private val context: Context, private val view: View) {
         }
     }
 
-    /** The Aba's top corners are square: they join the status bar, the bottom ones are rounded. */
     fun background(style: OverlayStyle): GradientDrawable = GradientDrawable().apply {
         val block = style.boxed
-        val r = dp(if (block) 8 else 12).toFloat()
-        if (style == OverlayStyle.TAB) cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r) else cornerRadius = r
+        cornerRadius = dp(if (block) 8 else 12).toFloat()
+        if (style == OverlayStyle.TAB) tabCorners(this, onLeft = false)
         // With window alpha 0.8 the pill still has >45% effective black.
         setColor(Color.argb(if (block) 245 else 180, 0, 0, 0))
+    }
+
+    /** The Aba's side against the edge is straight, the side facing the screen rounded. */
+    fun tabCorners(shape: GradientDrawable, onLeft: Boolean) {
+        val r = dp(8).toFloat()
+        shape.cornerRadii = if (onLeft) floatArrayOf(0f, 0f, r, r, r, r, 0f, 0f)
+            else floatArrayOf(r, r, 0f, 0f, 0f, 0f, r, r)
     }
 }
 

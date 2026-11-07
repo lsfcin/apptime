@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.provider.Settings
 import android.text.SpannableString
@@ -27,6 +28,9 @@ class TimerOverlay(context: Context) {
         visibility = View.INVISIBLE
     }
     private val window = OverlayWindow(context, view)
+    private val drops = OverlayDropStore(context)
+    private var box: GradientDrawable? = null
+    private var again: () -> Unit = {}
     private val density = view.resources.displayMetrics.density
     private var lastAppearance: List<Any>? = null
     private var lastText: String? = null
@@ -53,6 +57,10 @@ class TimerOverlay(context: Context) {
                visible: Boolean, chip: Shade, amber: Boolean) {
         val state = feedback.state
         val block = style.boxed
+        // A drop is saved, then placed at once by the same render (the Aba snaps to its edge).
+        again = { render(style, totalMs, feedback, thermometer, level, visible, chip, amber) }
+        window.onDrop = { drops.save(style, it); again() }
+        window.touchable(block)
         // The Bloco is always its 96% black, so only the pill follows the theme guess.
         val shade = if (block) Shade.DARK else chip
         val appearance = listOf(style, state, feedback.variant, thermometer, shade, amber)
@@ -64,7 +72,8 @@ class TimerOverlay(context: Context) {
             val ink = OverlayInk.ink(state, shade, amber)
             view.setTextColor(ink)
             // The pill has no fill: the bar follows the app, so the ink alone follows the theme guess (Lucas 2026-11-04).
-            feedbackDrawable = FeedbackDrawable(if (block) window.background(style) else ColorDrawable(Color.TRANSPARENT),
+            box = if (block) window.background(style) else null
+            feedbackDrawable = FeedbackDrawable(box ?: ColorDrawable(Color.TRANSPARENT),
                 density, block, ink)
             view.background = feedbackDrawable
             lastText = null
@@ -83,6 +92,7 @@ class TimerOverlay(context: Context) {
         feedbackDrawable.thermometerLook = thermometer
         feedbackDrawable.frame = feedback
         val slot = fit(style, feedback.variant, thermometer, step, bounds)
+        if (style == OverlayStyle.TAB) box?.let { window.tabCorners(it, slot.onLeft) }
         view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         val x = slot.x + if (slot.inStatusBar) 0 else bounds.rightInset
         window.place(view.measuredWidth, view.measuredHeight, x, slot.y, slot.inStatusBar)
@@ -108,7 +118,8 @@ class TimerOverlay(context: Context) {
         feedbackDrawable.textRight = (view.measuredWidth - view.paddingRight).toFloat()
         return OverlayPlacement.timer(Build.VERSION.SDK_INT, bounds.cutoutRight, bounds.statusBarHeight,
             bounds.width, view.measuredWidth, view.measuredHeight, window.dp(OverlayPlacement.PILL_SLOT_DP),
-            window.dp(8), window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), style, cutoutGap = 0)
+            window.dp(8), window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), style, cutoutGap = 0,
+            drop = drops.read(style))
     }
 
     private fun animate(delayMs: Long) {

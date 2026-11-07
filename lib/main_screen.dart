@@ -69,8 +69,8 @@ class _MainScreenState extends State<MainScreen> {
             label: l10n.navToday,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.insights_outlined),
-            selectedIcon: const Icon(Icons.insights),
+            icon: const Icon(Icons.show_chart),
+            selectedIcon: const Icon(Icons.show_chart),
             label: l10n.navHabits,
           ),
           NavigationDestination(

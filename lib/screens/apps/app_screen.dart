@@ -32,7 +32,7 @@ class _AppScreenState extends State<AppScreen> {
       dailyMs: (d) => s.getDailyMs(widget.package, date: d),
       deviceDailyMs: (d) => s.getDeviceDailyMs(date: d),
     );
-    final sentence = dayAgainstUsual(l10n, todayMs, usual);
+    final sentence = dayAgainstUsual(l10n, todayMs, usual, voice: UsualVoice.app);
 
     return Scaffold(
       appBar: AppBar(

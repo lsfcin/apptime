@@ -47,8 +47,9 @@ class TodaySummary {
   }
 }
 
-/// Today's [todayMs] against its [usual]: calm, near or past, and by how much past.
+/// Today's [todayMs] against its [usual]: calm, near or past, and by how much (negative below).
+/// The gap is taken between whole minutes, as both numbers are shown, so 9h27 − 5h50 reads 3h37.
 ({UsualState state, int overMs}) againstUsual(int todayMs, Usual usual) => (
       state: usualState(todayMs: todayMs, meanMs: usual.meanMs),
-      overMs: todayMs - usual.meanMs,
+      overMs: (todayMs ~/ 60000 - usual.meanMs ~/ 60000) * 60000,
     );

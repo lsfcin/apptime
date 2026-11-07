@@ -4,6 +4,8 @@ Read the next milestone, implement it bullet by bullet. Delete a bullet once it 
 
 ## Milestone — Prepare to PlayStore submission
 
+- [ ] [prelaunch-legal] Before release, review actual functions and target markets: children, external fonts, session recording, marketing, subscriptions and user uploads. Check primary rules, privacy policy and store declarations; document what applies and why. The post mixes US/EU examples; do not copy fines or add irrelevant controls. Lucas requests broader review; ref: refs/REFS.md [Pre-launch legal-risk claims].
+
 Ready: privacy policy at https://lsfcin.github.io/apptime/privacy_policy.html; store copy in
 `docs/store_listing.md`; `applicationId` `com.lsf.apptime` is final. Data Safety form: "no data
 collected", "no account required" (no INTERNET permission, so reviewers can check it).
@@ -122,6 +124,8 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
 
 ### App screens (screen review, 2026-10-31; panel Codex · Gemini agreed unless noted)
 
+- [ ] [ux-20] Reconstruct each spoken directive→screen item; preserve illegible labels and blank item 20. Compare guidance and test usability changes; no universal thresholds. Ref: refs/REFS.md [20 UX principles].
+
 - **Round 3 screen plan** (2026-11-03; Codex only, Gemini out of quota; refs in REFS.md): the
   Claude Design strict canvas is the base (Codex 9 · Stitch strict 7 · CD free 6 · Stitch free 4),
   with every state it drew. Lucas: Hoje · Análise · Ajustes; app rows in Hoje = icon, name, time;
@@ -196,22 +200,14 @@ Outside panel: `core/run tools/panel/ask` (calls and traps in `core/agents/SPECS
 
 ## Workspace drift, refiled from the wos list 2026-08-16
 
-These were tracked in `/ROADMAP.md`, which was the wrong home: the files live here and no
-workspace-level commit can touch them. The wos list's own rule is that a pointer to another
-ROADMAP is a duplicate by definition. Counts regenerate in `/ISSUES.md` § Entropy; never copy them here.
+These files belong here, not on the root roadmap; entropy counts regenerate in `/ISSUES.md`.
 
 - 🟡 **directories over the crowding cap** — `lib/screens/analytics`, `lib/screens`, `lib/data`
-  (limits in `core/hooks/limits.env`).
-  **A split only pays once each new directory declares itself with a `CONTEXT.md`**: the routing
-  generator folds any directory under the warn back into its parent, so moving files without
-  writing that file leaves the parent's table exactly as long. A split that does not shrink the
-  parent table is the check being gamed, not answered.
-
-Two hazards worth expecting, both learned the expensive way in `aiwbot` and `flows`:
-a new subdirectory turns a flat import into a module boundary, so the facade gate starts firing on
-imports that were legal the day before — re-export from the new facade rather than importing past
-it. And **grep this ROADMAP for a filename before calling it dead**: `flows` nearly lost five
-components that its own milestones had deliberately unwired and planned to reuse.
+  (limits in `core/hooks/limits.env`). A split must shrink the parent routing table: give each
+  new directory a `CONTEXT.md`, or the generator folds it back.
+- A directory split creates an import boundary: re-export from the new facade instead of
+  importing past it (aiwbot/flows incidents). Search this ROADMAP before deleting a file:
+  flows nearly lost five deliberately unwired components reserved for later milestones.
 
 ## Rejected
 

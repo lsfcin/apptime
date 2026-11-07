@@ -171,11 +171,15 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get todayLead => 'Today so far';
   @override String todayWarmup(int day) => 'Day $day of 7 · no comparison yet';
   @override String get usualBarely => 'Barely used in the last 30 days';
-  @override String usualCalm(String usual) => 'Your usual day: $usual';
-  @override String usualNear(String usual) => 'Close to your usual day ($usual)';
-  @override String usualPast(String over, String usual) => '$over above your usual day ($usual)';
-  @override String paceCalm(String recent, String pace) => 'Last 2 h: $recent · your pace: $pace';
-  @override String paceAbove(String recent, String pace) => 'Last 2 h: $recent, above your pace ($pace)';
+  @override String usualBelow(String under, String usual, {bool inApp = false}) =>
+      'You average $usual a day${inApp ? ' in this app' : ''}. Today, $under less so far.';
+  @override String usualNear(String usual, {bool inApp = false}) =>
+      'Close to your average${inApp ? ' in this app' : ''}, $usual a day.';
+  @override String usualPast(String over, String usual, {bool inApp = false}) =>
+      'You average $usual a day${inApp ? ' in this app' : ''}. Today, $over more so far.';
+  @override String usualPastRow(String over, String usual) => '$over above average ($usual a day)';
+  @override String recentUse(String recent) => 'Last 2 h: $recent of phone use';
+  @override String recentNonstop(String recent) => 'Last 2 h: $recent of phone use, almost without a break';
   @override String get todayAppsTitle => 'What pulled the day';
   @override String get todayNoApps => 'No app passed 1 minute today.';
   @override String get appOverlayTitle => 'Overlay in this app';

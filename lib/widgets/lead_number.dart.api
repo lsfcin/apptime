@@ -1,3 +1,7 @@
 // lead_number.dart
+enum UsualVoice
+  if (usual.realDays < kUsualWarmupDays) return (text: l10n.todayWarmup(usual.realDays + 1), past: false);
+  if (usual.meanMs < _kBarelyUsedMs) return (text: l10n.usualBarely, past: false);
+  return switch (against.state)
 class LeadNumber extends StatelessWidget
   Widget build(BuildContext context)

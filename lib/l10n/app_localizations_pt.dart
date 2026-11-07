@@ -170,11 +170,15 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get todayLead => 'Hoje até agora';
   @override String todayWarmup(int day) => 'Dia $day de 7 · sem comparação ainda';
   @override String get usualBarely => 'Quase sem uso nos últimos 30 dias';
-  @override String usualCalm(String usual) => 'Seu dia normal: $usual';
-  @override String usualNear(String usual) => 'Perto do seu dia normal ($usual)';
-  @override String usualPast(String over, String usual) => '$over acima do seu dia normal ($usual)';
-  @override String paceCalm(String recent, String pace) => 'Últimas 2 h: $recent · seu ritmo: $pace';
-  @override String paceAbove(String recent, String pace) => 'Últimas 2 h: $recent, acima do seu ritmo ($pace)';
+  @override String usualBelow(String under, String usual, {bool inApp = false}) =>
+      'Sua média${inApp ? ' neste app' : ''} é $usual por dia. Hoje, $under a menos até agora.';
+  @override String usualNear(String usual, {bool inApp = false}) =>
+      'Perto da sua média${inApp ? ' neste app' : ''}, $usual por dia.';
+  @override String usualPast(String over, String usual, {bool inApp = false}) =>
+      'Sua média${inApp ? ' neste app' : ''} é $usual por dia. Hoje, $over a mais até agora.';
+  @override String usualPastRow(String over, String usual) => '$over acima da média ($usual por dia)';
+  @override String recentUse(String recent) => 'Últimas 2 h: $recent de uso do celular';
+  @override String recentNonstop(String recent) => 'Últimas 2 h: $recent de uso do celular, quase sem pausa';
   @override String get todayAppsTitle => 'O que puxou o dia';
   @override String get todayNoApps => 'Nenhum app passou de 1 minuto hoje.';
   @override String get appOverlayTitle => 'Visor neste app';

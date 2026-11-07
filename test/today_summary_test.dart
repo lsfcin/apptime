@@ -33,7 +33,7 @@ void main() {
     expect(day.phoneMs, 180 * _min);
     expect(day.usual.meanMs, 120 * _min);
     expect(day.apps.map((a) => a.package), ['com.instagram.android', 'org.telegram.messenger']);
-    expect(dayAgainstUsual(l10n, day.phoneMs, day.usual).text, '1h00 acima do seu dia normal (2h00)');
+    expect(dayAgainstUsual(l10n, day.phoneMs, day.usual).text, 'Sua média é 2h00 por dia. Hoje, 1h00 a mais até agora.');
   });
 
   test('before 7 measured days the sentence counts the day instead of comparing', () async {
@@ -52,5 +52,20 @@ void main() {
     final s = dayAgainstUsual(l10n, app.todayMs, app.usual);
     expect(s.text, 'Quase sem uso nos últimos 30 dias');
     expect(s.past, isFalse);
+  });
+
+  test('the gap is taken between the minutes shown: 9h27 against 5h50 reads 3h37', () {
+    const usual = (meanMs: 350 * _min + 59 * 1000, realDays: 30);
+    final s = dayAgainstUsual(l10n, 567 * _min + 10 * 1000, usual);
+    expect(s.text, 'Sua média é 5h50 por dia. Hoje, 3h37 a mais até agora.');
+    expect(s.past, isTrue);
+  });
+
+  test('below the usual says how much less so far; an app speaks of itself; a row stays short', () {
+    const usual = (meanMs: 120 * _min, realDays: 30);
+    expect(dayAgainstUsual(l10n, 30 * _min, usual).text, 'Sua média é 2h00 por dia. Hoje, 1h30 a menos até agora.');
+    expect(dayAgainstUsual(l10n, 30 * _min, usual, voice: UsualVoice.app).text,
+        'Sua média neste app é 2h00 por dia. Hoje, 1h30 a menos até agora.');
+    expect(dayAgainstUsual(l10n, 150 * _min, usual, voice: UsualVoice.row).text, '30min acima da média (2h00 por dia)');
   });
 }

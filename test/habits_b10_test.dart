@@ -11,7 +11,7 @@ Future<void> _openHabits(WidgetTester tester, Map<String, Object> prefs) async {
   final storage = await StorageService.init();
   await tester.pumpWidget(AppTimeApp(storage: storage, initialLocale: const Locale('pt'), skipOnboarding: true));
   await tester.pumpAndSettle();
-  await tester.tap(find.byIcon(Icons.insights_outlined));
+  await tester.tap(find.byIcon(Icons.show_chart));
   await tester.pumpAndSettle();
 }
 

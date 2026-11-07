@@ -7,8 +7,8 @@ import '../../utils/index.dart';
 import '../../widgets/index.dart';
 import '../apps/index.dart';
 
-/// Under this much use in the window the thermometer stays calm (ROADMAP § Thermometer).
-const _kPaceCalmBelowMs = 10 * 60 * 1000;
+/// From this much use in the last 2 h, the line says "quase sem pausa" (Lucas 2026-11-06).
+const _kNonstopFromMs = 100 * 60 * 1000;
 
 class TodayScreen extends StatefulWidget {
   const TodayScreen({super.key, required this.storage});
@@ -31,9 +31,7 @@ class _TodayScreenState extends State<TodayScreen> with ReloadOnResume {
     final l10n = AppLocalizations.of(context);
     final day = TodaySummary.of(widget.storage, DateTime.now());
     final phone = dayAgainstUsual(l10n, day.phoneMs, day.usual);
-    final paceUp = day.pace.recentMs > day.pace.previousMs && day.pace.recentMs >= _kPaceCalmBelowMs;
     final recent = fmtDuration(day.pace.recentMs);
-    final pace = fmtDuration(day.pace.previousMs);
     final quiet = Theme.of(context).colorScheme.outline;
 
     return Scaffold(
@@ -45,9 +43,9 @@ class _TodayScreenState extends State<TodayScreen> with ReloadOnResume {
           children: [
             LeadNumber(label: l10n.todayLead, value: fmtDuration(day.phoneMs), sentence: phone.text, past: phone.past),
             const SizedBox(height: AppSpacing.sm),
-            Text(paceUp ? l10n.paceAbove(recent, pace) : l10n.paceCalm(recent, pace),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: paceUp ? AppColors.past(context) : quiet)),
+            // A plain fact, no comparison: the 2-hour share of a typical day was a sum, not a habit (panel 2026-11-06).
+            Text(day.pace.recentMs >= _kNonstopFromMs ? l10n.recentNonstop(recent) : l10n.recentUse(recent),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: quiet)),
             const SizedBox(height: AppSpacing.lg),
             SectionHeader(l10n.todayAppsTitle),
             if (day.apps.isEmpty)
@@ -69,7 +67,7 @@ class _AppDayRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final against = dayAgainstUsual(AppLocalizations.of(context), app.todayMs, app.usual);
+    final against = dayAgainstUsual(AppLocalizations.of(context), app.todayMs, app.usual, voice: UsualVoice.row);
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: AppIcon(app.package),

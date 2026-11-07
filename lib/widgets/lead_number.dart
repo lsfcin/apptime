@@ -8,18 +8,26 @@ import '../utils/index.dart';
 /// Under this mean per day the usual reads as 0min, so there is nothing to compare against.
 const _kBarelyUsedMs = 60 * 1000;
 
+/// Who the sentence speaks for: the phone's lead (Hoje), one app's lead, or a row in Hoje's app list.
+enum UsualVoice { phone, app, row }
+
 /// What [todayMs] means against [usual] (SPECS § Visual rule 3), and whether it reads as past it.
 /// Before [kUsualWarmupDays] measured days there is no comparison, only which day this is.
-({String text, bool past}) dayAgainstUsual(AppLocalizations l10n, int todayMs, Usual usual) {
+({String text, bool past}) dayAgainstUsual(AppLocalizations l10n, int todayMs, Usual usual,
+    {UsualVoice voice = UsualVoice.phone}) {
   if (usual.realDays < kUsualWarmupDays) return (text: l10n.todayWarmup(usual.realDays + 1), past: false);
   // An app barely opened in 30 days has a usual that rounds to 0min: "above 0min" says nothing.
   if (usual.meanMs < _kBarelyUsedMs) return (text: l10n.usualBarely, past: false);
   final usualText = fmtDuration(usual.meanMs);
   final against = againstUsual(todayMs, usual);
+  final inApp = voice == UsualVoice.app;
+  final gap = fmtDuration(against.overMs.abs());
   return switch (against.state) {
-    UsualState.past => (text: l10n.usualPast(fmtDuration(against.overMs), usualText), past: true),
-    UsualState.near => (text: l10n.usualNear(usualText), past: false),
-    UsualState.calm => (text: l10n.usualCalm(usualText), past: false),
+    UsualState.past => (
+        text: voice == UsualVoice.row ? l10n.usualPastRow(gap, usualText) : l10n.usualPast(gap, usualText, inApp: inApp),
+        past: true),
+    UsualState.near => (text: l10n.usualNear(usualText, inApp: inApp), past: false),
+    UsualState.calm => (text: l10n.usualBelow(gap, usualText, inApp: inApp), past: false),
   };
 }
 

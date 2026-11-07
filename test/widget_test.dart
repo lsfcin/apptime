@@ -19,7 +19,7 @@ void main() {
 
     expect(find.text('Hoje até agora'.toUpperCase()), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.insights_outlined));
+    await tester.tap(find.byIcon(Icons.show_chart));
     await tester.pumpAndSettle();
     expect(find.text('Hábitos'), findsWidgets);
 

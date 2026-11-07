@@ -135,11 +135,12 @@ abstract class AppLocalizations {
   String get todayLead;
   String todayWarmup(int day);
   String get usualBarely;
-  String usualCalm(String usual);
-  String usualNear(String usual);
-  String usualPast(String over, String usual);
-  String paceCalm(String recent, String pace);
-  String paceAbove(String recent, String pace);
+  String usualBelow(String under, String usual, {bool inApp = false});
+  String usualNear(String usual, {bool inApp = false});
+  String usualPast(String over, String usual, {bool inApp = false});
+  String usualPastRow(String over, String usual);
+  String recentUse(String recent);
+  String recentNonstop(String recent);
   String get todayAppsTitle;
   String get todayNoApps;
   String get appOverlayTitle;

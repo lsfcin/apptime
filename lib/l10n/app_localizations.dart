@@ -33,7 +33,7 @@ abstract class AppLocalizations {
 
   // ── Navigation ───────────────────────────────────────────────────────────────
   String get navToday;
-  String get navAnalysis;
+  String get navHabits;
   String get navSettings;
 
   // ── Common ───────────────────────────────────────────────────────────────────
@@ -150,8 +150,34 @@ abstract class AppLocalizations {
   String get pillBackground;
   String appsShowAll(int quiet);
 
-  // ── AnalyticsScreen ──────────────────────────────────────────────────────────
-  String get analysisTitle;
+  // ── HabitsScreen ─────────────────────────────────────────────────────────────
+  String get habitsTitle;
+  String get peakLead;
+  String peakHour(int hour);
+  String peakSentence(String peakMs, double ratio);
+  String peakWarmup(int day);
+  String get peakFlat;
+  String peakHarmMorning(String hour);
+  String peakHarmAfternoon(String hour);
+  String peakHarmNight(String hour);
+  String get weekdayAll;
+  List<String> get weekdaysShort;
+  String tryThis(String what);
+  String grayscaleTry(String from, String to);
+  String grayscaleSteps(String from, String to);
+  String get grayscaleEvidence;
+  String get grayscaleLimits;
+  String get stepsTitle;
+  String get evidenceTitle;
+  String get improvingTitle;
+  String periodNear(String before, int days);
+  String get entryTitle;
+  String entrySentence(String app, int percent, int days);
+  String get entryHarm;
+  String entryTry(String app);
+  String entrySteps(String app);
+  String get entryEvidence;
+  String get entryLimits;
   String get tab7d;
   String get tab30d;
   String get periodLead;

@@ -5,16 +5,12 @@
 ```
 lib/
 ├── main.dart                        # App entry point, AppTimeApp, _AppTimeAppState
-├── main_screen.dart                 # MainScreen — 3 tabs: Hoje (landing) · Análise · Ajustes
+├── main_screen.dart                 # MainScreen — 3 tabs: Hoje (landing) · Hábitos · Ajustes
 │
 ├── l10n/                          # Abstract base + en/pt implementations
 │
 ├── screens/
-│   ├── analytics/
-│   │   ├── analytics_screen.dart    # Shell: 7 dias · 30 dias, one PeriodView each
-│   │   ├── period_view.dart         # Mean per day vs the days before, DailyBars, night 22h–6h
-│   │   └── daily_bars.dart          # One bar per day, the days-before mean as a dashed line
-│   │
+│   ├── habits/                      # Hábitos: PeakBlock · ImprovingBlock (7/30 d, night) · EntryBlock, each with a WayOut
 │   ├── apps/                        # AppScreen (one app vs its usual) · AppsScreen (Ajustes > Apps)
 │   │                                #   · AppOverlayControls (switch + pill background)
 │   ├── today/today_screen.dart      # TodayScreen (Hoje) — reads TodaySummary
@@ -22,6 +18,7 @@ lib/
 │   └── settings_screen_sections.dart # Overlay style/feedback selectors, data/privacy and language sections
 │
 ├── services/
+│   ├── peak_hour.dart               # peakHour() — the busiest hour, mirror of PeakHour.kt
 │   ├── period_summary.dart          # periodSummary() — N complete days vs the N before, night use
 │   ├── app_info_service.dart        # AppInfoService — loads labels + launchers once
 │   ├── service_channel.dart         # ServiceChannel — MethodChannel bridge to Kotlin
@@ -216,8 +213,7 @@ usual, only. Dark `#14B8C4` / `#E5A93C`, light `#007B87` / `#8A5A00` (≥ 4.6:1)
 |--------|-------------------------|
 | Hoje | How is my day against my usual, and which app is pulling it? |
 | Per app | How and when do I use this app? |
-| Análise | Am I improving? When do I use it most? |
-| Patterns *(place open)* | Which flows are unhealthy (A → B → A, loops)? What are my triggers (entry app, hour)? Each with an intervention whose effect was measured. |
+| Hábitos | How is my use changing? The busiest hour leads; then the period, night, the entry app and, later, loops — each with a way out whose effect was measured. |
 | Ajustes | How does the overlay look for me? |
 
 A short stop on the launcher between two apps is a transition from A to B.

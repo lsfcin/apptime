@@ -45,7 +45,7 @@ class _AppScreenState extends State<AppScreen> {
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
-          LeadNumber(label: l10n.todayLead, ms: todayMs, sentence: sentence.text, past: sentence.past),
+          LeadNumber(label: l10n.todayLead, value: fmtDuration(todayMs), sentence: sentence.text, past: sentence.past),
           const SizedBox(height: AppSpacing.lg),
           SectionHeader(l10n.appOverlayTitle),
           AppOverlayControls(

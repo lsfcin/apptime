@@ -43,7 +43,7 @@ class _TodayScreenState extends State<TodayScreen> with ReloadOnResume {
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.md),
           children: [
-            LeadNumber(label: l10n.todayLead, ms: day.phoneMs, sentence: phone.text, past: phone.past),
+            LeadNumber(label: l10n.todayLead, value: fmtDuration(day.phoneMs), sentence: phone.text, past: phone.past),
             const SizedBox(height: AppSpacing.sm),
             Text(paceUp ? l10n.paceAbove(recent, pace) : l10n.paceCalm(recent, pace),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(

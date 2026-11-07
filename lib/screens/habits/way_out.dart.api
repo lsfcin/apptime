@@ -1,0 +1,4 @@
+// way_out.dart
+class WayOut extends StatelessWidget
+  Widget build(BuildContext context)
+  void _open(BuildContext context, AppLocalizations l10n)

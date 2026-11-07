@@ -1,3 +1,4 @@
+// Smoke test: the app opens on Hoje and moves between its three tabs
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,9 +19,9 @@ void main() {
 
     expect(find.text('Hoje até agora'.toUpperCase()), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.bar_chart_outlined));
+    await tester.tap(find.byIcon(Icons.insights_outlined));
     await tester.pumpAndSettle();
-    expect(find.text('Análise'), findsWidgets);
+    expect(find.text('Hábitos'), findsWidgets);
 
     await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();

@@ -5,7 +5,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   const AppLocalizationsEn(super.locale);
 
   @override String get navToday => 'Today';
-  @override String get navAnalysis => 'Analysis';
+  @override String get navHabits => 'Habits';
   @override String get navSettings => 'Settings';
 
   @override String get cancel => 'Cancel';
@@ -113,7 +113,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get noAppsMsg =>
       'No apps recorded in the last 7 days.\n'
       'Start monitoring and use your phone normally.';
-  @override String get analysisTitle => 'Analysis';
+  @override String get habitsTitle => 'Habits';
   @override String get tab7d => '7 days';
   @override String get tab30d => '30 days';
   @override String get periodLead => 'Average per day';
@@ -124,6 +124,45 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String periodLine(int days) => 'line: the $days days before';
   @override String get nightTitle => 'At night';
   @override String nightText(String avg) => '$avg a night, between 10 pm and 6 am';
+  @override String get peakLead => 'Busiest hour';
+  @override String peakHour(int hour) => '${hour.toString().padLeft(2, '0')}:00';
+  @override String peakSentence(String peakMs, double ratio) =>
+      '$peakMs on average in this hour, ${ratio.toStringAsFixed(1)}× a typical hour';
+  @override String peakWarmup(int day) => 'Day $day of 7 · no busiest hour yet';
+  @override String get peakFlat => 'Your use spreads over the day; no hour stands out';
+  @override String peakHarmMorning(String hour) => 'Heavy use at $hour can delay the start of what you planned for the day.';
+  @override String peakHarmAfternoon(String hour) => 'Heavy use at $hour can chop work or study time into short pieces.';
+  @override String peakHarmNight(String hour) => 'Heavy use at $hour can push back sleep and what you planned for the evening.';
+  @override String get weekdayAll => 'All';
+  @override List<String> get weekdaysShort => const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  @override String tryThis(String what) => 'Try: $what';
+  @override String grayscaleTry(String from, String to) => 'a grayscale screen from $from to $to';
+  @override String grayscaleSteps(String from, String to) =>
+      'Settings › Digital Wellbeing › Bedtime mode: turn on grayscale and schedule it from $from to $to. '
+      'The path differs a little from phone to phone.';
+  @override String get grayscaleEvidence =>
+      'In a study of 161 students, the 73 who used a grayscale screen for 8 to 10 days spent about '
+      '38 fewer minutes a day on their phone (Holte & Ferraro, 2020).';
+  @override String get grayscaleLimits =>
+      'Limits: a short study, students only, groups not randomised; grayscale was on all day, not only '
+      'in the busiest hour.';
+  @override String get stepsTitle => 'How to';
+  @override String get evidenceTitle => 'What is known';
+  @override String get improvingTitle => 'Getting better?';
+  @override String periodNear(String before, int days) => 'Close to the $days days before ($before)';
+  @override String get entryTitle => 'How your use starts';
+  @override String entrySentence(String app, int percent, int days) => '$app opens $percent% of your unlocks ($days days)';
+  @override String get entryHarm => 'If you pick up the phone for something else and land here, the path may be on autopilot.';
+  @override String entryTry(String app) => 'moving $app off the home screen';
+  @override String entrySteps(String app) =>
+      'Hold the $app icon on the home screen and tap Remove (it does not uninstall): it stays in the app '
+      'drawer and in search. Try it for a week, if those openings feel unwanted.';
+  @override String get entryEvidence =>
+      'In a randomised study (70 students, 2 weeks), those who made 10 settings changes, moving apps off '
+      'the home screen among them, used their phone about 57 fewer minutes a day; those who only '
+      'monitored, 11 (Olson et al., 2022).';
+  @override String get entryLimits =>
+      'Limits: the effect is of the 10-change bundle, not this one alone; a small study at one university.';
 
 
 

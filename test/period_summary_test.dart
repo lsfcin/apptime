@@ -1,4 +1,4 @@
-// Análise: the last N complete days against the N before them, the daily bars, and use between 22h and 6h
+// Hábitos, "Está melhorando?": the last N complete days against the N before them, the daily bars, and use between 22h and 6h
 import 'package:apptime/services/period_summary.dart';
 import 'package:flutter_test/flutter_test.dart';
 

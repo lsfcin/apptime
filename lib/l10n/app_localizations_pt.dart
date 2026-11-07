@@ -4,7 +4,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   const AppLocalizationsPt(super.locale);
 
   @override String get navToday => 'Hoje';
-  @override String get navAnalysis => 'Análise';
+  @override String get navHabits => 'Hábitos';
   @override String get navSettings => 'Ajustes';
 
   @override String get cancel => 'Cancelar';
@@ -112,7 +112,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get noAppsMsg =>
       'Nenhum app registrado nos últimos 7 dias.\n'
       'Inicie o monitoramento e use o celular normalmente.';
-  @override String get analysisTitle => 'Análise';
+  @override String get habitsTitle => 'Hábitos';
   @override String get tab7d => '7 dias';
   @override String get tab30d => '30 dias';
   @override String get periodLead => 'Média por dia';
@@ -123,6 +123,45 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String periodLine(int days) => 'linha: os $days dias anteriores';
   @override String get nightTitle => 'À noite';
   @override String nightText(String avg) => '$avg por noite, entre 22h e 6h';
+  @override String get peakLead => 'Hora de maior uso';
+  @override String peakHour(int hour) => '${hour}h';
+  @override String peakSentence(String peakMs, double ratio) =>
+      '$peakMs em média nessa hora, ${ratio.toStringAsFixed(1).replaceAll('.', ',')}× uma hora comum';
+  @override String peakWarmup(int day) => 'Dia $day de 7 · sem horário de pico ainda';
+  @override String get peakFlat => 'Seu uso se espalha pelo dia; nenhuma hora se destaca';
+  @override String peakHarmMorning(String hour) => 'Uso alto às $hour pode atrasar o começo do que você planejou para o dia.';
+  @override String peakHarmAfternoon(String hour) => 'Uso alto às $hour pode picotar em pedaços curtos o tempo de trabalho ou estudo.';
+  @override String peakHarmNight(String hour) => 'Uso alto às $hour pode empurrar o sono e o que você planejou para a noite.';
+  @override String get weekdayAll => 'Todos';
+  @override List<String> get weekdaysShort => const ['seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'];
+  @override String tryThis(String what) => 'Experimente: $what';
+  @override String grayscaleTry(String from, String to) => 'tela em escala de cinza das $from às $to';
+  @override String grayscaleSteps(String from, String to) =>
+      'Ajustes › Bem-estar digital › Modo hora de dormir: ligue a escala de cinza e agende das $from às $to. '
+      'O caminho muda um pouco de um celular para outro.';
+  @override String get grayscaleEvidence =>
+      'Num estudo com 161 estudantes, os 73 que usaram a tela em escala de cinza por 8 a 10 dias '
+      'passaram cerca de 38 minutos a menos por dia no celular (Holte & Ferraro, 2020).';
+  @override String get grayscaleLimits =>
+      'Limites: estudo curto, só com estudantes e sem sorteio dos grupos; a escala de cinza valia o dia '
+      'todo, não só no horário de pico.';
+  @override String get stepsTitle => 'Como fazer';
+  @override String get evidenceTitle => 'O que se sabe';
+  @override String get improvingTitle => 'Está melhorando?';
+  @override String periodNear(String before, int days) => 'Perto dos $days dias anteriores ($before)';
+  @override String get entryTitle => 'Como seu uso começa';
+  @override String entrySentence(String app, int percent, int days) => '$app abre $percent% dos seus desbloqueios ($days dias)';
+  @override String get entryHarm => 'Se você pega o celular para outra coisa e acaba nele, o caminho pode estar automático.';
+  @override String entryTry(String app) => 'tirar $app da tela inicial';
+  @override String entrySteps(String app) =>
+      'Segure o ícone de $app na tela inicial e toque em Remover (não desinstala): ele continua na gaveta '
+      'de apps e na busca. Teste por uma semana, se essas aberturas parecem indesejadas.';
+  @override String get entryEvidence =>
+      'Num estudo com sorteio (70 estudantes, 2 semanas), quem fez 10 mudanças nos ajustes, entre elas tirar '
+      'apps da tela inicial, usou o celular cerca de 57 minutos a menos por dia; quem só monitorou, 11 '
+      '(Olson et al., 2022).';
+  @override String get entryLimits =>
+      'Limites: o efeito é do pacote de 10 mudanças, não desta sozinha; estudo pequeno, numa só universidade.';
 
 
 

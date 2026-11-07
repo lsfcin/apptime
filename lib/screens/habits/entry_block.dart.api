@@ -1,0 +1,3 @@
+// entry_block.dart
+class EntryBlock extends StatefulWidget
+  State<EntryBlock> createState()

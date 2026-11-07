@@ -24,10 +24,12 @@ const _kBarelyUsedMs = 60 * 1000;
 }
 
 class LeadNumber extends StatelessWidget {
-  const LeadNumber({super.key, required this.label, required this.ms, required this.sentence, this.past = false});
+  const LeadNumber({super.key, required this.label, required this.value, required this.sentence, this.past = false});
 
   final String label;
-  final int ms;
+
+  /// Already formatted: a duration ("3h12") or an hour ("21h").
+  final String value;
   final String sentence;
 
   /// Past the usual: the sentence turns amber, never the number alone (colour plus a word).
@@ -42,7 +44,7 @@ class LeadNumber extends StatelessWidget {
       children: [
         Text(label.toUpperCase(), style: text.labelSmall?.copyWith(color: quiet, letterSpacing: 1.2)),
         const SizedBox(height: AppSpacing.xs),
-        Text(fmtDuration(ms),
+        Text(value,
             style: text.displaySmall?.copyWith(
                 fontSize: 40, fontWeight: FontWeight.w300,
                 fontFeatures: const [FontFeature.tabularFigures()])),

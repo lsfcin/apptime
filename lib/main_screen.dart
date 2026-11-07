@@ -1,7 +1,7 @@
-// Root screen: bottom navigation between Hoje (landing), Análise and Ajustes
+// Root screen: bottom navigation between Hoje (landing), Hábitos and Ajustes
 import 'package:flutter/material.dart';
 import 'l10n/index.dart';
-import 'screens/analytics/index.dart';
+import 'screens/habits/index.dart';
 import 'screens/index.dart';
 import 'services/index.dart';
 
@@ -29,7 +29,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildScreen(int index) => switch (index) {
         0 => TodayScreen(storage: widget.storage),
-        1 => AnalyticsScreen(storage: widget.storage, appInfo: _appInfo),
+        1 => HabitsScreen(storage: widget.storage),
         _ => SettingsScreen(storage: widget.storage, onLocaleChange: widget.onLocaleChange),
       };
 
@@ -69,9 +69,9 @@ class _MainScreenState extends State<MainScreen> {
             label: l10n.navToday,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.bar_chart_outlined),
-            selectedIcon: const Icon(Icons.bar_chart),
-            label: l10n.navAnalysis,
+            icon: const Icon(Icons.insights_outlined),
+            selectedIcon: const Icon(Icons.insights),
+            label: l10n.navHabits,
           ),
           NavigationDestination(
             icon: const Icon(Icons.settings_outlined),

@@ -1,0 +1,3 @@
+// habits_screen.dart
+class HabitsScreen extends StatefulWidget
+  State<HabitsScreen> createState()

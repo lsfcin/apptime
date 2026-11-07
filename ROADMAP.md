@@ -168,10 +168,13 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
 - **Round 4 reopens structure and colour** (Lucas 2026-11-06), under the charter in SPECS § Visual:
   structure decided on [the round 4 page](https://lucassf.pages.dev/apptime/estrutura) (votes in its db):
   Padrões is a section of Análise with its detail on tap (B, panel 9/10); "últimas 2 h", "sessões e
-  desbloqueios" and "apps mais abertos" move into it. **Colour waits on Lucas's vote** at
-  [apptime/cor](https://lucassf.pages.dev/apptime/cor) (panel: cyan = brand, amber = above usual,
-  `#14B8C4`, 9/10); light twins at 4.6:1, light amber stays `#8A5A00`. Then Claude Design projects
-  into the inventory.
+  desbloqueios" and "apps mais abertos" move into it. Colour decided on
+  [apptime/cor](https://lucassf.pages.dev/apptime/cor): SPECS § Visual. **Next: Análise** — first cut
+  what the inventory voted out (1 dia tab, abstract metrics, citations), then Padrões with what has
+  history (entry app over the days UsageStats really holds, sessions and unlocks, most opened, the last
+  2 h); loops wait until the rule is checked on real `SessionLog` days (panel 9/10, Lucas 2026-11-06).
+  Open: amber on passing the usual, or only past an explicit threshold (panel). Then Claude Design
+  projects into the inventory.
 - **Patterns: flows and triggers** (Lucas 2026-11-06; SPECS § Visual): `SessionLog` records since
   2026-11-06. Next: define a loop on real days (start: A → B → A inside 10 min, a short launcher stop
   counts as a transition); entry app per unlock. Wording (panel): "ciclos", "como seu uso começa",
@@ -215,6 +218,8 @@ components that its own milestones had deliberately unwired and planned to reuse
 
 - Session log written inside `accumulateDailyMs` — file and prefs are no transaction and the history backfill would log twice (Codex 4/10, 2026-11-06).
 - Round 4 mockups recoloured from the round 3 canvases — Lucas finds them crowded and hard to absorb; agent wireframes from the charter instead (2026-11-06).
+- Cyan for above-usual (panel 6/10) or for both (4/10); hues `#12A8D0` 8, `#00C1C1` 7, `#00C1A0` 6 (reads as health), `#2A90E0` 5 (Lucas 2026-11-06).
+- Padrões before slimming Análise (3/10); loops "forming" before the rule meets real days (4/10).
 - Padrões as a 4th tab (panel 7/10) or spread over Hoje and the app screen (4/10); Apps list in two groups — the row jumps on toggle (Lucas 2026-11-06).
 
 - Thermometer: extrapolating the current hour (`60/m ×` its minutes) — up to 60× noise at the start of each hour (Lucas 2026-11-03).

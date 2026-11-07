@@ -194,7 +194,6 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - **4am day boundary**: all date keys (`YYYY-MM-DD`) represent the 24h window starting at 04:00. `epochToDateKey()` (Kotlin) and `dayAnchor()` (Dart) implement this consistently. Cross-midnight sessions are split at the 4am boundary.
 - **Single source of truth**: `kAppMeta` is the sole source for app labels and colors.
 - **"Your usual" parity**: Dart and Kotlin both run `test/fixtures/usual_daily.json`; a rule change edits both files and adds a case there.
-- **No goals** (rejected 2026-10-31): the four goal levels, per-app levels and `GoalScreen` are gone. Messages key off the user's own 30-day mean, never a target the user picked.
 - **Thermometer parity and continuity**: the last 2 h against the 30-day daily mean × 2 / 17 awake hours; the hour 2 h back splits by the minute, so the window moves without a jump at an hour turn; `test/fixtures/thermometer.json` checks it on both sides. The open session is added hour by hour, since buckets fill only when it ends.
 - **Daily total == sum of hourly values**: `accumulateDailyMs` accumulates daily totals within the hourly walk loop.
 - **Restart replay checkpoint**: advance the heartbeat after successful gap replay, even with no events, and atomically with live-session flushes. Short skipped gaps stay pending. The 30s watchdog and screen-off flush also advance it; a restart must not replay time already stored.
@@ -212,6 +211,9 @@ Content before looks, one thing at a time: rounds 2–3 asked for everything at 
 5. The comparison is always with yourself — your usual, never a target.
 6. Detail on tap: the screen shows the summary.
 7. No abstract metrics ("dreno de dopamina", "índice de impulsividade"): only what the user recognises in their own day.
+
+**Colour** (Lucas 2026-11-06): cyan is the brand (active tab, switch, selection); amber is above your
+usual, only. Dark `#14B8C4` / `#E5A93C`, light `#007B87` / `#8A5A00` (≥ 4.6:1).
 
 | Screen | The question it answers |
 |--------|-------------------------|

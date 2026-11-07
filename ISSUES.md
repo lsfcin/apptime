@@ -149,7 +149,7 @@ semanal; legend colours repeat (Claude/Google/outros); chips in English (`unlock
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/new-look-r4 is 1 ahead of main
+- . — feature/new-look-r4 is 2 ahead of main
 
 ### Local branches already merged into their base
 

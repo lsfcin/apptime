@@ -1,6 +1,7 @@
-// HourBars: 24 bars, one per clock hour, on a fixed scale up to the whole hour, a dashed line at half an hour; the peak in full ink, labelled on its mark
+// HourBars: 24 bars, one per clock hour from 4h (the day's start), on a fixed scale up to the whole hour, a dashed line at half an hour; the peak in full ink, labelled on its mark
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import '../../utils/index.dart';
 
 /// The scale never moves: a full bar is an hour spent entirely on the phone, so heights compare
 /// across every weekday and the mean of all days (Lucas 2026-11-06).
@@ -20,7 +21,10 @@ class HourBars extends StatelessWidget {
   final int? peakHour;
   final String peakLabel;
 
-  static const _axisHours = [0, 6, 12, 18];
+  static const _axisHours = [4, 10, 16, 22];
+
+  /// The clock hour bar [x] stands for: the first bar is 4h–5h, the last 3h–4h.
+  static int _hourAt(num x) => (x.toInt() + kDayStartHour) % 24;
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +43,9 @@ class HourBars extends StatelessWidget {
           ),
         ]),
         barGroups: [
-          for (final (h, ms) in hourMs.indexed)
-            BarChartGroupData(x: h, showingTooltipIndicators: h == peakHour ? const [0] : const [], barRods: [
-              BarChartRodData(toY: ms.toDouble(), width: 7,
+          for (final (x, h) in [for (var x = 0; x < 24; x++) (x, _hourAt(x))])
+            BarChartGroupData(x: x, showingTooltipIndicators: h == peakHour ? const [0] : const [], barRods: [
+              BarChartRodData(toY: hourMs[h].toDouble(), width: 7,
                   color: h == peakHour ? scheme.onSurface : scheme.outlineVariant,
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(2))),
             ]),
@@ -63,8 +67,8 @@ class HourBars extends StatelessWidget {
           bottomTitles: AxisTitles(sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 18,
-            getTitlesWidget: (v, meta) => _axisHours.contains(v.toInt())
-                ? Text('${v.toInt()}h', style: small?.copyWith(color: scheme.outline))
+            getTitlesWidget: (v, meta) => _axisHours.contains(_hourAt(v))
+                ? Text('${_hourAt(v)}h', style: small?.copyWith(color: scheme.outline))
                 : const SizedBox.shrink(),
           )),
         ),

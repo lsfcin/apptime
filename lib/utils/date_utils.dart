@@ -1,8 +1,11 @@
 // Day-boundary helpers — all dates use the 4 AM anchor (hours 00–03 belong
 // to the previous calendar day), mirroring MonitoringService.kt behaviour.
 
+/// The clock hour a day starts at: Hábitos' hour bars start here too (Lucas 2026-11-06).
+const kDayStartHour = 4;
+
 DateTime dayAnchor(DateTime dt) =>
-    dt.hour < 4 ? dt.subtract(const Duration(days: 1)) : dt;
+    dt.hour < kDayStartHour ? dt.subtract(const Duration(days: 1)) : dt;
 
 String todayKey() => fmtDate(dayAnchor(DateTime.now()));
 

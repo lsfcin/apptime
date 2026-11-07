@@ -1,4 +1,5 @@
 // hour_bars.dart
 class HourBars extends StatelessWidget
-  static const _axisHours = [0, 6, 12, 18];
+  static const _axisHours = [4, 10, 16, 22];
+  static int _hourAt(num x)
   Widget build(BuildContext context)

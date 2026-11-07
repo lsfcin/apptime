@@ -131,7 +131,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String peakHarmMorning(String hour) => 'Uso alto às $hour pode atrasar o começo do que você planejou para o dia.';
   @override String peakHarmAfternoon(String hour) => 'Uso alto às $hour pode picotar em pedaços curtos o tempo de trabalho ou estudo.';
   @override String peakHarmNight(String hour) => 'Uso alto às $hour pode empurrar o sono e o que você planejou para a noite.';
-  @override String get weekdayAll => 'Todos';
+  @override String get weekdayAll => 'todos';
   @override List<String> get weekdaysShort => const ['seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'];
   @override String tryThis(String what) => 'Experimente: $what';
   @override String grayscaleTry(String from, String to) => 'tela em escala de cinza das $from às $to';

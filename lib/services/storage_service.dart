@@ -79,10 +79,8 @@ class StorageService {
 
   // ── Session data (escrito pelo MonitoringService Kotlin) ──
 
-  /// The "day" starts at 04:00. Hours 00–03 belong to the previous calendar day,
-  /// matching the 4 AM day-boundary used by the Kotlin monitoring service.
-  DateTime _dayAnchor(DateTime dt) =>
-      dt.hour < 4 ? dt.subtract(const Duration(days: 1)) : dt;
+  /// The "day" starts at 04:00, as the Kotlin monitoring service's: [dayAnchor].
+  DateTime _dayAnchor(DateTime dt) => dayAnchor(dt);
 
   String _todayKey() {
     final d = _dayAnchor(DateTime.now());

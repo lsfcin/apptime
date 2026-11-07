@@ -73,6 +73,8 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get overlayFeedback => 'Usual feedback';
   @override String get overlayStylePillSub => 'In the status bar, beside the camera';
   @override String get overlayStyleBlockSub => 'Below the status bar, large text on a solid background';
+  @override String get overlayStyleTab => 'Tab';
+  @override String get overlayStyleTabSub => 'Hanging under the status bar, centred, large text';
   @override String get overlayFeedbackFill => 'Filling dot';
   @override String get overlayFeedbackFillSub => 'A dot beside the time fills up as you reach your usual';
   @override String get overlayFeedbackBar => 'Bar';

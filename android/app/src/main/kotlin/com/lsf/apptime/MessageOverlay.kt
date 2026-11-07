@@ -33,7 +33,7 @@ class MessageOverlay(context: Context) {
 
     init {
         view.setPadding(window.dp(12), window.dp(8), window.dp(12), window.dp(8))
-        view.background = window.background(true)
+        view.background = window.background(OverlayStyle.BLOCK)
     }
 
     fun show(title: String, message: String) {

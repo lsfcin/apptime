@@ -74,8 +74,11 @@ class OverlayWindow(private val context: Context, private val view: View) {
         }
     }
 
-    fun background(block: Boolean): GradientDrawable = GradientDrawable().apply {
-        cornerRadius = dp(if (block) 8 else 12).toFloat()
+    /** The Aba's top corners are square: they join the status bar, the bottom ones are rounded. */
+    fun background(style: OverlayStyle): GradientDrawable = GradientDrawable().apply {
+        val block = style.boxed
+        val r = dp(if (block) 8 else 12).toFloat()
+        if (style == OverlayStyle.TAB) cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r) else cornerRadius = r
         // With window alpha 0.8 the pill still has >45% effective black.
         setColor(Color.argb(if (block) 245 else 180, 0, 0, 0))
     }

@@ -130,7 +130,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | Key | Type | Description |
 |-----|------|-------------|
 | `overlay_text` | String | Legacy timer string from MonitoringService; nonempty value gates timer visibility |
-| `overlay_style` | String | `"pill"` (default; also fallback for unknown values) or `"block"` |
+| `overlay_style` | String | `"pill"` (default, and any unknown value), `"block"` or `"tab"` |
 | `overlay_feedback` | String | `"fill"`, `"bar"` (default; also fallback for unknown values), `"outline"`, `"none"`; Kotlin reads `flutter.overlay_feedback` |
 | `overlay_thermometer` | String | `"vertical"` (default; also fallback for unknown values), `"ecg"`, `"mao"`, `"none"`; Kotlin reads `flutter.overlay_thermometer` |
 | `rhythm_level` | Long | Kotlin only: the notification icon's last level, 0–2 (`RhythmLevel`), kept across service restarts (`RhythmNotification`) |

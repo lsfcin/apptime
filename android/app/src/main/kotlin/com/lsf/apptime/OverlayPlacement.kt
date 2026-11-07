@@ -1,4 +1,4 @@
-// Chooses where the timer sits: the pill always inside the status bar, the Bloco always below it.
+// Chooses where the timer sits: the pill always inside the status bar, the Bloco below it, the Aba hanging from it.
 package com.lsf.apptime
 
 /** `fits` is false when the pill is wider than its slot: the fit ladder's signal to tighten it. */
@@ -18,10 +18,12 @@ object OverlayPlacement {
      */
     fun timer(
         api: Int, cutoutRight: Int, statusBarHeight: Int, screenWidth: Int,
-        width: Int, height: Int, maxWidth: Int, margin: Int, iconRowFromBottom: Int, block: Boolean,
+        width: Int, height: Int, maxWidth: Int, margin: Int, iconRowFromBottom: Int, style: OverlayStyle,
         cutoutGap: Int = margin,
     ): TimerPlacement {
-        if (block) return TimerPlacement(false, margin, statusBarHeight + margin)
+        if (style == OverlayStyle.BLOCK) return TimerPlacement(false, margin, statusBarHeight + margin)
+        // The Aba's top is joined to the bar's bottom, centred (Lucas 2026-11-06: first cut, no drag).
+        if (style == OverlayStyle.TAB) return TimerPlacement(false, ((screenWidth - width) / 2).coerceAtLeast(0), statusBarHeight)
         val start = if (api >= 30 && cutoutRight > 0) cutoutRight + cutoutGap else screenWidth / 2 + margin
         val lastX = screenWidth - margin - width
         val x = start.coerceAtMost(lastX).coerceAtLeast(0)

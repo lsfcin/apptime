@@ -77,6 +77,7 @@ class _OverlaySection extends StatelessWidget {
         choices: [
           ('pill', l10n.overlayStylePill, l10n.overlayStylePillSub),
           ('block', l10n.overlayStyleBlock, l10n.overlayStyleBlockSub),
+          ('tab', l10n.overlayStyleTab, l10n.overlayStyleTabSub),
         ],
       ),
       _ChoiceRow<String>(

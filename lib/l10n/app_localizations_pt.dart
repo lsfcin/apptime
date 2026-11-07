@@ -72,6 +72,8 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get overlayFeedback => 'Comparação com seu habitual';
   @override String get overlayStylePillSub => 'Na barra de status, ao lado da câmera';
   @override String get overlayStyleBlockSub => 'Abaixo da barra de status, letra grande e fundo opaco';
+  @override String get overlayStyleTab => 'Aba';
+  @override String get overlayStyleTabSub => 'Presa embaixo da barra de status, no centro, letra grande';
   @override String get overlayFeedbackFill => 'Ponto que enche';
   @override String get overlayFeedbackFillSub => 'Um ponto ao lado do tempo vai enchendo até o seu habitual';
   @override String get overlayFeedbackBar => 'Barra';

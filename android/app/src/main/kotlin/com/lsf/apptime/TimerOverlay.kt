@@ -1,4 +1,4 @@
-// Renders the anchored pill or block with usual feedback.
+// Renders the anchored pill, Bloco or Aba with usual feedback.
 package com.lsf.apptime
 
 import android.content.Context
@@ -49,12 +49,13 @@ class TimerOverlay(context: Context) {
         private set
     val isAdded get() = window.isAdded
 
-    fun render(block: Boolean, totalMs: Long, feedback: OverlayFeedback.Frame, thermometer: String, level: Float,
+    fun render(style: OverlayStyle, totalMs: Long, feedback: OverlayFeedback.Frame, thermometer: String, level: Float,
                visible: Boolean, chip: Shade, amber: Boolean) {
         val state = feedback.state
+        val block = style.boxed
         // The Bloco is always its 96% black, so only the pill follows the theme guess.
         val shade = if (block) Shade.DARK else chip
-        val appearance = listOf(block, state, feedback.variant, thermometer, shade, amber)
+        val appearance = listOf(style, state, feedback.variant, thermometer, shade, amber)
         if (lastAppearance != appearance) {
             lastAppearance = appearance
             // The pill's text size is the fit ladder's (dp); the Bloco is the app's own text and follows font_scale.
@@ -63,7 +64,7 @@ class TimerOverlay(context: Context) {
             val ink = OverlayInk.ink(state, shade, amber)
             view.setTextColor(ink)
             // The pill has no fill: the bar follows the app, so the ink alone follows the theme guess (Lucas 2026-11-04).
-            feedbackDrawable = FeedbackDrawable(if (block) window.background(true) else ColorDrawable(Color.TRANSPARENT),
+            feedbackDrawable = FeedbackDrawable(if (block) window.background(style) else ColorDrawable(Color.TRANSPARENT),
                 density, block, ink)
             view.background = feedbackDrawable
             lastText = null
@@ -77,11 +78,11 @@ class TimerOverlay(context: Context) {
             lastText = text
             view.text = unitsCondensed(text)
             step = if (block) FitLadder.STEPS[0] else FitLadder.STEPS[FitLadder.first {
-                fit(block, feedback.variant, thermometer, it, bounds).fits }]
+                fit(style, feedback.variant, thermometer, it, bounds).fits }]
         }
         feedbackDrawable.thermometerLook = thermometer
         feedbackDrawable.frame = feedback
-        val slot = fit(block, feedback.variant, thermometer, step, bounds)
+        val slot = fit(style, feedback.variant, thermometer, step, bounds)
         view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         val x = slot.x + if (slot.inStatusBar) 0 else bounds.rightInset
         window.place(view.measuredWidth, view.measuredHeight, x, slot.y, slot.inStatusBar)
@@ -90,8 +91,9 @@ class TimerOverlay(context: Context) {
     }
 
     // Applies one ladder step (the pill only), measures, and asks where it goes and whether it fits.
-    private fun fit(block: Boolean, variant: String, thermometer: String, s: FitLadder.Step,
+    private fun fit(style: OverlayStyle, variant: String, thermometer: String, s: FitLadder.Step,
                     bounds: OverlayBounds): TimerPlacement {
+        val block = style.boxed
         if (!block) {
             // dp, as tall as the status bar clock at 13 dp (26 px at 440 dpi), which ignores font_scale
             // (measured 1.0 / 1.15 / 1.3 on HyperOS, 2026-11-04).
@@ -106,7 +108,7 @@ class TimerOverlay(context: Context) {
         feedbackDrawable.textRight = (view.measuredWidth - view.paddingRight).toFloat()
         return OverlayPlacement.timer(Build.VERSION.SDK_INT, bounds.cutoutRight, bounds.statusBarHeight,
             bounds.width, view.measuredWidth, view.measuredHeight, window.dp(OverlayPlacement.PILL_SLOT_DP),
-            window.dp(8), window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), block, cutoutGap = 0)
+            window.dp(8), window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), style, cutoutGap = 0)
     }
 
     private fun animate(delayMs: Long) {

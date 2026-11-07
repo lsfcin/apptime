@@ -31,10 +31,9 @@ class StorageService {
 
   // ── Overlay appearance (escrito pelo Flutter, lido pelo OverlayService) ──
 
-  String get overlayStyle =>
-      _prefs.getString('overlay_style') == 'block' ? 'block' : 'pill';
-  set overlayStyle(String v) =>
-      _prefs.setString('overlay_style', v == 'block' ? 'block' : 'pill');
+  String get overlayStyle => _style(_prefs.getString('overlay_style'));
+  set overlayStyle(String v) => _prefs.setString('overlay_style', _style(v));
+  static String _style(String? v) => const ['block', 'tab'].contains(v) ? v! : 'pill';
 
   static const overlayFeedbackVariants = ['fill', 'bar', 'outline', 'none'];
   static String _feedbackVariant(String? value) =>

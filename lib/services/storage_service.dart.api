@@ -9,6 +9,7 @@ class StorageService
   set overlayVisible(bool v)
   String get overlayStyle
   set overlayStyle(String v)
+  static String _style(String? v)
   static const overlayFeedbackVariants = ['fill', 'bar', 'outline', 'none'];
   static String _feedbackVariant(String? value)
   String get overlayFeedback

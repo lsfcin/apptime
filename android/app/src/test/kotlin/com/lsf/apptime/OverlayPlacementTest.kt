@@ -1,4 +1,4 @@
-// Checks the pill never leaves the status bar, sits right of the camera on the icon row, and flags when it does not fit.
+// Checks the pill never leaves the status bar, sits right of the camera on the icon row, and flags when it does not fit; the Bloco and Aba sit below.
 package com.lsf.apptime
 
 import org.junit.Assert.assertEquals
@@ -8,8 +8,8 @@ import org.junit.Test
 
 class OverlayPlacementTest {
     private fun place(api: Int = 30, cutout: Int = 100, width: Int = 44, height: Int = 18,
-                      bar: Int = 30, iconRow: Int = 12, block: Boolean = false) =
-        OverlayPlacement.timer(api, cutout, bar, 400, width, height, 44, 8, iconRow, block)
+                      bar: Int = 30, iconRow: Int = 12, style: OverlayStyle = OverlayStyle.PILL) =
+        OverlayPlacement.timer(api, cutout, bar, 400, width, height, 44, 8, iconRow, style)
 
     @Test
     fun fittingPillIsRightOfCameraCentredOnTheIconRow() {
@@ -19,7 +19,7 @@ class OverlayPlacementTest {
 
     @Test
     fun cutoutGapMovesOnlyTheStatusBarSlot() {
-        val slot = OverlayPlacement.timer(30, 100, 30, 400, 44, 18, 44, 8, 12, false, cutoutGap = 0)
+        val slot = OverlayPlacement.timer(30, 100, 30, 400, 44, 18, 44, 8, 12, OverlayStyle.PILL, cutoutGap = 0)
         assertEquals(TimerPlacement(true, 100, 9), slot)
     }
 
@@ -51,6 +51,18 @@ class OverlayPlacementTest {
 
     @Test
     fun theBlocoStaysBelowTheBar() {
-        assertEquals(TimerPlacement(false, 8, 38), place(block = true))
+        assertEquals(TimerPlacement(false, 8, 38), place(style = OverlayStyle.BLOCK))
+    }
+
+    @Test
+    fun theAbaHangsCentredFromTheBarsBottom() {
+        assertEquals(TimerPlacement(false, 178, 30), place(style = OverlayStyle.TAB))
+    }
+
+    @Test
+    fun unknownStylesAreThePill() {
+        assertEquals(OverlayStyle.PILL, OverlayStyle.parse(null))
+        assertEquals(OverlayStyle.PILL, OverlayStyle.parse("unknown"))
+        assertEquals(OverlayStyle.TAB, OverlayStyle.parse("tab"))
     }
 }

@@ -1,4 +1,4 @@
-// Verifies style preference defaults and the bilingual settings selector persists both choices.
+// Verifies style preference defaults and the bilingual settings selector persists all three choices.
 import 'package:apptime/l10n/app_localizations.dart';
 import 'package:apptime/screens/settings_screen.dart';
 import 'package:apptime/services/storage_service.dart';
@@ -20,7 +20,7 @@ void main() {
   });
 
   for (final lang in ['pt', 'en']) {
-    testWidgets('Settings persists pill and block in $lang', (tester) async {
+    testWidgets('Settings persists pill, block and tab in $lang', (tester) async {
       SharedPreferences.setMockInitialValues({});
       final storage = await StorageService.init();
       mockServiceChannel();
@@ -37,6 +37,8 @@ void main() {
       await pickChoice(tester, row, block);
       expect(storage.overlayStyle, 'block');
       expect((await SharedPreferences.getInstance()).getString('overlay_style'), 'block');
+      await pickChoice(tester, row, lang == 'pt' ? 'Aba' : 'Tab');
+      expect(storage.overlayStyle, 'tab');
       await pickChoice(tester, row, pill);
       expect(storage.overlayStyle, 'pill');
       expect((await SharedPreferences.getInstance()).getString('overlay_style'), 'pill');

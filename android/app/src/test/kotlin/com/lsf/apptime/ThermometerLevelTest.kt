@@ -9,8 +9,8 @@ class ThermometerLevelTest {
     private fun level(recentMin: Double, previousMin: Double, days: Int = 2) =
         ThermometerLevel.intensity(ThermometerReading((recentMin * min).toLong(), (previousMin * min).toLong()), days)
 
-    @Test fun missingAndUnknownLooksFallBackToVertical() {
-        for (value in listOf(null, "", "unknown")) assertEquals("vertical", ThermometerLevel.look(value))
+    @Test fun missingAndUnknownLooksFallBackToEcg() {
+        for (value in listOf(null, "", "unknown")) assertEquals("ecg", ThermometerLevel.look(value))
         for (value in ThermometerLevel.LOOKS) assertEquals(value, ThermometerLevel.look(value))
     }
 

@@ -142,6 +142,13 @@ class _OverlaySection extends StatelessWidget {
           ('tab', l10n.overlayStyleTab, ChoiceArtKind.tab),
         ],
       ),
+      SwitchListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(l10n.overlayDropAllApps),
+        subtitle: Text(l10n.overlayDropAllAppsSub),
+        value: s.overlayDropAllApps,
+        onChanged: on && s.overlayStyle != 'pill' ? (v) { s.overlayDropAllApps = v; onChanged(); } : null,
+      ),
       _VisualChoice<String>(
         title: l10n.overlayFeedback, hint: l10n.overlayFeedbackSub, value: s.overlayFeedback, enabled: on,
         onSelect: (v) { s.overlayFeedback = v; onChanged(); },

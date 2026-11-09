@@ -10,9 +10,9 @@ class OverlayFeedbackTest {
     private fun frame(total: Long = 20 * min, mean: Long = 60 * min, days: Int = 7, variant: String? = "bar") =
         OverlayFeedback.frame(variant, total, Usual(mean, days))
 
-    @Test fun missingUnknownAndRetiredVariantsFallBackToBar() {
+    @Test fun missingUnknownAndRetiredVariantsFallBackToOutline() {
         for (value in listOf(null, "", "unknown", "dots", "underline", "underline_delta")) {
-            assertEquals("bar", frame(variant = value).variant)
+            assertEquals("outline", frame(variant = value).variant)
         }
         for (value in OverlayFeedback.VARIANTS) assertEquals(value, frame(variant = value).variant)
     }

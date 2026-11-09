@@ -8,7 +8,7 @@ enum class OverlayStyle(val pref: String) {
     val boxed get() = this != PILL
 
     companion object {
-        /** Missing or unknown values are the pill, as on the Dart side. */
-        fun parse(value: String?) = entries.firstOrNull { it.pref == value } ?: PILL
+        /** Missing or unknown values are the Aba, as on the Dart side (Lucas 2026-11-09). */
+        fun parse(value: String?) = entries.firstOrNull { it.pref == value } ?: TAB
     }
 }

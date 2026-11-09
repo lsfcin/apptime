@@ -83,6 +83,8 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get overlayThermometerSub => 'Your use over the last 2 h';
   @override String get overlayAmberOn => 'with';
   @override String get overlayAmberOff => 'without';
+  @override String get overlayDropAllApps => 'Same position in every app';
+  @override String get overlayDropAllAppsSub => 'Off, each app keeps its own. Switching erases neither.';
   @override String get chipAuto => 'Pill background: automatic';
   @override String get chipLight => 'Pill background: light';
   @override String get chipDark => 'Pill background: dark';

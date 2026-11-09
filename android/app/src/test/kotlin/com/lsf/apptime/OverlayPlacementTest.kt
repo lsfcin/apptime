@@ -66,8 +66,8 @@ class OverlayPlacementTest {
 
     @Test
     fun unknownStylesAreThePill() {
-        assertEquals(OverlayStyle.PILL, OverlayStyle.parse(null))
-        assertEquals(OverlayStyle.PILL, OverlayStyle.parse("unknown"))
+        assertEquals(OverlayStyle.TAB, OverlayStyle.parse(null))
+        assertEquals(OverlayStyle.TAB, OverlayStyle.parse("unknown"))
         assertEquals(OverlayStyle.TAB, OverlayStyle.parse("tab"))
     }
 }

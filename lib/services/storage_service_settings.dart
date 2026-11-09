@@ -53,6 +53,10 @@ extension StorageServiceSettings on StorageService {
   bool get overlayAmber => _prefs.getBool('overlay_amber') ?? true;
   set overlayAmber(bool v) => _prefs.setBool('overlay_amber', v);
 
+  /// One Bloco/Aba position for every app; off, each app keeps its own. Neither set is erased. Kotlin: `OverlayDropKey`.
+  bool get overlayDropAllApps => _prefs.getString('overlay_drop_scope') == 'all';
+  set overlayDropAllApps(bool v) => _prefs.setString('overlay_drop_scope', v ? 'all' : 'app');
+
   void toggleApp(String packageName) {
     final apps = disabledApps;
     if (apps.contains(packageName)) {

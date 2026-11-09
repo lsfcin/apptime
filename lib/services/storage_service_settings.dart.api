@@ -10,6 +10,8 @@ extension StorageServiceSettings on StorageService
   Map<String, dynamic> get _chipShades
   bool get overlayAmber
   set overlayAmber(bool v)
+  bool get overlayDropAllApps
+  set overlayDropAllApps(bool v)
   void toggleApp(String packageName)
   bool get onboardingDone
   set onboardingDone(bool v)

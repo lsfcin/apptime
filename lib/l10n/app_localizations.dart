@@ -103,6 +103,8 @@ abstract class AppLocalizations {
   String get overlayThermometerSub;
   String get overlayAmberOn;
   String get overlayAmberOff;
+  String get overlayDropAllApps;
+  String get overlayDropAllAppsSub;
   String get chipAuto;
   String get chipLight;
   String get chipDark;

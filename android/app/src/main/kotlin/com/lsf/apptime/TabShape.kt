@@ -12,7 +12,7 @@ import android.graphics.drawable.Drawable
 
 /**
  * Drawn for the right edge and mirrored for the left. The body spans [flare] below the window's top to
- * [flare] above its bottom (1.4× the corner radius); the inverted corners fill that band where the body meets the edge, like a
+ * [flare] above its bottom; the inverted corners fill that band where the body meets the edge, like a
  * browser tab turned on its side (Lucas 2026-11-06).
  */
 class TabShape(private val radius: Float, val flare: Float, private val color: Int) : Drawable() {

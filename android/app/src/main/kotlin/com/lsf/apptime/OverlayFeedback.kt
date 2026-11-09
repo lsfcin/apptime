@@ -5,7 +5,7 @@ import kotlin.math.sqrt
 
 object OverlayFeedback {
     val VARIANTS = listOf("fill", "bar", "outline", "none")
-    const val DEFAULT = "bar"
+    const val DEFAULT = "outline"
 
     data class Frame(
         val variant: String,

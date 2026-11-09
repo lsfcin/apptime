@@ -107,15 +107,15 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - An unmonitored app never counts in the phone's total, history included: excluded at read time, so the stored series stays whole and switching the app back on restores its past. A day spent only in unmonitored apps still counts as measured for the usual
 - Storage typing (`Long`, the `flutter.` prefix, `disabledApps` as a JSON string): CONTEXT.md § Key constraints
 
-**Overlay behavior:** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Window alpha 0.8, tabular figures, no intensity modes. `OverlayStyle` is pill, block or tab. The pill is `FLAG_NOT_TOUCHABLE`; Bloco and Aba take the touch and are dragged, the drop saved per app in `flutter.overlay_drop_<style>_<app>_x|y`. The Aba stays on a side edge (an 8% middle band against tremor), and the window is the only source of its side.
+**Overlay behavior:** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Window alpha 0.8, tabular figures, no intensity modes. `OverlayStyle` is pill, block or tab. The pill is `FLAG_NOT_TOUCHABLE`; Bloco and Aba take the touch and are dragged, the drop saved in `flutter.overlay_drop_<style>_<app|all>[_land]_x|y` (`OverlayDropKey`; `overlay_drop_scope` picks `app` or `all`, separate drops for portrait and landscape; an app or orientation with none takes the default spot). The Aba stays on a side edge (an 8% middle band against tremor), and the window is the only source of its side.
 
-- `pill` (default): 13 dp (as tall as the status bar clock, which ignores font_scale), no fill; light or dark ink by `ChipShade` (per-app override first), as no app can read another's status bar. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). It never leaves the status bar: on API 30+ with a top cutout it sits flush with `boundingRectTop.right`, otherwise just right of the bar's centre; centred on the icon row (12 dp above the bar's bottom; no API reports it), never past the right margin. Wider than `PILL_SLOT_DP` (52 dp) or taller than the bar, `FitLadder` tightens it; a transient system icon may draw over it.
+- `pill`: 13 dp (as tall as the status bar clock, which ignores font_scale), no fill; light or dark ink by `ChipShade` (per-app override first), as no app can read another's status bar. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). It never leaves the status bar: on API 30+ with a top cutout it sits flush with `boundingRectTop.right`, otherwise just right of the bar's centre; centred on the icon row (12 dp above the bar's bottom; no API reports it), never past the right margin. Wider than `PILL_SLOT_DP` (52 dp) or taller than the bar, `FitLadder` tightens it; a transient system icon may draw over it.
 - `block`: below the status bar, top-right; 17 sp bold, the pill's letter format (`12m`, `1h44`), 96% black background, no rim. Uses the selected feedback variant with cues scaled 1.25×.
 - Padding: every style adds one blank character's width each side of the time (Lucas, 2026-11-02).
 - Today's app total is compared with that app's 30-day `UsualDaily` mean; on the launcher the timer uses phone usage/usual. Before 7 real days feedback is calm and no cue is drawn. Calm, near (soft amber), past (amber, bold pill) per `OverlayInk`; `overlay_amber` off keeps calm.
-- Missing/unknown `overlay_feedback` values use `bar`; it updates on the 500 ms poll without restarting monitoring. Drawing stays inside the measured timer, keeping the status-bar cap.
+- Missing/unknown `overlay_feedback` values use `outline`; it updates on the 500 ms poll without restarting monitoring. Drawing stays inside the measured timer, keeping the status-bar cap.
   - `fill`: a dot left of the time fills clockwise from 12 o'clock like a pie; full at the usual.
-  - `bar` (default): 2 dp round-capped line under the time, ink spanning exactly the text width (caps included); fills left→right to the usual, then stays full.
+  - `bar`: 2 dp round-capped line under the time, ink spanning exactly the text width (caps included); fills left→right to the usual, then stays full.
   - `outline`: 1 dp border starts at top-centre and grows clockwise, closing at the usual.
   - `none`: no cue and no state colour (messages keep their own rule).
 - Every variant takes its state from `OverlayText.state` (the `UsualDaily` rule plus the 7-day floor), so shapes and messages never disagree. Progress is clamped to [0,1]; a zero usual draws a full line for any use (no division by zero).
@@ -130,9 +130,9 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | Key | Type | Description |
 |-----|------|-------------|
 | `overlay_text` | String | Legacy timer string from MonitoringService; nonempty value gates timer visibility |
-| `overlay_style` | String | `"pill"` (default, and any unknown value), `"block"` or `"tab"` |
-| `overlay_feedback` | String | `"fill"`, `"bar"` (default; also fallback for unknown values), `"outline"`, `"none"`; Kotlin reads `flutter.overlay_feedback` |
-| `overlay_thermometer` | String | `"vertical"` (default; also fallback for unknown values), `"ecg"`, `"mao"`, `"none"`; Kotlin reads `flutter.overlay_thermometer` |
+| `overlay_style` | String | `"pill"`, `"block"` or `"tab"` (default, and any unknown value) |
+| `overlay_feedback` | String | `"fill"`, `"bar"`, `"outline"` (default; also fallback for unknown values), `"none"`; Kotlin reads `flutter.overlay_feedback` |
+| `overlay_thermometer` | String | `"vertical"`, `"ecg"` (default; also fallback for unknown values), `"mao"`, `"none"`; Kotlin reads `flutter.overlay_thermometer` |
 | `rhythm_level` | Long | Kotlin only: the notification icon's last level, 0–2 (`RhythmLevel`), kept across service restarts (`RhythmNotification`) |
 | `overlay_enabled` | Boolean | Show timer/messages; monitoring continues (default true) |
 | `monitor_launcher` | Boolean | Show overlay on launcher (default true) |

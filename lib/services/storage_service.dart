@@ -33,21 +33,21 @@ class StorageService {
 
   String get overlayStyle => _style(_prefs.getString('overlay_style'));
   set overlayStyle(String v) => _prefs.setString('overlay_style', _style(v));
-  static String _style(String? v) => const ['block', 'tab'].contains(v) ? v! : 'pill';
+  static String _style(String? v) => const ['pill', 'block'].contains(v) ? v! : 'tab';
 
   static const overlayFeedbackVariants = ['fill', 'bar', 'outline', 'none'];
   static String _feedbackVariant(String? value) =>
-      overlayFeedbackVariants.contains(value) ? value! : 'bar';
+      overlayFeedbackVariants.contains(value) ? value! : 'outline';
 
   String get overlayFeedback =>
       _feedbackVariant(_prefs.getString('overlay_feedback'));
   set overlayFeedback(String v) =>
       _prefs.setString('overlay_feedback', _feedbackVariant(v));
 
-  // Kotlin reads `flutter.overlay_thermometer`; unknown values fall back to 'vertical' on both sides.
+  // Kotlin reads `flutter.overlay_thermometer`; unknown values fall back to 'ecg' on both sides.
   static const overlayThermometerLooks = ['vertical', 'ecg', 'mao', 'none'];
   static String _thermometerLook(String? value) =>
-      overlayThermometerLooks.contains(value) ? value! : 'vertical';
+      overlayThermometerLooks.contains(value) ? value! : 'ecg';
   String get overlayThermometer =>
       _thermometerLook(_prefs.getString('overlay_thermometer'));
   set overlayThermometer(String v) =>

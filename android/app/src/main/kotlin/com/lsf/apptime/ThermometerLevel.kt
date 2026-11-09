@@ -3,7 +3,7 @@ package com.lsf.apptime
 
 object ThermometerLevel {
     val LOOKS = listOf("vertical", "ecg", "mao", "none")
-    const val DEFAULT = "vertical"
+    const val DEFAULT = "ecg"
     private const val FLOOR_MS = 10 * 60_000L
     private const val MIN_REAL_DAYS = 2
 

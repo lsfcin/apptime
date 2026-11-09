@@ -130,6 +130,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String peakHarmNight(String hour) => 'Heavy use at $hour can push back sleep and what you planned for the evening.';
   @override String get weekdayAll => 'All';
   @override List<String> get weekdaysShort => const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  @override List<String> get weekdayLetters => const ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
   @override String tryThis(String what) => 'Try: $what';
   @override String grayscaleTry(String from, String to) => 'a grayscale screen from $from to $to';
   @override String grayscaleSteps(String from, String to) =>

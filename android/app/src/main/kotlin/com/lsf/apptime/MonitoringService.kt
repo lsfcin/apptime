@@ -91,11 +91,13 @@ class MonitoringService : Service() {
         }
     }
 
+    private var nextTickMs = TICK_MS
+
     private val pollRunnable = object : Runnable {
         override fun run() {
             tick()
             // Screen off: nothing to count, so no wake-ups; SCREEN_ON posts the tick again.
-            if (powerManager.isInteractive) handler.postDelayed(this, 1_000)
+            if (powerManager.isInteractive) handler.postDelayed(this, nextTickMs)
         }
     }
 
@@ -140,6 +142,7 @@ class MonitoringService : Service() {
     }
 
     private fun tick() {
+        nextTickMs = TICK_MS
         // Watchdog: restart OverlayService every 30s; refresh default launcher every 60s.
         // Heartbeat written here too — 30s granularity is sufficient for gap detection.
         if (++watchdogTick >= 30) {
@@ -218,8 +221,10 @@ class MonitoringService : Service() {
         // Only the launcher waits: passing through it to switch apps shows nothing,
         // except right after an unlock (ACTION_USER_PRESENT within 5 s before the session).
         val directUnlockToLauncher = lastUnlockMs > 0L && (sessionStartMs - lastUnlockMs) < 5_000L
-        val waiting = isLauncher && !directUnlockToLauncher &&
-            System.currentTimeMillis() - sessionStartMs < HOME_DELAY_MS
+        val homeRemainingMs = HOME_DELAY_MS - (System.currentTimeMillis() - sessionStartMs)
+        val waiting = isLauncher && !directUnlockToLauncher && homeRemainingMs > 0
+        // The next tick lands when the wait ends, not up to a second past it.
+        nextTickMs = if (waiting) homeRemainingMs else TICK_MS
         publishLive(timer = !waiting, visible = true, pkg = current)
     }
 
@@ -403,7 +408,9 @@ class MonitoringService : Service() {
 
     companion object {
         // On the launcher: passing through it to switch apps shows nothing.
-        const val HOME_DELAY_MS = 2_000L
+        const val TICK_MS = 1_000L
+        // With OverlayService's 500 ms poll the launcher's timer appears 0.5 to 1 s in (Lucas 2026-11-09).
+        const val HOME_DELAY_MS = 500L
         // The foreground activity's class name, beside current_pkg: the overlay guesses its theme from it.
         const val CURRENT_ACTIVITY_KEY = "flutter.current_activity"
         var isRunning = false

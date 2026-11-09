@@ -5,7 +5,7 @@ Read the next milestone, implement it bullet by bullet. Delete a bullet once it 
 ## Next, by block (Lucas 2026-11-09; details below)
 
 - **Telas**: message switches; per-app screen; Obsidian surfaces; pill padding and delay.
-- **Overlay**: position per orientation and an Ajustes mode, "the same in all apps / one per app" (a drag while rotated overwrites the upright drop today; line "Position per app" asked for a global default, and the Aba shipped per app without asking); size for Bloco and Aba; pill size in two steps: research Android status bars in Brazil and worldwide and fit them, then an option showing the suggested size. Intensity; thermometer granularity.
+- **Overlay**: size for Bloco and Aba; pill size in two steps: research Android status bars in Brazil and worldwide and fit them, then an option showing the suggested size. Intensity; thermometer granularity.
 - **Low priority**: the Aba zigzagged once on opening Telegram (Lucas 2026-11-09, not repeated). Hypothesis: a transient package between apps moves it, since `OverlayService` follows `current_pkg` unfiltered. Diagnose only if it returns.
 - **Phone tests**, **Reviews** (`ux-20`, `prelaunch-legal`), **Publishing** (milestone below), **Waiting on real days** (loops, peak message, intensity week).
 

@@ -115,6 +115,7 @@ abstract class AppLocalizations
   String peakHarmNight(String hour);
   String get weekdayAll;
   List<String> get weekdaysShort;
+  List<String> get weekdayLetters;
   String tryThis(String what);
   String grayscaleTry(String from, String to);
   String grayscaleSteps(String from, String to);

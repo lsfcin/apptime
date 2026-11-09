@@ -66,17 +66,26 @@ class _PeakBlockState extends State<PeakBlock> {
   }
 
   Widget _weekdays(AppLocalizations l10n) {
-    Widget chip(String label, int? day) => ChoiceChip(
+    Widget chip(String label, int? day, {String? name}) => ChoiceChip(
           label: Text(label),
+          tooltip: name,
           selected: _weekday == day,
           showCheckmark: false,
           visualDensity: VisualDensity.compact,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          labelPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+          padding: const EdgeInsets.symmetric(horizontal: 2),
           onSelected: (_) => setState(() => _weekday = day),
         );
-    return Wrap(spacing: AppSpacing.xs, runSpacing: AppSpacing.xs, children: [
-      chip(l10n.weekdayAll, null),
-      for (final (i, name) in l10n.weekdaysShort.indexed) chip(name, i + 1),
-    ]);
+    // One line on any width: letters alone say the week (Lucas 2026-11-09); the name stays on the tooltip.
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Row(spacing: AppSpacing.xs, children: [
+        chip(l10n.weekdayAll, null),
+        for (final (i, letter) in l10n.weekdayLetters.indexed) chip(letter, i + 1, name: l10n.weekdaysShort[i]),
+      ]),
+    );
   }
 
   String _sentence(AppLocalizations l10n, PeakHour peak) {

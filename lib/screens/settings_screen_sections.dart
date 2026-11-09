@@ -99,7 +99,8 @@ class _VisualChoice<T> extends StatelessWidget {
                       child: Column(children: [
                         ChoiceArt(art, amber: amber),
                         const SizedBox(height: AppSpacing.xs),
-                        Text(label, style: Theme.of(context).textTheme.labelMedium, textAlign: TextAlign.center),
+                        Text(label, textAlign: TextAlign.center, style: Theme.of(context).textTheme.labelMedium
+                            ?.copyWith(color: art == ChoiceArtKind.amber ? amber : null)),
                       ]),
                     ),
                   ),
@@ -133,6 +134,13 @@ class _OverlaySection extends StatelessWidget {
         value: on,
         onChanged: (v) { s.overlayEnabled = v; onChanged(); },
       ),
+      SwitchListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(l10n.overlayDropAllApps),
+        subtitle: Text(l10n.overlayDropAllAppsSub),
+        value: s.overlayDropAllApps,
+        onChanged: on && s.overlayStyle != 'pill' ? (v) { s.overlayDropAllApps = v; onChanged(); } : null,
+      ),
       _VisualChoice<String>(
         title: l10n.overlayStyle, hint: l10n.overlayStyleSub, value: s.overlayStyle, enabled: on,
         onSelect: (v) { s.overlayStyle = v; onChanged(); },
@@ -141,13 +149,6 @@ class _OverlaySection extends StatelessWidget {
           ('block', l10n.overlayStyleBlock, ChoiceArtKind.block),
           ('tab', l10n.overlayStyleTab, ChoiceArtKind.tab),
         ],
-      ),
-      SwitchListTile(
-        contentPadding: EdgeInsets.zero,
-        title: Text(l10n.overlayDropAllApps),
-        subtitle: Text(l10n.overlayDropAllAppsSub),
-        value: s.overlayDropAllApps,
-        onChanged: on && s.overlayStyle != 'pill' ? (v) { s.overlayDropAllApps = v; onChanged(); } : null,
       ),
       _VisualChoice<String>(
         title: l10n.overlayFeedback, hint: l10n.overlayFeedbackSub, value: s.overlayFeedback, enabled: on,

@@ -1,9 +1,9 @@
 // app_theme.dart
 abstract final class AppColors
   static Color brand(Brightness b)
-  static const surfaceLight = Color(0xFFF7F8FC);
-  static const surfaceDark = Color(0xFF1A1D2E);
-  static const cardDark = Color(0xFF242740);
+  static const surfaceLight = Color(0xFFF3F4F5);
+  static const surfaceDark = Color(0xFF15171B);
+  static const cardDark = Color(0xFF202328);
   static const error = Color(0xFFF87171);
   static Color past(BuildContext context)
 abstract final class AppSpacing

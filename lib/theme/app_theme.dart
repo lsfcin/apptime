@@ -5,9 +5,9 @@ abstract final class AppColors {
   /// Cyan is the brand: active tab, switch, selection (SPECS § Visual).
   static Color brand(Brightness b) =>
       b == Brightness.dark ? const Color(0xFF14B8C4) : const Color(0xFF007B87);
-  static const surfaceLight = Color(0xFFF7F8FC);
-  static const surfaceDark = Color(0xFF1A1D2E);
-  static const cardDark = Color(0xFF242740);
+  static const surfaceLight = Color(0xFFF3F4F5);
+  static const surfaceDark = Color(0xFF15171B);
+  static const cardDark = Color(0xFF202328);
   static const error = Color(0xFFF87171);
 
   /// Amber marks only what is past the user's usual (ROADMAP § Visual: Obsidian dark, round 3 light).

@@ -30,9 +30,9 @@ Map<String, Object> _sevenDaysPeakAt21() {
 void main() {
   testWidgets('Hábitos in pt carries only Portuguese text and none of the cut cards', (tester) async {
     await _openHabits(tester, {});
-    expect(find.text('HORA DE MAIOR USO'), findsOneWidget);
+    expect(find.text('FAIXA DE MAIOR USO'), findsOneWidget);
     expect(find.text('Dia 1 de 7 · sem horário de pico ainda'), findsOneWidget);
-    expect(find.text('Está melhorando?'), findsOneWidget);
+    expect(find.text('Você está usando menos?'), findsOneWidget);
     await tester.drag(find.byType(ListView), const Offset(0, -600));
     await tester.pumpAndSettle();
     expect(find.text('À noite'), findsOneWidget);
@@ -43,7 +43,7 @@ void main() {
 
   testWidgets('a clear peak at 21h is named, with its harm and the grayscale way out', (tester) async {
     await _openHabits(tester, _sevenDaysPeakAt21());
-    expect(find.text('21h'), findsWidgets);
+    expect(find.text('21h–22h'), findsOneWidget);
     expect(find.textContaining('empurrar o sono'), findsOneWidget);
     await tester.tap(find.text('Experimente: tela em escala de cinza das 21h às 22h'));
     await tester.pumpAndSettle();

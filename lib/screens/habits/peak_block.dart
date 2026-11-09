@@ -46,7 +46,7 @@ class _PeakBlockState extends State<PeakBlock> {
             .toList());
     final quiet = Theme.of(context).colorScheme.outline;
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      LeadNumber(label: l10n.peakLead, value: peak.trusted ? hourText : '—', sentence: _sentence(l10n, peak)),
+      LeadNumber(label: l10n.peakLead, value: peak.trusted ? '$hourText–${l10n.peakHour((peak.hour + 1) % 24)}' : '—', sentence: _sentence(l10n, peak)),
       const SizedBox(height: AppSpacing.lg),
       HourBars(hourMs: bars, peakHour: peak.trusted && weekday == null ? peak.hour : null, peakLabel: hourText,
           halfLabel: l10n.hourHalf),

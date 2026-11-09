@@ -216,5 +216,5 @@ usual, only. Dark `#14B8C4` / `#E5A93C`, light `#007B87` / `#8A5A00` (≥ 4.6:1)
 
 A short stop on the launcher between two apps is a transition from A to B.
 
-**Theme:** cyan and amber in § Visual · surface #F7F8FC / #1A1D2E · card white / #242740 · error #F87171  
+**Theme:** cyan and amber in § Visual · surface #F3F4F5 / #15171B · card white / #202328 (soft graphite, Lucas 2026-11-09) · error #F87171  
 **Spacing:** XS=4 SM=8 MD=16 LG=24 XL=32 · Radius: SM=8 MD=12 LG=16 XL=24 · Material3, light/dark auto

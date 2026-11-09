@@ -108,7 +108,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get habitsTitle => 'Habits';
   @override String get tab7d => '7 days';
   @override String get tab30d => '30 days';
-  @override String get periodLead => 'Average per day';
+  @override String periodLead(int days) => 'Average per day over the last $days days';
   @override String periodBelow(String diff, String before, int days) => '$diff below the $days days before ($before)';
   @override String periodAbove(String diff, String before, int days) => '$diff above the $days days before ($before)';
   @override String periodSame(String before, int days) => 'Same as the $days days before ($before)';
@@ -118,7 +118,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get periodNoHistory => 'No history to compare with';
   @override String get nightTitle => 'At night';
   @override String nightText(String avg) => '$avg a night, between 10 pm and 6 am';
-  @override String get peakLead => 'Busiest hour';
+  @override String get peakLead => 'Busiest time slot';
   @override String get hourHalf => 'half an hour';
   @override String peakHour(int hour) => '${hour.toString().padLeft(2, '0')}:00';
   @override String peakSentence(String peakMs, double ratio) =>
@@ -144,7 +144,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
       'in the busiest hour.';
   @override String get stepsTitle => 'How to';
   @override String get evidenceTitle => 'What is known';
-  @override String get improvingTitle => 'Getting better?';
+  @override String get improvingTitle => 'Are you using your phone less?';
   @override String periodNear(String before, int days) => 'Close to the $days days before ($before)';
   @override String get entryTitle => 'How your use starts';
   @override String entrySentence(String app, int percent, int days) => '$app opens $percent% of your unlocks ($days days)';

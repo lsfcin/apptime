@@ -39,21 +39,19 @@ class _ImprovingBlockState extends State<ImprovingBlock> {
     final quiet = Theme.of(context).colorScheme.outline;
     final against = _against(l10n, s);
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(children: [
-        Expanded(child: SectionHeader(l10n.improvingTitle)),
-        SegmentedButton<int>(
-          segments: [
-            ButtonSegment(value: 7, label: Text(l10n.tab7d)),
-            ButtonSegment(value: 30, label: Text(l10n.tab30d)),
-          ],
-          selected: {_days},
-          showSelectedIcon: false,
-          style: const ButtonStyle(visualDensity: VisualDensity.compact),
-          onSelectionChanged: (v) => setState(() => _days = v.first),
-        ),
-      ]),
+      SectionHeader(l10n.improvingTitle),
+      SegmentedButton<int>(
+        segments: [
+          ButtonSegment(value: 7, label: Text(l10n.tab7d)),
+          ButtonSegment(value: 30, label: Text(l10n.tab30d)),
+        ],
+        selected: {_days},
+        showSelectedIcon: false,
+        style: const ButtonStyle(visualDensity: VisualDensity.compact),
+        onSelectionChanged: (v) => setState(() => _days = v.first),
+      ),
       const SizedBox(height: AppSpacing.sm),
-      Text('${l10n.periodLead}: ${fmtDuration(s.avgMs)}'),
+      Text('${l10n.periodLead(_days)}: ${fmtDuration(s.avgMs)}'),
       Text(against.text, style: TextStyle(color: against.past ? AppColors.past(context) : quiet)),
       const SizedBox(height: AppSpacing.md),
       DailyBars(dailyMs: s.dailyMs, lineMs: s.beforeAvgMs, emptyLabel: l10n.periodNoHistory,

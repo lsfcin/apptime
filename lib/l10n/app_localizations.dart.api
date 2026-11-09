@@ -134,7 +134,7 @@ abstract class AppLocalizations
   String get entryLimits;
   String get tab7d;
   String get tab30d;
-  String get periodLead;
+  String periodLead(int days);
   String periodBelow(String diff, String before, int days);
   String periodAbove(String diff, String before, int days);
   String periodSame(String before, int days);

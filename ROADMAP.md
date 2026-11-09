@@ -4,7 +4,7 @@ Read the next milestone, implement it bullet by bullet. Delete a bullet once it 
 
 ## Next, by block (Lucas 2026-11-09; details below)
 
-- **Telas**: message switches; per-app screen; Obsidian surfaces; pill padding and delay.
+- **Telas**: message switches; per-app screen; pill padding and delay.
 - **Overlay**: size for Bloco and Aba; pill size in two steps: research Android status bars in Brazil and worldwide and fit them, then an option showing the suggested size. Intensity; thermometer granularity.
 - **Low priority**: the Aba zigzagged once on opening Telegram (Lucas 2026-11-09, not repeated). Hypothesis: a transient package between apps moves it, since `OverlayService` follows `current_pkg` unfiltered. Diagnose only if it returns.
 - **Phone tests**, **Reviews** (`ux-20`, `prelaunch-legal`), **Publishing** (milestone below), **Waiting on real days** (loops, peak message, intensity week).
@@ -145,14 +145,12 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   conditionally, then a way out with evidence, its limits on tap; old Insights only after review.
   The peak-hour text replaces a due message's inside the trusted peak hour, never a 4th message.
   Harm lines approved (Lucas 2026-11-06). **Next** (Lucas): measure the peak
-  message by later use and annoyance, not taps; surfaces are still the old navy, not Obsidian
-  carbon; then Claude Design projects. Loops wait for real `SessionLog` days.
+  message by later use and annoyance, not taps; then Claude Design projects. Loops wait for real `SessionLog` days.
 - **Patterns: flows and triggers** (Lucas 2026-11-06; SPECS § Visual): `SessionLog` records since
   2026-11-06. Next: define a loop on real days (start: A → B → A inside 10 min, a short launcher stop
   counts as a transition). Wording (panel): "ciclos", "como seu uso começa",
   "experimente" — a loop proves no harm, an entry app proves no trigger.
-- **Visual: Obsidian Mono** (Lucas, over Codex's light editorial): carbon `#0B0C0E`, borderless
-  surfaces `#14161B`, text `#F3F4F6` / `#7E8594`, the usual in graphite, amber `#E5A93C` only well
+- **Visual: Obsidian Mono** (Lucas, over Codex's light editorial; background now soft graphite, SPECS § Theme, panel 9/10 over carbon 8, 2026-11-09): text `#F3F4F6` / `#7E8594`, the usual in graphite, amber `#E5A93C` only well
   above it; no red, neon green or electric blue; Inter `tnum`, metric 40sp Light, section labels
   11sp caps; 24dp between sections, no card borders. Reference: Oura.
 

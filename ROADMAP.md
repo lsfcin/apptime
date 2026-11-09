@@ -2,6 +2,13 @@
 
 Read the next milestone, implement it bullet by bullet. Delete a bullet once it is done, and commit.
 
+## Next, by block (Lucas 2026-11-09; details below)
+
+- **Telas**: message switches; per-app screen; Obsidian surfaces; pill padding and delay.
+- **Overlay**: position per orientation and an Ajustes mode, "the same in all apps / one per app" (a drag while rotated overwrites the upright drop today; line "Position per app" asked for a global default, and the Aba shipped per app without asking); size for Bloco and Aba; pill size in two steps: research Android status bars in Brazil and worldwide and fit them, then an option showing the suggested size. Intensity; thermometer granularity.
+- **Low priority**: the Aba zigzagged once on opening Telegram (Lucas 2026-11-09, not repeated). Hypothesis: a transient package between apps moves it, since `OverlayService` follows `current_pkg` unfiltered. Diagnose only if it returns.
+- **Phone tests**, **Reviews** (`ux-20`, `prelaunch-legal`), **Publishing** (milestone below), **Waiting on real days** (loops, peak message, intensity week).
+
 ## Milestone — Prepare to PlayStore submission
 
 - [ ] [prelaunch-legal] Before release, review actual functions and target markets: children, external fonts, session recording, marketing, subscriptions and user uploads. Check primary rules, privacy policy and store declarations; document what applies and why. The post mixes US/EU examples; do not copy fines or add irrelevant controls. Lucas requests broader review; ref: refs/REFS.md [Pre-launch legal-risk claims].
@@ -44,13 +51,7 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
 - **Touch passes through the pill only.** Android hands the whole gesture to whichever window gets
   the DOWN, so "hold to drag, tap passes" cannot be built. Lucas 2026-11-03: Bloco and Aba may
   consume the touch, since dragging them is worth it; the drop is saved per app.
-- **Aba & Bloco**, both kept (Lucas 2026-11-03; Bloco is built, Aba not yet): an **Aba** is always attached to a screen edge,
-  like a browser tab turned around: hanging from the status bar (bottom corners rounded, top ones
-  joined to the bar), or from a side (the side rail: corners on the screen side rounded, the edge
-  side straight). Dragged, it slides along the edge it is on and jumps to another edge when pulled
-  far across; all four edges allowed. A **Bloco** is free: dragged anywhere. Open: whether the Aba
-  reads as attached on light and dark status bars; centre vs the camera; an animated move between
-  per-app positions on app switch (prettiest, but animations ran janky before).
+- **Aba & Bloco**, both built: the **Aba** hangs from a side edge and keeps it while dragged; the **Bloco** is free. Open: an animated move between per-app positions on app switch (prettiest, but animations ran janky before).
 - **Position per app, optional**: a global default plus "position in this app" on the per-app
   screen, with "back to default" (the rail also learns it from the drag).
 - **Intensity is a user setting**: none · colour/weight · contrast · grow slowly (capped, smooth
@@ -114,10 +115,6 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
   "Grande").
 
-Panels: round 1 (Codex · Gemini) Notch 7 · 8.5, Quiet pill 8 · 6.5, Side rail (tick) 4 · 5.5.
-Round 2 (Claude version): Quiet pill 8 · 9, Bloco 7 · 8.5, Selo 7 · 8, Side rail 5 · 6.5 — the
-rail's weak point is glanceability. Both judged Claude's round far more buildable than Stitch's.
-
 **Still to test on the phone**: WindowInsets for 3-button nav, keyboard and
 rotation; app-switch latency of `UsageStatsManager` on Xiaomi (panel warns 2–5 s); the touchable
 rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of vertical video).
@@ -131,33 +128,17 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   with every state it drew. Lucas: Hoje · Análise · Ajustes; app rows in Hoje = icon, name, time;
   first days quiet, "Dia 3 de 7 · sem comparação ainda"; tracking stopped = banner + the gap
   drawn dashed in charts and days ("sem registro das 11:42 às 19:10"), vendor steps behind "Por que
-  isso acontece?"; Ajustes opens on the live overlay preview (boxed, Stitch strict); Inter tnum
+  isso acontece?"; Inter tnum
   Light, graphite, amber with ▲ + a word; app screen adds a 24-hour "quando você costuma usar"
   map under its controls, with the position previewed on a status-bar mock (Stitch strict).
   Also in: welcome "O AppTime não bloqueia nada. Ele só mostra."; one switch per message
   trigger; light theme bg `#F1F2F4`, white surfaces, amber `#8A5A00`; switch copy "Desligado: sem
   visor e fora do total, inclusive dos dias passados. Religar devolve." Out: avatar, "metas",
   "pickups", unlocks on Hoje, battery claims, session "aviso" markers, CSV export.
-- 🔴 **Thermometer in the overlay: three looks, all kept** (Lucas 2026-11-03, from the
-  [Claude Design canvas](https://claude.ai/artifact/Rwo9Q55GG55rHqUT5NUSYY), `project/Visor.dc.html`
-  holds the geometry). No colour of its own: it takes the text's ink, amber only with the number.
-  Built on the pill and Bloco (`ThermometerLevel` · `ThermometerMotion` · `ThermometerGlyph` ·
-  `ThermometerSource` · `ThermometerPhase`, which steps motion by elapsed time: speed × uptime made
-  the ECG leap on every level change, fixed 2026-11-04), selector in Ajustes, default vertical. Sizes Lucas set on the phone
-  2026-11-03: vertical redrawn from its box (2026-11-04: 13.7 × 6.45 dp, centre 0.5 dp up) (circles stay circles), ▼ at 80% closer to
-  the number, ECG as the canvas but half as wide on the pill (it ends cut at the edge: keep), unit
-  letters h/m condensed at 72%, pill number 1.5 dp nearer its edges, 2 dp after the glyph.
-  Seen on the phone 2026-11-04: "3h09" + glyph stays in the status bar; the outline cleared the glyph
-  once the glyph moved in by the arc's bend (`7ccafba`). `gfxinfo`, 20 s of Chrome scrolling: none and
-  vertical 38 frames (0–1 janky), ECG 221 (4%) — the ECG animates nonstop at ~11 fps, so its battery
-  cost needs its own run. 2026-11-04 (`e16f583`): vertical 1.5× wider, bulb rebuilt, 1 dp stroke
-  like the outline, pill as wide as the ▼ one. **Next**: Lucas checks the new vertical; the morning
-  starts calm (after 04:00); battery, vertical first; a better name than "Mão única" for the ▼ look; avaliar granularidade (3 estágios vs 7 estágios vs escala linear contínua) para feedback mais imediato sem perda de performance (INBOX 2026-11-03).
-  Aba built 2026-11-07: side edges only, drag keeps the edge (B, panel), drop per app.
+- 🔴 **Thermometer in the overlay: three looks, all kept** (Lucas 2026-11-03). No colour of its own: it takes the text's ink, amber only with the number. Built on all styles, default vertical. The ECG animates nonstop at ~11 fps, so its battery cost needs its own run. **Next**: Lucas checks the new vertical; the morning starts calm (after 04:00); battery, vertical first; a better name than "Mão única" for the ▼ look; granularity (3 stages, 7, or continuous) for quicker feedback at no performance cost.
 
 - **Per-app screen** still lacks position, fullscreen/landscape and "quando você costuma usar".
-- **Ajustes** (built 2026-11-06, one row per choice, options in a sheet): still wants the live preview on
-  top, a size control, the messages' switches and Apps › search.
+- **Ajustes** (built 2026-11-06, one row per choice, options in a sheet): still wants a size control and the messages' switches.
 - **Hábitos** (built 2026-11-06; Lucas, panel 9/10 over Padrões inside Análise): "Como seu uso está
   mudando?" — the peak hour leads ([apptime/padroes](https://lucassf.pages.dev/apptime/padroes) votes),
   then 7/30 days, night, the entry app. Rule for every block (Lucas): the harm said plainly but
@@ -197,6 +178,7 @@ These files belong here, not on the root roadmap; entropy counts regenerate in `
 
 ## Rejected
 
+- Ajustes: a boxed live preview (the real overlay already changes within 500 ms) and a search in Apps (Lucas 2026-11-09).
 - The Aba hanging from the status bar: it cannot match the bar's colour, so it reads as a stray box (Lucas 2026-11-06).
 - A fixed "healthy limit" line (3 h, or OCDE's 5 h) where Hábitos has no days before: no adult threshold is validated, so the chart says "Sem histórico para comparar" (panel 1–4/10 vs 9/10, Lucas 2026-11-06).
 - Session log written inside `accumulateDailyMs` — file and prefs are no transaction and the history backfill would log twice (Codex 4/10, 2026-11-06).
@@ -206,7 +188,6 @@ These files belong here, not on the root roadmap; entropy counts regenerate in `
 - Análise: unlocks and the 5×4 grade in the lead, both trends, passive/active (panel 2–5/10).
 - Padrões before slimming Análise (3/10); loops "forming" before the rule meets real days (4/10).
 - Padrões as a 4th tab (panel 7/10) or spread over Hoje and the app screen (4/10); Apps list in two groups — the row jumps on toggle (Lucas 2026-11-06).
-- Padrões placement (2026-11-06): renaming the tab alone (8/10), a 4th message near the peak (5/10), both (7/10). Peak way out: batched notifications 6, phone out of reach 6, a plan made in advance 4 (RCT null, 10.1016/j.chb.2025.108624). Entry app: a folder 6, badges off 6, its notifications batched 5. Peak window: the hour before + peak 7, ±1 h 5.
 - Hoje's "acima do seu ritmo (41 min)": the 2-hour share of 17 assumed awake hours reads as a habit it is not (panel 2026-11-06); the line states the last 2 h plainly.
 
 - Thermometer: extrapolating the current hour (`60/m ×` its minutes) — up to 60× noise at the start of each hour (Lucas 2026-11-03).

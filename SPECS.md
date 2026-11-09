@@ -107,13 +107,13 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 - An unmonitored app never counts in the phone's total, history included: excluded at read time, so the stored series stays whole and switching the app back on restores its past. A day spent only in unmonitored apps still counts as measured for the usual
 - Storage typing (`Long`, the `flutter.` prefix, `disabledApps` as a JSON string): CONTEXT.md § Key constraints
 
-**Overlay behavior:** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Both styles use `FLAG_NOT_TOUCHABLE`, window alpha 0.8 and tabular figures; no drag or intensity modes.
+**Overlay behavior:** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Window alpha 0.8, tabular figures, no intensity modes. `OverlayStyle` is pill, block or tab. The pill is `FLAG_NOT_TOUCHABLE`; Bloco and Aba take the touch and are dragged, the drop saved per app in `flutter.overlay_drop_<style>_<app>_x|y`. The Aba stays on a side edge (an 8% middle band against tremor), and the window is the only source of its side.
 
 - `pill` (default): 13 dp (as tall as the status bar clock, which ignores font_scale), no fill; light or dark ink by `ChipShade` (per-app override first), as no app can read another's status bar. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). It never leaves the status bar: on API 30+ with a top cutout it sits flush with `boundingRectTop.right`, otherwise just right of the bar's centre; centred on the icon row (12 dp above the bar's bottom; no API reports it), never past the right margin. Wider than `PILL_SLOT_DP` (52 dp) or taller than the bar, `FitLadder` tightens it; a transient system icon may draw over it.
 - `block`: below the status bar, top-right; 17 sp bold, the pill's letter format (`12m`, `1h44`), 96% black background, no rim. Uses the selected feedback variant with cues scaled 1.25×.
-- Padding: every style adds one blank character's width each side of the time (Lucas, 2026-11-02); `fill` reserves the dot (6.9 dp, 1.25× on block) plus a fixed 3 dp gap left of the text, so the gap never varies with the state; `bar` takes a bottom padding of three bar thicknesses: the bar right under the digits, twice its thickness free below it.
+- Padding: every style adds one blank character's width each side of the time (Lucas, 2026-11-02).
 - Today's app total is compared with that app's 30-day `UsualDaily` mean; on the launcher the timer uses phone usage/usual. Before 7 real days feedback is calm and no cue is drawn. Calm, near (soft amber), past (amber, bold pill) per `OverlayInk`; `overlay_amber` off keeps calm.
-- Settings exposes `overlay_feedback` beside the style selector in PT/EN, each choice and style with a one-line description. Missing/unknown values (including the retired `dots`, `underline`, `underline_delta`) use `bar`; it updates on the 500 ms poll without restarting monitoring. Drawing stays inside the measured timer, keeping the status-bar cap.
+- Missing/unknown `overlay_feedback` values use `bar`; it updates on the 500 ms poll without restarting monitoring. Drawing stays inside the measured timer, keeping the status-bar cap.
   - `fill`: a dot left of the time fills clockwise from 12 o'clock like a pie; full at the usual.
   - `bar` (default): 2 dp round-capped line under the time, ink spanning exactly the text width (caps included); fills left→right to the usual, then stays full.
   - `outline`: 1 dp border starts at top-centre and grows clockwise, closing at the usual.
@@ -137,7 +137,6 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `overlay_enabled` | Boolean | Show timer/messages; monitoring continues (default true) |
 | `monitor_launcher` | Boolean | Show overlay on launcher (default true) |
 | `overlay_visible` | Boolean | Whether overlay should appear |
-| `overlay_font_size`, `_show_background`, `_show_border`, `_top_dp`, `monitoring_ever_started` | — | Legacy, ignored |
 | `daily_ms_{pkg}_{date}` | Long | Accumulated ms for app that calendar day |
 | `open_count_{pkg}_{date}` | Int | App opens that calendar day |
 | `unlock_count_{date}` | Int | Device unlocks that calendar day |
@@ -170,11 +169,9 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 |--------|-----------|-------------|
 | `getStartupStatus` | Dart→Kotlin | Returns `{overlayGranted, usageGranted, isRunning}` — single startup round-trip |
 | `getAppMetadata` | Dart→Kotlin | Returns `{labels: Map<String,String>, launchers: List<String>}` — merged call |
-| `startMonitoring` | Dart→Kotlin | Starts MonitoringService + OverlayService |
+| `startMonitoring`, `stopMonitoring`, `isRunning` | Dart→Kotlin | Start or stop both services; running flag |
 | `deleteSessionLog` | Dart→Kotlin | Deletes every session-log day; delete-all calls it after the prefs |
 | `getEntryApps` | Dart→Kotlin | Entry app per unlock, and the days covered |
-| `stopMonitoring` | Dart→Kotlin | Stops both services |
-| `isRunning` | Dart→Kotlin | Returns Boolean (uses MonitoringService.isRunning static flag) |
 | `requestOverlayPermission`, `requestUsagePermission` | Dart→Kotlin | Open AppTime's own page (usage falls back to the list) |
 | `hasOverlayPermission`, `hasUsagePermission` | Dart→Kotlin | Return Boolean |
 | `openAutostartSettings`, `requestIgnoreBatteryOptimizations` | Dart→Kotlin | MIUI autostart list (fallback: app details); battery exemption dialog |
@@ -218,16 +215,6 @@ usual, only. Dark `#14B8C4` / `#E5A93C`, light `#007B87` / `#8A5A00` (≥ 4.6:1)
 | Ajustes | How does the overlay look for me? |
 
 A short stop on the launcher between two apps is a transition from A to B.
-
-## Tech stack
-
-| Layer | Technology |
-|-------|------------|
-| UI | Flutter / Dart — Android only, min SDK 23 |
-| Overlay + monitoring | Kotlin native services |
-| Storage | SharedPreferences |
-| Charts | fl_chart ^0.70.2 |
-| Icons (dev) | flutter_launcher_icons ^0.14.3 |
 
 **Theme:** cyan and amber in § Visual · surface #F7F8FC / #1A1D2E · card white / #242740 · error #F87171  
 **Spacing:** XS=4 SM=8 MD=16 LG=24 XL=32 · Radius: SM=8 MD=12 LG=16 XL=24 · Material3, light/dark auto

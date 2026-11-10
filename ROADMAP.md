@@ -2,12 +2,24 @@
 
 Read the next milestone, implement it bullet by bullet. Delete a bullet once it is done, and commit.
 
-## Next, by block (Lucas 2026-11-09; details below)
+## Next, by block (Lucas 2026-11-10; details below)
 
-- **Telas**: message switches; per-app screen; pill padding and delay.
-- **Overlay**: size for Bloco and Aba; pill size in two steps: research Android status bars in Brazil and worldwide and fit them, then an option showing the suggested size (Automatic plus a few fixed sizes, no slider). First check the pill's window type: Android documents `TYPE_APPLICATION_OVERLAY` as below the status bar, so showing there on the Redmi proves nothing elsewhere; test Samsung and Motorola, offer Bloco or Aba if it fails (panel 2026-11-09, `outputs/apptime-panel-posicao-pilula.md`). Intensity; thermometer granularity.
+v1 in three sessions: (1) the open features below, (2) validation — a Pixel emulator, then family
+phones (a Samsung and a Motorola), battery, `ux-20` and `prelaunch-legal`, (3) publishing (milestone below).
+
+- **Messages**: one switch for all three triggers; always at the top, under the status bar; 7.5 s;
+  the visor hides while a message crosses it (the header already carries the total).
+- **Overlay**: size for Bloco and Aba (Automatic plus a few fixed sizes, no slider); pill size in two steps: research Android status bars in Brazil and worldwide and fit them, then the same Automatic-plus-fixed option. First check the pill's window type: Android documents `TYPE_APPLICATION_OVERLAY` as below the status bar, so showing there on the Redmi proves nothing elsewhere; test a stock emulator, then Samsung and Motorola, offer Bloco or Aba if it fails (panel 2026-11-09, `outputs/apptime-panel-posicao-pilula.md`).
 - **Low priority**: the Aba zigzagged once on opening Telegram (Lucas 2026-11-09, not repeated). Hypothesis: a transient package between apps moves it, since `OverlayService` follows `current_pkg` unfiltered. Diagnose only if it returns.
-- **Phone tests**, **Reviews** (`ux-20`, `prelaunch-legal`), **Publishing** (milestone below), **Waiting on real days** (loops, peak message, intensity week).
+- **Waiting on real days** (loops, peak message) — not v1.
+
+## To evaluate for 1.1 (Lucas 2026-11-10)
+
+Out of v1. Each goes to a usability and design panel first, and enters 1.1 only if it proves worth it.
+
+- **Per-app screen**: a position control with "back to default" (the drag already saves one per app), fullscreen/landscape behaviour, and a 24-hour "quando você costuma usar" map.
+- **Intensity as a setting**: none · colour/weight (built: bold + amber past the usual) · contrast · grow slowly (capped, ~300 ms between apps).
+- **Thermometer granularity**: 3 stages now; 7 or continuous for quicker feedback at no performance cost.
 
 ## Milestone — Prepare to PlayStore submission
 
@@ -52,11 +64,6 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   the DOWN, so "hold to drag, tap passes" cannot be built. Lucas 2026-11-03: Bloco and Aba may
   consume the touch, since dragging them is worth it; the drop is saved per app.
 - **Aba & Bloco**, both built: the **Aba** hangs from a side edge and keeps it while dragged; the **Bloco** is free. Open: an animated move between per-app positions on app switch (prettiest, but animations ran janky before).
-- **Position per app, optional**: a global default plus "position in this app" on the per-app
-  screen, with "back to default" (the rail also learns it from the drag).
-- **Intensity is a user setting**: none · colour/weight · contrast · grow slowly (capped, smooth
-  ~300 ms transition between apps). Session 2 builds all four; Lucas tests one week, then picks the
-  default.
 - **Typography**: one family, Inter, tabular figures (both panels, round 1).
 - **Window alpha**: set `LayoutParams.alpha` ≤ the system's maximum obscuring opacity (0.8), or
   Android 12+ blocks touches under the overlay (`OverlayService.kt:123`).
@@ -93,7 +100,7 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   `%/day = 100 × mAh_uid / capacity × 24 / hours_on_battery`, with screen-on time. 2026-11-02
   estimate: ~1.0 s CPU per screen-on minute, ~0 screen off → ~0.5%/day at 4 h, ~0.8% at 6 h.
 - **No app name in the timer; never shrinks to a dot**; a long session only triggers a message.
-- **Message**: 6–7 s, 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
+- **Message**: 15 words at most (texts in `PmMessages.kt`), header `Mural · 1h 18m hoje` (the total; from Stitch). Timer stays anchored; switching app cancels it.
 - **Contrast ink** (built 2026-11-04 as a chip; Lucas 2026-11-04: the bar follows the app, so the pill
   has no fill and only its ink follows the guess; SPECS § Overlay behavior; panel
   `outputs/apptime-panel-contrast-answer.md`). Right: Settings light, Telegram and Chrome dark. Wrong
@@ -111,9 +118,7 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   1.5 dp, pie whole (Roboto advances on this phone's fonts, 2026-11-06; kerning not modelled).
 - **Notification icon** (Lucas 2026-11-06): the phone, corners radius 5, with a zigzag whose amplitude
   is the whole phone's pace — one notification for both services (`RhythmNotification`). Launcher icon cyan.
-- **Settings screen** (Claude canvas S4 is the base): gallery shows every built style;
-  landscape/fullscreen behaviour per app; size control fixed (mock shows "Médio" with the thumb on
-  "Grande").
+- **Settings screen** (Claude canvas S4 is the base): gallery shows every built style.
 
 **Still to test on the phone**: WindowInsets for 3-button nav, keyboard and
 rotation; app-switch latency of `UsageStatsManager` on Xiaomi (panel warns 2–5 s); the touchable
@@ -135,10 +140,9 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   trigger; light theme bg `#F1F2F4`, white surfaces, amber `#8A5A00`; switch copy "Desligado: sem
   visor e fora do total, inclusive dos dias passados. Religar devolve." Out: avatar, "metas",
   "pickups", unlocks on Hoje, battery claims, session "aviso" markers, CSV export.
-- 🔴 **Thermometer in the overlay: three looks, all kept** (Lucas 2026-11-03). No colour of its own: it takes the text's ink, amber only with the number. Built on all styles, default vertical. The ECG animates nonstop at ~11 fps, so its battery cost needs its own run. **Next**: Lucas checks the new vertical; the morning starts calm (after 04:00); battery, vertical first; a better name than "Mão única" for the ▼ look; granularity (3 stages, 7, or continuous) for quicker feedback at no performance cost.
+- 🔴 **Thermometer in the overlay: three looks, all kept** (Lucas 2026-11-03). No colour of its own: it takes the text's ink, amber only with the number. Built on all styles, default vertical. The ECG animates nonstop at ~11 fps, so its battery cost needs its own run. **Next**: Lucas checks the new vertical; the morning starts calm (after 04:00); battery, vertical first; a better name than "Mão única" for the ▼ look.
 
-- **Per-app screen** still lacks position, fullscreen/landscape and "quando você costuma usar".
-- **Ajustes** (built 2026-11-06, one row per choice, options in a sheet): still wants a size control and the messages' switches.
+- **Ajustes** (built 2026-11-06, one row per choice, options in a sheet): still wants a size control and the messages' switch.
 - **Hábitos** (built 2026-11-06; Lucas, panel 9/10 over Padrões inside Análise): "Como seu uso está
   mudando?" — the peak hour leads ([apptime/padroes](https://lucassf.pages.dev/apptime/padroes) votes),
   then 7/30 days, night, the entry app. Rule for every block (Lucas): the harm said plainly but
@@ -158,10 +162,6 @@ Screens via adb: `core/run tools/phone/adb shoot|prefs|sheet` (debug build only,
 **and the phone is rebooted**. Shots and panel answers stay in the session scratchpad (usage data).
 Outside panel: `core/run tools/panel/ask` (calls and traps in `core/agents/SPECS.md`).
 
-- 🟡 **Ajustes de layout e delay da pílula** (Lucas 2026-11-02): dar respiro horizontal à pílula (padding
-  interno), mover o acréscimo para a esquerda consumindo o espaço até a câmera no Redmi Note 10 Pro,
-  e encurtar o tempo de espera para o timer aparecer na tela inicial.
-
 
 ## Workspace drift, refiled from the wos list 2026-08-16
 
@@ -176,6 +176,8 @@ These files belong here, not on the root roadmap; entropy counts regenerate in `
 
 ## Rejected
 
+- Pill padding and growing it left toward the camera (Lucas 2026-11-02): the 52 dp fit of 2026-11-05 covers it, and the home delay is 500 ms (Lucas 2026-11-10).
+- A message that follows the visor down the screen: it lands mid-app wherever the Bloco was dropped; it stays at the top (Lucas 2026-11-10).
 - Ajustes: a boxed live preview (the real overlay already changes within 500 ms) and a search in Apps (Lucas 2026-11-09).
 - The Aba hanging from the status bar: it cannot match the bar's colour, so it reads as a stray box (Lucas 2026-11-06).
 - A fixed "healthy limit" line (3 h, or OCDE's 5 h) where Hábitos has no days before: no adult threshold is validated, so the chart says "Sem histórico para comparar" (panel 1–4/10 vs 9/10, Lucas 2026-11-06).

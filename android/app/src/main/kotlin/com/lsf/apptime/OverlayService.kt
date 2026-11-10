@@ -89,8 +89,9 @@ class OverlayService : Service() {
         val look = ThermometerLevel.look(prefs.getString("flutter.overlay_thermometer", null))
         val level = if (look == "none") 0f else ThermometerLevel.intensity(
             thermometerSource.read(pkg, inApp, now, prefs.safeGetCount("flutter.current_session_start_ms"), usual.meanMs, disabled), usual.realDays)
-        timer.render(pkg, OverlayStyle.parse(prefs.getString("flutter.overlay_style", null)), total, feedback, look, level,
-            allowed && hasText, chipShade(pkg), prefs.getBoolean(OverlayInk.AMBER_KEY, true))
+        val style = OverlayStyle.parse(prefs.getString("flutter.overlay_style", null))
+        timer.render(pkg, style, total, feedback, look, level, allowed && hasText, chipShade(pkg),
+            prefs.getBoolean(OverlayInk.AMBER_KEY, true), OverlaySize.parse(prefs.getString(OverlaySize.key(style), null), style))
         val messages = allowed && prefs.getBoolean(FeedbackEngine.ENABLED_KEY, true)
         feedbackEngine?.refresh(pkg, now, messages)
         if (++evalTick >= 5) {

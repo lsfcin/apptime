@@ -105,6 +105,14 @@ abstract class AppLocalizations {
   String get overlayAmberOff;
   String get overlayDropAllApps;
   String get overlayDropAllAppsSub;
+  String get overlaySize;
+  String get overlaySizeSmall;
+  String get overlaySizeAuto;
+  String get overlaySizeLarge;
+  String get overlaySizeLarger;
+  String get overlaySizeXLarge;
+  String get overlaySizeAutoSub;
+  String get overlaySizeBarLimit;
   String get messagesEnabled;
   String get messagesEnabledSub;
   String get chipAuto;

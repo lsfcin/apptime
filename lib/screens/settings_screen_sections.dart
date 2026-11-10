@@ -157,6 +157,7 @@ class _OverlaySection extends StatelessWidget {
           ('tab', l10n.overlayStyleTab, ChoiceArtKind.tab),
         ],
       ),
+      _sizeRow(s),
       _VisualChoice<String>(
         title: l10n.overlayFeedback, hint: l10n.overlayFeedbackSub, value: s.overlayFeedback, enabled: on,
         onSelect: (v) { s.overlayFeedback = v; onChanged(); },
@@ -186,6 +187,25 @@ class _OverlaySection extends StatelessWidget {
         ],
       ),
     ]);
+  }
+
+  // One row, its options following the style; each style keeps its own (panel 2026-11-10, 9/10).
+  Widget _sizeRow(StorageService s) {
+    final style = s.overlayStyle;
+    final pill = style == 'pill';
+    final labels = {
+      'small': (l10n.overlaySizeSmall, null),
+      'auto': (l10n.overlaySizeAuto, l10n.overlaySizeAutoSub),
+      'large': (pill ? l10n.overlaySizeLarger : l10n.overlaySizeLarge, pill ? l10n.overlaySizeBarLimit : null),
+      'xlarge': (l10n.overlaySizeXLarge, null),
+    };
+    return _ChoiceRow<String>(
+      title: l10n.overlaySize,
+      value: s.overlaySize(style),
+      enabled: s.overlayEnabled,
+      onSelect: (v) { s.setOverlaySize(style, v); onChanged(); },
+      choices: [for (final v in s.overlaySizeChoices(style)) (v, labels[v]!.$1, labels[v]!.$2)],
+    );
   }
 }
 

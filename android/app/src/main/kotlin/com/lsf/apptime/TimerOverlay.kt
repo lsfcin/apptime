@@ -28,6 +28,9 @@ class TimerOverlay(context: Context) {
     }
     private val window = OverlayWindow(context, view)
     private val drops = OverlayDropStore(context)
+    // Read once: SystemUI's dimensions change only with a new build or font scale, and the watchdog restarts us often.
+    private val systemBar = SystemBar.read(context)
+    private var pillDp = OverlaySize.FALLBACK_CLOCK_DP
     private var tab: TabShape? = null
     private var again: () -> Unit = {}
     private var lastApp: String? = null
@@ -64,23 +67,24 @@ class TimerOverlay(context: Context) {
 
     /** [app] is the front app: a Bloco or Aba dropped there stays there for that app only (Lucas 2026-11-06). */
     fun render(app: String?, style: OverlayStyle, totalMs: Long, feedback: OverlayFeedback.Frame, thermometer: String, level: Float,
-               visible: Boolean, chip: Shade, amber: Boolean) {
+               visible: Boolean, chip: Shade, amber: Boolean, size: OverlaySize) {
         val state = feedback.state
         val block = style.boxed
         lastApp = app
         // A drop is saved, then placed at once by the same render (the Aba snaps to its edge).
-        again = { render(app, style, totalMs, feedback, thermometer, level, visible, chip, amber) }
+        again = { render(app, style, totalMs, feedback, thermometer, level, visible, chip, amber, size) }
         window.onDrop = { drops.save(style, app, it); again() }
         // The joint flips the moment the edge does, not on the drop (Lucas 2026-11-07).
         window.onSide = ::joinEdge
         window.touchable(block)
         // The Bloco is always its 96% black, so only the pill follows the theme guess.
         val shade = if (block) Shade.DARK else chip
-        val appearance = listOf(style, state, feedback.variant, thermometer, shade, amber)
+        val appearance = listOf(style, state, feedback.variant, thermometer, shade, amber, size)
         if (lastAppearance != appearance) {
             lastAppearance = appearance
             // The pill's text size is the fit ladder's (dp); the Bloco is the app's own text and follows font_scale.
-            if (block) view.textSize = 17f
+            if (block) view.textSize = OverlaySize.boxSp(size)
+            pillDp = OverlaySize.pillDp(systemBar.clockPx?.div(density), size)
             view.typeface = if (block || state == UsualState.PAST) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
             val ink = OverlayInk.ink(state, shade, amber)
             view.setTextColor(ink)
@@ -122,9 +126,8 @@ class TimerOverlay(context: Context) {
                     bounds: OverlayBounds): TimerPlacement {
         val block = style.boxed
         if (!block) {
-            // dp, as tall as the status bar clock at 13 dp (26 px at 440 dpi), which ignores font_scale
-            // (measured 1.0 / 1.15 / 1.3 on HyperOS, 2026-11-04).
-            view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, s.textDp)
+            // As tall as the bar's own clock, which SystemUI scales or not (HyperOS ignores font_scale, 2026-11-04).
+            view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, pillDp - s.textDropDp)
             feedbackDrawable.dotScale = s.dotScale
             feedbackDrawable.dotGapDp = s.dotGapDp
         }
@@ -136,7 +139,7 @@ class TimerOverlay(context: Context) {
         feedbackDrawable.textBottom = (view.measuredHeight - view.paddingBottom).toFloat()
         return OverlayPlacement.timer(Build.VERSION.SDK_INT, bounds.cutoutRight, bounds.statusBarHeight,
             bounds.width, view.measuredWidth, view.measuredHeight, window.dp(OverlayPlacement.PILL_SLOT_DP),
-            window.dp(8), window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP), style, cutoutGap = 0,
+            window.dp(8), systemBar.iconRowFromBottom(bounds.statusBarHeight, window.dp(OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP)), style, cutoutGap = 0,
             drop = drops.read(style, lastApp))
     }
 

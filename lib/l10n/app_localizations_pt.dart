@@ -84,6 +84,14 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get overlayAmberOff => 'sem';
   @override String get overlayDropAllApps => 'Mesma posição em todos os apps';
   @override String get overlayDropAllAppsSub => 'Desligado, cada app guarda a sua. Trocar não apaga nenhuma.';
+  @override String get overlaySize => 'Tamanho';
+  @override String get overlaySizeSmall => 'Menor';
+  @override String get overlaySizeAuto => 'Automático';
+  @override String get overlaySizeLarge => 'Grande';
+  @override String get overlaySizeLarger => 'Maior';
+  @override String get overlaySizeXLarge => 'Muito grande';
+  @override String get overlaySizeAutoSub => 'Segue o seu celular';
+  @override String get overlaySizeBarLimit => 'Limitado ao espaço da barra';
   @override String get messagesEnabled => 'Mensagens';
   @override String get messagesEnabledSub => 'Uma frase curta no topo quando uma sessão passa de 20 min ou o uso passa do seu habitual';
   @override String get chipAuto => 'Fundo da pílula: automático';

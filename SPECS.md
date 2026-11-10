@@ -65,7 +65,8 @@ lib/
 | `OverlayInk.kt` | Pure: ink per state and bar shade, ≥ 4.5:1 after alpha 0.8 |
 | `MessageOverlay.kt` | Separate header/body window always under the status bar, at most 88% screen width; returns its `OverlaySpan` |
 | `OverlayPlacement.kt` | Pure: the pill's status-bar spot (right of the cutout, or right of centre), icon-row centring, and whether it fits |
-| `FitLadder.kt` | Pure: the steps that tighten a pill that does not fit — padding, then the pie, then text to 11 dp; none drops an element |
+| `FitLadder.kt` | Pure: the steps that tighten a pill that does not fit — padding, then the pie, then the text by up to 2 dp; none drops an element |
+| `OverlaySize.kt` · `SystemBar.kt` | Pure: the size choice per style (pill around the bar's clock ±1.5 dp; Bloco/Aba 17·21·25 sp) · reads SystemUI's `status_bar_clock_size` and `status_bar_padding_top`, null where absent |
 | `OverlayText.kt` | Pure: compact durations (pill and block), localized message headers, 7-real-day feedback floor |
 | `LiveUsage.kt` | Pure: stored daily totals plus unflushed app/launcher session for both timer and messages |
 | `UsualCache.kt` | Per-package/phone usual cache shared by timer and messages; invalidated on 04:00 day-key change or a new unmonitored set |
@@ -109,17 +110,16 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 
 **Overlay behavior:** immediate show/hide, hidden on unmonitored apps and (optionally) the launcher. Window alpha 0.8, tabular figures, no intensity modes. `OverlayStyle` is pill, block or tab. The pill is `FLAG_NOT_TOUCHABLE`; Bloco and Aba take the touch and are dragged, the drop saved in `flutter.overlay_drop_<style>_<app|all>[_land]_x|y` (`OverlayDropKey`; `overlay_drop_scope` picks `app` or `all`, separate drops for portrait and landscape; an app or orientation with none takes the default spot). The Aba stays on a side edge (an 8% middle band against tremor), and the window is the only source of its side.
 
-- `pill`: 13 dp (as tall as the status bar clock, which ignores font_scale), no fill; light or dark ink by `ChipShade` (per-app override first), as no app can read another's status bar. Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). It never leaves the status bar: on API 30+ with a top cutout it sits flush with `boundingRectTop.right`, otherwise just right of the bar's centre; centred on the icon row (12 dp above the bar's bottom; no API reports it), never past the right margin. Wider than `PILL_SLOT_DP` (52 dp) or taller than the bar, `FitLadder` tightens it; a transient system icon may draw over it.
-- `block`: below the status bar, top-right; 17 sp bold, the pill's letter format (`12m`, `1h44`), 96% black background, no rim. Uses the selected feedback variant with cues scaled 1.25×.
-- Padding: every style adds one blank character's width each side of the time (Lucas, 2026-11-02).
+- `pill`: as tall as the bar's own clock (`SystemBar`; 13 dp where SystemUI reports none), Menor/Maior ±1.5 dp, no fill; light or dark ink by `ChipShade` (per-app override first). Minute-only text of at most 4 characters (`0m`, `12m`, `1h44`; 10+ hours become `10h`). It never leaves the status bar: on API 30+ with a top cutout it sits flush with `boundingRectTop.right`, otherwise just right of the bar's centre; centred on the icon row (`SystemBar`, else 12 dp above the bar's bottom), never past the right margin. Wider than `PILL_SLOT_DP` (52 dp) or taller than the bar, `FitLadder` tightens it; a transient system icon may draw over it.
+- `block`: below the status bar, top-right; 17, 21 or 25 sp bold (`OverlaySize`), the pill's letter format (`12m`, `1h44`), 96% black background, no rim. Uses the selected feedback variant with cues scaled 1.25×.
 - Today's app total is compared with that app's 30-day `UsualDaily` mean; on the launcher the timer uses phone usage/usual. Before 7 real days feedback is calm and no cue is drawn. Calm, near (soft amber), past (amber, bold pill) per `OverlayInk`; `overlay_amber` off keeps calm.
 - Missing/unknown `overlay_feedback` values use `outline`; it updates on the 500 ms poll without restarting monitoring. Drawing stays inside the measured timer, keeping the status-bar cap.
   - `fill`: a dot left of the time fills clockwise from 12 o'clock like a pie; full at the usual.
   - `bar`: 2 dp round-capped line under the time, ink spanning exactly the text width (caps included); fills left→right to the usual, then stays full.
   - `outline`: 1 dp border starts at top-centre and grows clockwise, closing at the usual.
   - `none`: no cue and no state colour (messages keep their own rule).
-- Every variant takes its state from `OverlayText.state` (the `UsualDaily` rule plus the 7-day floor), so shapes and messages never disagree. Progress is clamped to [0,1]; a zero usual draws a full line for any use (no division by zero).
-- Messages have a separate window, always under the status bar (Lucas 2026-11-10), right aligned and at most 88% screen width. A Bloco or Aba it crosses hides for as long as it shows (`TimerOverlay.yieldTo`, `OverlaySpan.crosses`): two overlapping windows would pass the 0.8 obscuring opacity. The pill, inside the bar, never crosses it. Header: `<app label> · 1h 18m hoje` / `today`; on the launcher `Celular` / `Phone` with the phone total. Language follows the saved override or system language (PT fallback).
+- Every variant takes its state from `OverlayText.state` (the `UsualDaily` rule plus the 7-day floor), so shapes and messages never disagree. Progress is clamped to [0,1]; a zero usual draws a full line for any use.
+- Messages have a separate window, always under the status bar, right aligned and at most 88% screen width. A Bloco or Aba it crosses hides for as long as it shows (`TimerOverlay.yieldTo`, `OverlaySpan.crosses`): two overlapping windows would pass the 0.8 obscuring opacity. Header: `<app label> · 1h 18m hoje` / `today`; on the launcher `Celular` / `Phone` with the phone total. Language follows the saved override or system language (PT fallback).
 - A message ends after 7.5 s, on a detected package change (500 ms poll), overlay hiding/disabling, or screen off. Cancellation leaves the trigger recorded as shown. Trigger evaluation remains every ~2.5 s.
 - `MonitoringService` still writes `overlay_text`; its nonempty value/visibility gates the timer, including the launcher's `HOME_DELAY_MS` (500 ms; Lucas, 2026-11-09): blank, or the unlock count right after an unlock.
 
@@ -159,6 +159,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `current_activity` | String | Its activity (`Event.className`), for the theme guess |
 | `chip_shades` | String (JSON) | Per-app chip, `{pkg: "light"\|"dark"}`; absent = Auto |
 | `overlay_amber` | Boolean | Amber state ink (default true) |
+| `overlay_size_{style}` | String | Per style: pill `small`·`auto`·`large`, block/tab `auto`·`large`·`xlarge`; unknown = `auto` |
 | `current_session_start_ms` | Long | Epoch ms when current session began |
 | `monitoring_heartbeat_ms` | Long | Kotlin restart cursor; advanced after gap replay, atomically with live-session totals, every 30s while running and at screen off |
 

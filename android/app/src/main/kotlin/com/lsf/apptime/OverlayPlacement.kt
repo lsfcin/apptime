@@ -9,7 +9,7 @@ data class TimerPlacement(val inStatusBar: Boolean, val x: Int, val y: Int, val 
 data class Drop(val fromRight: Int, val top: Int)
 
 object OverlayPlacement {
-    // Status icons sit low in a tall cutout band (Xiaomi: centre 12 dp above the bar's bottom); no API reports it.
+    // Where SystemUI reports no top padding (`SystemBar`): the Redmi's icon row, 12 dp above the bar's bottom.
     const val ICON_ROW_FROM_BOTTOM_DP = 12
     // The pill's widest slot. A transient system icon (Maps' arrow) may still draw over it: no public API
     // says which icons are showing, so the pill stays put and the user changes its look (Lucas 2026-11-05).

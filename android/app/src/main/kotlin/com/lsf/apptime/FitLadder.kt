@@ -7,16 +7,17 @@ package com.lsf.apptime
  * Not built yet, waiting on design: condensed font, squarer outline.
  */
 object FitLadder {
-    data class Step(val sideTrimDp: Float, val dotScale: Float, val dotGapDp: Float, val textDp: Float)
+    /** [textDropDp] counts down from the chosen size (`OverlaySize.pillDp`), not from a fixed 13 dp. */
+    data class Step(val sideTrimDp: Float, val dotScale: Float, val dotGapDp: Float, val textDropDp: Float)
 
     val STEPS = listOf(
-        Step(0f, 1f, FeedbackDrawable.FILL_GAP_DP, 13f),   // as designed: as tall as the status bar clock
-        Step(1f, 1f, FeedbackDrawable.FILL_GAP_DP, 13f),   // the number 1 dp nearer each edge with no glyph there
-        Step(1f, 1f, 2f, 13f),                             // the whole pie nearer the number: fits pie + ECG
-        Step(1f, 1f, 1.5f, 13f),                           // nearer still, for the wider bold digits
-        Step(1f, 0.8f, 1.5f, 13f),                         // the pie smaller and nearer still
-        Step(1f, 0.8f, 1.5f, 12f),
-        Step(1f, 0.8f, 1.5f, 11f),                         // the floor
+        Step(0f, 1f, FeedbackDrawable.FILL_GAP_DP, 0f),    // as designed: as tall as the status bar clock
+        Step(1f, 1f, FeedbackDrawable.FILL_GAP_DP, 0f),    // the number 1 dp nearer each edge with no glyph there
+        Step(1f, 1f, 2f, 0f),                              // the whole pie nearer the number: fits pie + ECG
+        Step(1f, 1f, 1.5f, 0f),                            // nearer still, for the wider bold digits
+        Step(1f, 0.8f, 1.5f, 0f),                          // the pie smaller and nearer still
+        Step(1f, 0.8f, 1.5f, 1f),
+        Step(1f, 0.8f, 1.5f, 2f),                          // the floor
     )
 
     /** The first step whose pill fits, or the last one when none does; `fits` measures a step. */

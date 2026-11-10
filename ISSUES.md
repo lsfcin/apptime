@@ -28,9 +28,9 @@ gets past it. The way around is in [SETUP.md](SETUP.md) § Install on a phone. A
 Every device check ran on one Redmi Note 10 Pro (MIUI 14 / HyperOS). AppTime targets any Android 6+,
 so each value below holds there and is unknown elsewhere:
 
-- **Pill geometry**: `OverlayPlacement.ICON_ROW_FROM_BOTTOM_DP` (12 dp, Xiaomi's cutout band); text
-  13 dp to match the HyperOS clock; the fit ladder's widths come from this phone's Roboto; the
-  font-scale steps in `TimerOverlay` were measured on HyperOS.
+- **Pill geometry**: `SystemBar` reads SystemUI's clock size and top padding, which match the icons
+  on HyperOS and stock 15 (Pixel emulator); other skins may lack or misuse them, and then the Redmi's
+  12 dp and 13 dp apply. The fit ladder's widths come from this phone's Roboto.
 - **Theme guess**: `ChipShade.knownDark` lists only MIUI Recents; other launchers' Recents are untested.
 - **App lists**: `isSystemPkg` / `isLauncherPkg` (`lib/utils/app_info.dart`) name MIUI packages but
   few Samsung, Oppo, Vivo, Huawei or Motorola ones; a vendor's system app may show up as a user app.
@@ -133,7 +133,7 @@ One owner and one number is the fix; the session log follows Kotlin's 31 meanwhi
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/new-look-r4 is 6 ahead of main
+- . — feature/new-look-r4 is 7 ahead of main
 
 ### Local branches already merged into their base
 

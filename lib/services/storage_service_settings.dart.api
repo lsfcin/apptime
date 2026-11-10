@@ -10,6 +10,9 @@ extension StorageServiceSettings on StorageService
   Map<String, dynamic> get _chipShades
   bool get overlayAmber
   set overlayAmber(bool v)
+  List<String> overlaySizeChoices(String style)
+  String overlaySize(String style)
+  void setOverlaySize(String style, String v)
   bool get messagesEnabled
   set messagesEnabled(bool v)
   bool get overlayDropAllApps

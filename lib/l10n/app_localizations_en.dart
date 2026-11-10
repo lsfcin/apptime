@@ -85,6 +85,14 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get overlayAmberOff => 'without';
   @override String get overlayDropAllApps => 'Same position in every app';
   @override String get overlayDropAllAppsSub => 'Off, each app keeps its own. Switching erases neither.';
+  @override String get overlaySize => 'Size';
+  @override String get overlaySizeSmall => 'Smaller';
+  @override String get overlaySizeAuto => 'Automatic';
+  @override String get overlaySizeLarge => 'Large';
+  @override String get overlaySizeLarger => 'Larger';
+  @override String get overlaySizeXLarge => 'Extra large';
+  @override String get overlaySizeAutoSub => 'Follows your phone';
+  @override String get overlaySizeBarLimit => 'Limited to the space in the bar';
   @override String get messagesEnabled => 'Messages';
   @override String get messagesEnabledSub => 'A short line at the top when a session passes 20 min or use passes your usual';
   @override String get chipAuto => 'Pill background: automatic';

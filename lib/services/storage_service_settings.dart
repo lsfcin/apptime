@@ -53,6 +53,18 @@ extension StorageServiceSettings on StorageService {
   bool get overlayAmber => _prefs.getBool('overlay_amber') ?? true;
   set overlayAmber(bool v) => _prefs.setBool('overlay_amber', v);
 
+  /// The visor's sizes per style (Lucas 2026-11-10): the pill around the bar's clock, the Bloco and Aba in sp.
+  List<String> overlaySizeChoices(String style) =>
+      style == 'pill' ? const ['small', 'auto', 'large'] : const ['auto', 'large', 'xlarge'];
+
+  /// Each style keeps its own size; unknown values are 'auto'. Kotlin: `OverlaySize.key`.
+  String overlaySize(String style) {
+    final v = _prefs.getString('overlay_size_$style');
+    return overlaySizeChoices(style).contains(v) ? v! : 'auto';
+  }
+
+  void setOverlaySize(String style, String v) => _prefs.setString('overlay_size_$style', v);
+
   /// One switch for the three message triggers (Lucas 2026-11-10). Kotlin: `FeedbackEngine.ENABLED_KEY`.
   bool get messagesEnabled => _prefs.getBool('messages_enabled') ?? true;
   set messagesEnabled(bool v) => _prefs.setBool('messages_enabled', v);

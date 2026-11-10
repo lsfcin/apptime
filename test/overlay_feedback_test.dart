@@ -37,6 +37,29 @@ void main() {
       expect((await SharedPreferences.getInstance()).getBool('messages_enabled'), isFalse);
     });
 
+    testWidgets('One size row follows the style, and each style keeps its own size in $lang', (tester) async {
+      final storage = await pumpSettings(tester, lang);
+      final l10n = settingsL10n(tester);
+      expect(storage.overlaySize('tab'), 'auto');
+      Future<void> pickSize(String label) async {
+        final row = find.widgetWithText(ListTile, l10n.overlaySize);
+        await tester.ensureVisible(row);
+        await tester.pumpAndSettle();
+        await tester.tap(row);
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(label).last);
+        await tester.pumpAndSettle();
+      }
+      await pickSize(l10n.overlaySizeXLarge);
+      expect(storage.overlaySize('tab'), 'xlarge');
+      await pickChoice(tester, l10n.overlayStyle, lang == 'pt' ? 'pílula' : 'pill');
+      expect(storage.overlaySize('pill'), 'auto');
+      await pickSize(l10n.overlaySizeLarger);
+      expect(storage.overlaySize('pill'), 'large');
+      expect(storage.overlaySize('tab'), 'xlarge');
+      expect((await SharedPreferences.getInstance()).getString('overlay_size_pill'), 'large');
+    });
+
     testWidgets('Settings persists all feedback variants in $lang', (tester) async {
       final storage = await pumpSettings(tester, lang);
       final labels = lang == 'pt'

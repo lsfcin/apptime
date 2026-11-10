@@ -69,6 +69,8 @@
     </application>
 
     <queries>
+        <!-- The status bar's own clock size and icon row: SystemBar.read -->
+        <package android:name="com.android.systemui" />
         <!-- Vendor autostart screens: SystemSettings.hasAutostartScreen -->
         <package android:name="com.miui.securitycenter" />
         <package android:name="com.coloros.safecenter" />

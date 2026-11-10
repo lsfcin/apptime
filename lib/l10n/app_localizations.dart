@@ -105,6 +105,8 @@ abstract class AppLocalizations {
   String get overlayAmberOff;
   String get overlayDropAllApps;
   String get overlayDropAllAppsSub;
+  String get messagesEnabled;
+  String get messagesEnabledSub;
   String get chipAuto;
   String get chipLight;
   String get chipDark;

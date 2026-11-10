@@ -91,20 +91,21 @@ class OverlayService : Service() {
             thermometerSource.read(pkg, inApp, now, prefs.safeGetCount("flutter.current_session_start_ms"), usual.meanMs, disabled), usual.realDays)
         timer.render(pkg, OverlayStyle.parse(prefs.getString("flutter.overlay_style", null)), total, feedback, look, level,
             allowed && hasText, chipShade(pkg), prefs.getBoolean(OverlayInk.AMBER_KEY, true))
-        feedbackEngine?.refresh(pkg, now, allowed)
+        val messages = allowed && prefs.getBoolean(FeedbackEngine.ENABLED_KEY, true)
+        feedbackEngine?.refresh(pkg, now, messages)
         if (++evalTick >= 5) {
             evalTick = 0
             showRhythm(ThermometerLevel.intensity(phoneThermometer.read(null, false, now,
                 prefs.safeGetCount("flutter.current_session_start_ms"), usage.phoneUsual.meanMs, disabled),
                 usage.phoneUsual.realDays))
-            if (allowed && timer.isAdded) {
+            if (messages && timer.isAdded) {
                 val lang = prefs.getString("flutter.language_code", null) ?: Locale.getDefault().language
                 val header = OverlayText.header(if (inApp) resolveAppLabel(pkg!!) else null, total, lang)
                 feedbackEngine?.evaluate(pkg, usage, today, now, lang, header,
                     MessageRules.atPeak(peakCache.get(today, disabled), DateUtils.currentHour()))
             }
         }
-        message.reposition(timer.bottom)
+        timer.yieldTo(message.reposition())
     }
 
     // The pill's chip: the per-app choice from Ajustes, else the front activity's declared theme.

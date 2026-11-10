@@ -50,9 +50,17 @@ class TimerOverlay(context: Context) {
         }
     }
     private lateinit var feedbackDrawable: FeedbackDrawable
-    var bottom = 0
-        private set
     val isAdded get() = window.isAdded
+
+    /**
+     * Hides the visor for this poll when [message] crosses it: two overlapping 0.8 windows would pass the
+     * system's obscuring limit, and the message's header already says the total (Lucas 2026-11-10).
+     * The next render shows it again; both run in one main-looper turn, so no frame flickers.
+     */
+    fun yieldTo(message: OverlaySpan?) {
+        val mine = window.span() ?: return
+        if (message != null && view.visibility == View.VISIBLE && message.crosses(mine)) view.visibility = View.INVISIBLE
+    }
 
     /** [app] is the front app: a Bloco or Aba dropped there stays there for that app only (Lucas 2026-11-06). */
     fun render(app: String?, style: OverlayStyle, totalMs: Long, feedback: OverlayFeedback.Frame, thermometer: String, level: Float,
@@ -106,7 +114,6 @@ class TimerOverlay(context: Context) {
         view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         val x = slot.x + if (slot.inStatusBar) 0 else bounds.rightInset
         window.place(view.measuredWidth, view.measuredHeight, x, slot.y, slot.inStatusBar)
-        bottom = if (visible) slot.y + view.measuredHeight else 0
         animate(if (visible && motionOn()) ThermometerMotion.frameMs(thermometer, level) else 0L)
     }
 

@@ -63,15 +63,15 @@ lib/
 | `FeedbackDrawable.kt` | Draws the dot, bar or clockwise outline over a 32% track of the ink; cues 1.25× on block |
 | `ChipShade.kt` · `StatusBarTheme.kt` | Pure: shade cascade, per-app override · reads the front activity's theme |
 | `OverlayInk.kt` | Pure: ink per state and bar shade, ≥ 4.5:1 after alpha 0.8 |
-| `MessageOverlay.kt` | Separate header/body window below status bar and timer, at most 88% screen width |
+| `MessageOverlay.kt` | Separate header/body window always under the status bar, at most 88% screen width; returns its `OverlaySpan` |
 | `OverlayPlacement.kt` | Pure: the pill's status-bar spot (right of the cutout, or right of centre), icon-row centring, and whether it fits |
 | `FitLadder.kt` | Pure: the steps that tighten a pill that does not fit — padding, then the pie, then text to 11 dp; none drops an element |
 | `OverlayText.kt` | Pure: compact durations (pill and block), localized message headers, 7-real-day feedback floor |
 | `LiveUsage.kt` | Pure: stored daily totals plus unflushed app/launcher session for both timer and messages |
 | `UsualCache.kt` | Per-package/phone usual cache shared by timer and messages; invalidated on 04:00 day-key change or a new unmonitored set |
 | `PhoneTotal.kt` | Pure: a day's or an hour's phone total minus unmonitored apps (the launcher thermometer reads the hour), mirrored by `getDeviceDailyMs`/`getDeviceHourlyMs` in Dart |
-| `MessageDisplay.kt` | Pure: 6.5 s message lifetime and foreground-package cancellation |
-| `FeedbackEngine.kt` | Consumes shared live usage, asks MessageRules, schedules 6.5 s display; cadence persisted before display and retained on cancellation |
+| `MessageDisplay.kt` | Pure: 7.5 s message lifetime and foreground-package cancellation |
+| `FeedbackEngine.kt` | Consumes shared live usage, asks MessageRules, schedules 7.5 s display; gated by `messages_enabled`; cadence persisted before display and retained on cancellation |
 | `MessageRules.kt` | Pure: three triggers (session ≥20 min, app past usual, phone past usual), each once a day, ≥90 min apart; `atPeak` swaps the text in the peak hour |
 | `PeakHour.kt` · `PeakCache.kt` | Peak hour — mirror of `peak_hour.dart` · cached per day |
 | `Thermometer.kt` | Thermometer — mirror of `thermometer.dart`, held equal by `test/fixtures/thermometer.json` |
@@ -119,8 +119,8 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
   - `outline`: 1 dp border starts at top-centre and grows clockwise, closing at the usual.
   - `none`: no cue and no state colour (messages keep their own rule).
 - Every variant takes its state from `OverlayText.state` (the `UsualDaily` rule plus the 7-day floor), so shapes and messages never disagree. Progress is clamped to [0,1]; a zero usual draws a full line for any use (no division by zero).
-- Messages have a separate window, below the status bar and the Bloco, right aligned and at most 88% screen width. This avoids overlapping non-touchable windows (whose combined obscuring opacity would exceed 0.8). The timer stays anchored. Header: `<app label> · 1h 18m hoje` / `today`; on the launcher `Celular` / `Phone` with the phone total. Language follows the saved override or system language (PT fallback).
-- A message ends after 6.5 s, on a detected package change (500 ms poll), overlay hiding/disabling, or screen off. Cancellation leaves the trigger recorded as shown. Trigger evaluation remains every ~2.5 s.
+- Messages have a separate window, always under the status bar (Lucas 2026-11-10), right aligned and at most 88% screen width. A Bloco or Aba it crosses hides for as long as it shows (`TimerOverlay.yieldTo`, `OverlaySpan.crosses`): two overlapping windows would pass the 0.8 obscuring opacity. The pill, inside the bar, never crosses it. Header: `<app label> · 1h 18m hoje` / `today`; on the launcher `Celular` / `Phone` with the phone total. Language follows the saved override or system language (PT fallback).
+- A message ends after 7.5 s, on a detected package change (500 ms poll), overlay hiding/disabling, or screen off. Cancellation leaves the trigger recorded as shown. Trigger evaluation remains every ~2.5 s.
 - `MonitoringService` still writes `overlay_text`; its nonempty value/visibility gates the timer, including the launcher's `HOME_DELAY_MS` (500 ms; Lucas, 2026-11-09): blank, or the unlock count right after an unlock.
 
 ---
@@ -151,6 +151,7 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `onboarding_done` | Boolean | Onboarding completed |
 | `monitoring_enabled` | Boolean | Kotlin writes on Iniciar/Parar; boot/reinstall resume only when true; app open resumes unless false |
 | `language_code` | String? | `null`=system · `"pt"` · `"en"` |
+| `messages_enabled` | Boolean | One switch for the three message triggers (default true); off, nothing is evaluated or recorded |
 | `pm_day` | String | Kotlin only — date key the shown set below belongs to |
 | `pm_shown` | String | Kotlin only — triggers shown on `pm_day`, comma-separated |
 | `pm_last_ms` | Long | Kotlin only — epoch ms of the last message (the 90-min gap spans days) |

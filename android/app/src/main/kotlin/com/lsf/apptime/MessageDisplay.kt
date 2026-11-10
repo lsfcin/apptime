@@ -6,6 +6,6 @@ data class MessageDisplay(val pkg: String?, val startedAtMs: Long) {
         pkg == currentPkg && now - startedAtMs < SHOW_MS
 
     companion object {
-        const val SHOW_MS = 6_500L
+        const val SHOW_MS = 7_500L
     }
 }

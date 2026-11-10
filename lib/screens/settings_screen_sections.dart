@@ -136,6 +136,13 @@ class _OverlaySection extends StatelessWidget {
       ),
       SwitchListTile(
         contentPadding: EdgeInsets.zero,
+        title: Text(l10n.messagesEnabled),
+        subtitle: Text(l10n.messagesEnabledSub),
+        value: s.messagesEnabled,
+        onChanged: on ? (v) { s.messagesEnabled = v; onChanged(); } : null,
+      ),
+      SwitchListTile(
+        contentPadding: EdgeInsets.zero,
         title: Text(l10n.overlayDropAllApps),
         subtitle: Text(l10n.overlayDropAllAppsSub),
         value: s.overlayDropAllApps,

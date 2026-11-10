@@ -1,4 +1,4 @@
-// Renders a separate message below the status bar without moving or overlapping the timer.
+// Renders a separate message at the top, under the status bar; the service hides a timer it crosses.
 package com.lsf.apptime
 
 import android.content.Context
@@ -47,16 +47,17 @@ class MessageOverlay(context: Context) {
         view.visibility = View.INVISIBLE
     }
 
-    fun reposition(timerBottom: Int) {
-        if (!active) return
+    /** Places a showing message under the status bar and returns where it is; null while none shows. */
+    fun reposition(): OverlaySpan? {
+        if (!active) return null
         val bounds = window.bounds()
         val width = (bounds.width * 0.88f).toInt()
         view.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.UNSPECIFIED)
-        // Separate non-overlapping windows keep combined obscuring opacity <= 0.8.
-        val y = maxOf(bounds.statusBarHeight + window.dp(8), timerBottom + window.dp(4))
-        window.place(width, view.measuredHeight, bounds.rightInset + window.dp(8), y)
+        // Always at the top (Lucas 2026-11-10): a message that followed the visor landed mid-app.
+        window.place(width, view.measuredHeight, bounds.rightInset + window.dp(8), bounds.statusBarHeight + window.dp(8))
         view.visibility = View.VISIBLE
+        return window.span()
     }
 
     fun remove() = window.remove()

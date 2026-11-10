@@ -108,6 +108,10 @@ class OverlayWindow(private val context: Context, private val view: View) {
         } catch (_: Exception) { remove() } // retry next poll if permission/display returns
     }
 
+    /** Where the window last was placed, or null before its first placement. */
+    fun span(): OverlaySpan? = if (!isAdded) null else OverlaySpan.of(bounds().width,
+        (params.gravity and Gravity.RELATIVE_HORIZONTAL_GRAVITY_MASK) == Gravity.START, params.x, params.y, params.width, params.height)
+
     fun remove() {
         if (isAdded) {
             try { manager.removeView(view) } catch (_: Exception) {}
@@ -128,3 +132,17 @@ class OverlayWindow(private val context: Context, private val view: View) {
 }
 
 data class OverlayBounds(val width: Int, val statusBarHeight: Int, val cutoutRight: Int, val rightInset: Int)
+
+/** A window's rectangle in pixels from the screen's left edge, whichever edge it is anchored to. */
+data class OverlaySpan(val left: Int, val top: Int, val right: Int, val bottom: Int) {
+    fun crosses(other: OverlaySpan): Boolean =
+        left < other.right && other.left < right && top < other.bottom && other.top < bottom
+
+    companion object {
+        /** [x] counts from the left edge when [fromLeft] (gravity START), else from the right (gravity RIGHT). */
+        fun of(screenWidth: Int, fromLeft: Boolean, x: Int, y: Int, width: Int, height: Int): OverlaySpan {
+            val left = if (fromLeft) x else screenWidth - x - width
+            return OverlaySpan(left, y, left + width, y + height)
+        }
+    }
+}

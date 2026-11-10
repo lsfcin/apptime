@@ -1,4 +1,4 @@
-// Verifies feedback defaults, bilingual settings choices and persistence beside the style selector.
+// Verifies feedback defaults, bilingual settings choices and persistence beside the style selector, and the one messages switch.
 import 'package:apptime/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,6 +25,18 @@ void main() {
   });
 
   for (final lang in ['pt', 'en']) {
+    testWidgets('Messages start on and one switch turns all three off in $lang', (tester) async {
+      final storage = await pumpSettings(tester, lang);
+      expect(storage.messagesEnabled, isTrue);
+      final row = find.widgetWithText(SwitchListTile, settingsL10n(tester).messagesEnabled);
+      await tester.ensureVisible(row);
+      await tester.pumpAndSettle();
+      await tester.tap(row);
+      await tester.pumpAndSettle();
+      expect(storage.messagesEnabled, isFalse);
+      expect((await SharedPreferences.getInstance()).getBool('messages_enabled'), isFalse);
+    });
+
     testWidgets('Settings persists all feedback variants in $lang', (tester) async {
       final storage = await pumpSettings(tester, lang);
       final labels = lang == 'pt'

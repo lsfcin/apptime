@@ -7,8 +7,6 @@ Read the next milestone, implement it bullet by bullet. Delete a bullet once it 
 v1 in three sessions: (1) the open features below, (2) validation — a Pixel emulator, then family
 phones (a Samsung and a Motorola), battery, `ux-20` and `prelaunch-legal`, (3) publishing (milestone below).
 
-- **Messages**: one switch for all three triggers; always at the top, under the status bar; 7.5 s;
-  the visor hides while a message crosses it (the header already carries the total).
 - **Overlay**: size for Bloco and Aba (Automatic plus a few fixed sizes, no slider); pill size in two steps: research Android status bars in Brazil and worldwide and fit them, then the same Automatic-plus-fixed option. First check the pill's window type: Android documents `TYPE_APPLICATION_OVERLAY` as below the status bar, so showing there on the Redmi proves nothing elsewhere; test a stock emulator, then Samsung and Motorola, offer Bloco or Aba if it fails (panel 2026-11-09, `outputs/apptime-panel-posicao-pilula.md`).
 - **Low priority**: the Aba zigzagged once on opening Telegram (Lucas 2026-11-09, not repeated). Hypothesis: a transient package between apps moves it, since `OverlayService` follows `current_pkg` unfiltered. Diagnose only if it returns.
 - **Waiting on real days** (loops, peak message) — not v1.
@@ -142,7 +140,7 @@ rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of 
   "pickups", unlocks on Hoje, battery claims, session "aviso" markers, CSV export.
 - 🔴 **Thermometer in the overlay: three looks, all kept** (Lucas 2026-11-03). No colour of its own: it takes the text's ink, amber only with the number. Built on all styles, default vertical. The ECG animates nonstop at ~11 fps, so its battery cost needs its own run. **Next**: Lucas checks the new vertical; the morning starts calm (after 04:00); battery, vertical first; a better name than "Mão única" for the ▼ look.
 
-- **Ajustes** (built 2026-11-06, one row per choice, options in a sheet): still wants a size control and the messages' switch.
+- **Ajustes** (built 2026-11-06, one row per choice, options in a sheet): still wants a size control.
 - **Hábitos** (built 2026-11-06; Lucas, panel 9/10 over Padrões inside Análise): "Como seu uso está
   mudando?" — the peak hour leads ([apptime/padroes](https://lucassf.pages.dev/apptime/padroes) votes),
   then 7/30 days, night, the entry app. Rule for every block (Lucas): the harm said plainly but

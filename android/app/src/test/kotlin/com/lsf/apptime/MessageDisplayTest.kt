@@ -8,10 +8,10 @@ import org.junit.Test
 
 class MessageDisplayTest {
     @Test
-    fun messageEndsAtSixAndAHalfSeconds() {
+    fun messageEndsAtSevenAndAHalfSeconds() {
         val message = MessageDisplay("app", 100L)
-        assertTrue(message.isActive("app", 6_599L))
-        assertFalse(message.isActive("app", 6_600L))
+        assertTrue(message.isActive("app", 7_599L))
+        assertFalse(message.isActive("app", 7_600L))
     }
 
     @Test

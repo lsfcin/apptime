@@ -127,13 +127,13 @@ One owner and one number is the fix; the session log follows Kotlin's 31 meanwhi
 
 *the only enforced-read type — move the contract to a sibling SPECS.md*
 
-- CONTEXT.md: head is 745 tok carrying 2 constraint(s), over the warning
+- CONTEXT.md: head is 753 tok carrying 2 constraint(s), over the warning
 
 ### Local branches holding unpromoted work
 
 *promote when the work is green, or say which reason applies — /roundup Phase 5*
 
-- . — feature/new-look-r4 is 5 ahead of main
+- . — feature/new-look-r4 is 6 ahead of main
 
 ### Local branches already merged into their base
 

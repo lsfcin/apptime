@@ -85,6 +85,8 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get overlayAmberOff => 'without';
   @override String get overlayDropAllApps => 'Same position in every app';
   @override String get overlayDropAllAppsSub => 'Off, each app keeps its own. Switching erases neither.';
+  @override String get messagesEnabled => 'Messages';
+  @override String get messagesEnabledSub => 'A short line at the top when a session passes 20 min or use passes your usual';
   @override String get chipAuto => 'Pill background: automatic';
   @override String get chipLight => 'Pill background: light';
   @override String get chipDark => 'Pill background: dark';

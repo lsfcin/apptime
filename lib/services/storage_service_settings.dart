@@ -53,6 +53,10 @@ extension StorageServiceSettings on StorageService {
   bool get overlayAmber => _prefs.getBool('overlay_amber') ?? true;
   set overlayAmber(bool v) => _prefs.setBool('overlay_amber', v);
 
+  /// One switch for the three message triggers (Lucas 2026-11-10). Kotlin: `FeedbackEngine.ENABLED_KEY`.
+  bool get messagesEnabled => _prefs.getBool('messages_enabled') ?? true;
+  set messagesEnabled(bool v) => _prefs.setBool('messages_enabled', v);
+
   /// One Bloco/Aba position for every app; off, each app keeps its own. Neither set is erased. Kotlin: `OverlayDropKey`.
   bool get overlayDropAllApps => _prefs.getString('overlay_drop_scope') == 'all';
   set overlayDropAllApps(bool v) => _prefs.setString('overlay_drop_scope', v ? 'all' : 'app');

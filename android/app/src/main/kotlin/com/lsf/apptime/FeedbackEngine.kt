@@ -1,4 +1,4 @@
-// Shows due messages for 6.5 seconds and persists cadence independently of their display lifetime.
+// Shows due messages for 7.5 seconds and persists cadence independently of their display lifetime.
 package com.lsf.apptime
 
 import android.content.SharedPreferences
@@ -16,6 +16,8 @@ class FeedbackEngine(
 
     companion object {
         const val PM_SHOW_MS = MessageDisplay.SHOW_MS
+        /** One switch for all three triggers (Lucas 2026-11-10); off, nothing is evaluated or recorded. */
+        const val ENABLED_KEY = "flutter.messages_enabled"
         private const val KEY_DAY = "flutter.pm_day"
         private const val KEY_SHOWN = "flutter.pm_shown"
         private const val KEY_LAST_MS = "flutter.pm_last_ms"

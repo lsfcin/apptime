@@ -65,6 +65,21 @@ class OverlayPlacementTest {
     }
 
     @Test
+    fun spansAnchoredToEitherEdgeShareOneFrame() {
+        assertEquals(OverlaySpan(300, 10, 380, 40), OverlaySpan.of(400, fromLeft = false, x = 20, y = 10, width = 80, height = 30))
+        assertEquals(OverlaySpan(20, 10, 100, 40), OverlaySpan.of(400, fromLeft = true, x = 20, y = 10, width = 80, height = 30))
+    }
+
+    @Test
+    fun aMessageAtTheTopCrossesABlocoUnderItButNotThePillInTheBar() {
+        val message = OverlaySpan(48, 38, 392, 110)
+        assertTrue(message.crosses(OverlaySpan(300, 46, 380, 80)))
+        assertFalse(message.crosses(OverlaySpan(300, 9, 344, 27)))
+        assertFalse(message.crosses(OverlaySpan(300, 110, 380, 140)))
+        assertFalse(message.crosses(OverlaySpan(0, 50, 40, 90)))
+    }
+
+    @Test
     fun unknownStylesAreThePill() {
         assertEquals(OverlayStyle.TAB, OverlayStyle.parse(null))
         assertEquals(OverlayStyle.TAB, OverlayStyle.parse("unknown"))

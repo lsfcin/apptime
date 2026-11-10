@@ -84,6 +84,8 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get overlayAmberOff => 'sem';
   @override String get overlayDropAllApps => 'Mesma posição em todos os apps';
   @override String get overlayDropAllAppsSub => 'Desligado, cada app guarda a sua. Trocar não apaga nenhuma.';
+  @override String get messagesEnabled => 'Mensagens';
+  @override String get messagesEnabledSub => 'Uma frase curta no topo quando uma sessão passa de 20 min ou o uso passa do seu habitual';
   @override String get chipAuto => 'Fundo da pílula: automático';
   @override String get chipLight => 'Fundo da pílula: claro';
   @override String get chipDark => 'Fundo da pílula: escuro';

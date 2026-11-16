@@ -115,9 +115,9 @@ abstract class AppLocalizations {
   String get overlaySizeBarLimit;
   String get messagesEnabled;
   String get messagesEnabledSub;
-  String get chipAuto;
-  String get chipLight;
-  String get chipDark;
+  String get inkAuto;
+  String get inkBlack;
+  String get inkWhite;
   String get overlayThermometer;
   String get overlayThermometerVertical;
   String get overlayThermometerEcg;
@@ -151,7 +151,8 @@ abstract class AppLocalizations {
   String get appsSub;
   String get appMonitor;
   String get appMonitorSub;
-  String get pillBackground;
+  String get pillInk;
+  String get homeInk;
   String appsShowAll(int quiet);
 
   // ── HabitsScreen ─────────────────────────────────────────────────────────────

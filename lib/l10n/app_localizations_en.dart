@@ -95,9 +95,9 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get overlaySizeBarLimit => 'Limited to the space in the bar';
   @override String get messagesEnabled => 'Messages';
   @override String get messagesEnabledSub => 'A short line at the top when a session passes 20 min or use passes your usual';
-  @override String get chipAuto => 'Pill background: automatic';
-  @override String get chipLight => 'Pill background: light';
-  @override String get chipDark => 'Pill background: dark';
+  @override String get inkAuto => 'Automatic';
+  @override String get inkBlack => 'Black';
+  @override String get inkWhite => 'White';
   @override String get overlayThermometer => 'Pace';
   @override String get overlayThermometerVertical => 'thermometer';
   @override String get overlayThermometerEcg => 'wave';
@@ -193,6 +193,7 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get appsSub => 'Which apps count and show the overlay';
   @override String get appMonitor => 'Monitor this app';
   @override String get appMonitorSub => 'When off, it neither counts in the total nor shows the overlay';
-  @override String get pillBackground => 'Pill background';
+  @override String get pillInk => 'Pill text colour';
+  @override String get homeInk => 'Text colour on the home screen';
   @override String appsShowAll(int quiet) => 'Show all ($quiet under 1 min)';
 }

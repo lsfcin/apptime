@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../l10n/index.dart';
 import '../services/index.dart';
 import '../theme/index.dart';
+import '../utils/index.dart';
 import '../widgets/index.dart';
 import 'apps/index.dart';
 import 'onboarding_screen.dart';
@@ -141,6 +142,16 @@ class _SettingsScreenState extends State<SettingsScreen>
             value: _s.monitorLauncher,
             onChanged: (v) => setState(() => _s.monitorLauncher = v),
           ),
+          // Under its switch, not a row in Apps: there a switch also drops the time from the total (panel 9/10, Lucas 2026-11-16).
+          if (_s.monitorLauncher)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l10n.homeInk),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.sm),
+                child: PillInkSelector(storage: _s, packages: homeLaunchers(), onChanged: () => setState(() {})),
+              ),
+            ),
           _ChoiceRow<String?>(
             title: l10n.sectionLanguage,
             value: _s.languageCode,

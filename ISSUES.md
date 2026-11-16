@@ -69,7 +69,7 @@ One owner and one number is the fix; the session log follows Kotlin's 31 meanwhi
 | Routing tables pointing at files git does not carry | 1 |
 | Projects not declaring their goal | 0 |
 | Wiki-links naming nothing | 0 |
-| Retired tokens still alive | 6 |
+| Retired tokens still alive | 5 |
 | Roadmap item numbers cited outside a roadmap | 0 |
 | Items claimed by two lists | 0 |
 | Size signals | 0 |
@@ -82,7 +82,7 @@ One owner and one number is the fix; the session log follows Kotlin's 31 meanwhi
 | Header fields naming code that is not there | 0 |
 | Truncated routing descriptions | 0 |
 | Constraints trapped in a CONTEXT.md head | 1 |
-| Local branches holding unpromoted work | 0 |
+| Local branches holding unpromoted work | 1 |
 | Work that exists on this disk and nowhere else | 0 |
 | Local branches already merged into their base | 1 |
 | Remote branches already merged into their base | 1 |
@@ -102,7 +102,6 @@ One owner and one number is the fix; the session log follows Kotlin's 31 meanwhi
 - CONTEXT.md: retired token 'slug' survives (line 55).
 - CONTEXT.md: retired token 'tier' survives (line 55).
 - docs/store_listing.md: retired token 'nudge' survives (line 21).
-- lib/utils/app_info.dart: retired token 'tier' survives (line 6).
 - refs/CONTEXT.md: retired token 'slug' survives (line 2).
 - refs/CONTEXT.md: retired token 'tier' survives (line 2).
 
@@ -128,6 +127,12 @@ One owner and one number is the fix; the session log follows Kotlin's 31 meanwhi
 *the only enforced-read type — move the contract to a sibling SPECS.md*
 
 - CONTEXT.md: head is 753 tok carrying 2 constraint(s), over the warning
+
+### Local branches holding unpromoted work
+
+*promote when the work is green, or say which reason applies — /roundup Phase 5*
+
+- . — feature/fixes-1116 is 1 ahead of main
 
 ### Local branches already merged into their base
 

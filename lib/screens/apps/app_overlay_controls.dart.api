@@ -4,5 +4,6 @@ class AppMonitorSwitch extends StatelessWidget
   void _set(bool on)
   Widget build(BuildContext context)
 class AppOverlayControls extends StatelessWidget
-  Widget _shadeSelector(AppLocalizations l10n)
+  Widget build(BuildContext context)
+class PillInkSelector extends StatelessWidget
   Widget build(BuildContext context)

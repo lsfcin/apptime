@@ -38,9 +38,17 @@ extension StorageServiceSettings on StorageService {
     return v == 'light' || v == 'dark' ? v as String : 'auto';
   }
 
-  void setChipShade(String pkg, String shade) {
+  void setChipShade(String pkg, String shade) => setChipShades({pkg}, shade);
+
+  /// The first set choice among [pkgs], else 'auto': the home screen reads as one setting.
+  String chipShadeOf(Iterable<String> pkgs) =>
+      pkgs.map(chipShade).firstWhere((v) => v != 'auto', orElse: () => 'auto');
+
+  void setChipShades(Iterable<String> pkgs, String shade) {
     final map = _chipShades;
-    shade == 'auto' ? map.remove(pkg) : map[pkg] = shade;
+    for (final pkg in pkgs) {
+      shade == 'auto' ? map.remove(pkg) : map[pkg] = shade;
+    }
     _prefs.setString('chip_shades', jsonEncode(map));
   }
 

@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 
 part 'app_info_meta.dart';
 
-// ─── Three-tier naming + classification strategy ──────────────────────────────
+// ─── Three-level naming + classification strategy ──────────────────────────────
 //
-// TIER 1 — Android PackageManager (primary, most reliable)
+// LEVEL 1 — Android PackageManager (primary, most reliable)
 //   Queried at runtime via getInstalledApps() in MainActivity.kt.
 //   Filters FLAG_SYSTEM == 0 → user-installed apps only.
 //   Label = the display name the user sees in their launcher.
 //   Stored in AppInfoService.labels. Handles ~95 % of apps.
 //
-// TIER 2 — Static map kAppMeta
+// LEVEL 2 — Static map kAppMeta
 //   Overrides or supplements PM for:
 //   • Apps with confusing internal names (e.g. com.google.android.apps.tachyon → "Meet")
 //   • Brand colors (PM does not provide these)
 //   • Historic usage data for apps that were later uninstalled
 //
-// TIER 3 — labelForApp() fallback
-//   Last resort for packages absent from both Tier 1 and Tier 2.
+// LEVEL 3 — labelForApp() fallback
+//   Last resort for packages absent from both Level 1 and Level 2.
 //   Strips TLD / vendor / generic segments, capitalises the brand name.
 //
 // CLASSIFICATION (decides whether an app appears in lists / charts)
@@ -34,7 +34,7 @@ Color colorForApp(String pkg) => kAppMeta[pkg]?.color ?? const Color(0xFFB0BEC5)
 // ─── Label lookup ─────────────────────────────────────────────────────────────
 
 // Segments that carry no brand information and should be stripped when
-// deriving a fallback label from a package name (Tier 3).
+// deriving a fallback label from a package name (Level 3).
 const _kTld      = {'com', 'org', 'net', 'io', 'br', 'uk', 'de', 'fr', 'co'};
 const _kNoise    = {'android', 'app', 'apps', 'mobile', 'production', 'release',
                     'mediaclient', 'frontpage', 'katana', 'barcelona'};
@@ -46,7 +46,7 @@ const _kGeneric  = {'music', 'messenger', 'messages', 'browser', 'player',
                     'wallet', 'store', 'market', 'search', 'assistant', 'one'};
 
 /// Returns the best display label for a package name.
-/// Tier 2 (kAppMeta) → Tier 3 fallback (heuristic from package ID).
+/// Level 2 (kAppMeta) → Level 3 fallback (heuristic from package ID).
 // Runtime labels loaded from PackageManager — populated once at startup.
 Map<String, String> _dynamicLabels = {};
 void seedDynamicLabels(Map<String, String> labels) => _dynamicLabels = labels;
@@ -80,10 +80,15 @@ String labelForApp(String pkg) {
   return '${brand[0].toUpperCase()}${brand.substring(1)}';
 }
 
+// Treated as launchers on every phone; the Google app because its feed sits on the home screen.
+const _kFixedLaunchers = {'com.miui.home', 'com.google.android.googlequicksearchbox'};
+
+/// Every package known to be a home screen: the fixed ones plus this phone's CATEGORY_HOME apps.
+Set<String> homeLaunchers() => {..._kFixedLaunchers, ..._dynamicLaunchers};
+
 bool isLauncherPkg(String pkg) =>
     _dynamicLaunchers.contains(pkg) ||
-    pkg == 'com.miui.home' ||
-    pkg == 'com.google.android.googlequicksearchbox' ||
+    _kFixedLaunchers.contains(pkg) ||
     pkg.contains('.launcher') ||
     pkg.endsWith('launcher') ||
     pkg.endsWith('.home') ||

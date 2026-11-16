@@ -7,6 +7,8 @@ extension StorageServiceSettings on StorageService
   void applyDefaultUnmonitored(Iterable<String> installed)
   String chipShade(String pkg)
   void setChipShade(String pkg, String shade)
+  String chipShadeOf(Iterable<String> pkgs)
+  void setChipShades(Iterable<String> pkgs, String shade)
   Map<String, dynamic> get _chipShades
   bool get overlayAmber
   set overlayAmber(bool v)

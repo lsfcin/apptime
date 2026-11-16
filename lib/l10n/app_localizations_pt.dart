@@ -94,9 +94,9 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get overlaySizeBarLimit => 'Limitado ao espaço da barra';
   @override String get messagesEnabled => 'Mensagens';
   @override String get messagesEnabledSub => 'Uma frase curta no topo quando uma sessão passa de 20 min ou o uso passa do seu habitual';
-  @override String get chipAuto => 'Fundo da pílula: automático';
-  @override String get chipLight => 'Fundo da pílula: claro';
-  @override String get chipDark => 'Fundo da pílula: escuro';
+  @override String get inkAuto => 'Automática';
+  @override String get inkBlack => 'Preto';
+  @override String get inkWhite => 'Branco';
   @override String get overlayThermometer => 'Ritmo';
   @override String get overlayThermometerVertical => 'termômetro';
   @override String get overlayThermometerEcg => 'onda';
@@ -192,6 +192,7 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get appsSub => 'Quais apps contam e mostram o visor';
   @override String get appMonitor => 'Monitorar este app';
   @override String get appMonitorSub => 'Desligado, não conta no total nem mostra o visor';
-  @override String get pillBackground => 'Fundo da pílula';
+  @override String get pillInk => 'Cor do texto da pílula';
+  @override String get homeInk => 'Cor do texto na tela inicial';
   @override String appsShowAll(int quiet) => 'Mostrar todos ($quiet com menos de 1 min)';
 }

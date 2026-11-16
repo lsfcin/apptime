@@ -30,21 +30,6 @@ class AppOverlayControls extends StatelessWidget {
   final String package;
   final VoidCallback onChanged;
 
-  // Auto / Claro / Escuro (Lucas 2026-11-04): fixes a wrong theme guess for this app's pill.
-  Widget _shadeSelector(AppLocalizations l10n) => SegmentedButton<String>(
-        showSelectedIcon: false,
-        segments: [
-          ButtonSegment(value: 'auto', icon: const Icon(Icons.brightness_auto, size: 18), tooltip: l10n.chipAuto),
-          ButtonSegment(value: 'light', icon: const Icon(Icons.light_mode, size: 18), tooltip: l10n.chipLight),
-          ButtonSegment(value: 'dark', icon: const Icon(Icons.dark_mode, size: 18), tooltip: l10n.chipDark),
-        ],
-        selected: {storage.chipShade(package)},
-        onSelectionChanged: (s) {
-          storage.setChipShade(package, s.first);
-          onChanged();
-        },
-      );
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -58,9 +43,38 @@ class AppOverlayControls extends StatelessWidget {
       if (AppMonitorSwitch.isMonitored(storage, package))
         ListTile(
           contentPadding: EdgeInsets.zero,
-          title: Text(l10n.pillBackground),
-          trailing: _shadeSelector(l10n),
+          title: Text(l10n.pillInk),
+          trailing: PillInkSelector(storage: storage, packages: {package}, onChanged: onChanged),
         ),
     ]);
+  }
+}
+
+/// Automática / Branco / Preto (Lucas 2026-11-16, was "Fundo"): fixes a wrong theme guess for the pill's ink.
+/// Stored as the bar's shade: 'dark' = white text, 'light' = black text. Every package in [packages] gets the
+/// same choice, so the home screen is one setting however many launchers the phone has.
+class PillInkSelector extends StatelessWidget {
+  const PillInkSelector({super.key, required this.storage, required this.packages, required this.onChanged});
+
+  final StorageService storage;
+  final Set<String> packages;
+  final VoidCallback onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return SegmentedButton<String>(
+      showSelectedIcon: false,
+      segments: [
+        ButtonSegment(value: 'auto', label: Text(l10n.inkAuto)),
+        ButtonSegment(value: 'dark', label: Text(l10n.inkWhite)),
+        ButtonSegment(value: 'light', label: Text(l10n.inkBlack)),
+      ],
+      selected: {storage.chipShadeOf(packages)},
+      onSelectionChanged: (s) {
+        storage.setChipShades(packages, s.first);
+        onChanged();
+      },
+    );
   }
 }

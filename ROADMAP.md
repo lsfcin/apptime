@@ -2,12 +2,16 @@
 
 Read the next milestone, implement it bullet by bullet. Delete a bullet once it is done, and commit.
 
-## Next, by block (Lucas 2026-11-10; details below)
+## Next, to close v1 (Lucas 2026-11-16: features done, the Redmi build approved)
 
-v1 in three sessions: (1) the open features below, (2) validation — a Pixel emulator, then family
-phones (a Samsung and a Motorola), battery, `ux-20` and `prelaunch-legal`, (3) publishing (milestone below).
+Two blocks left, in order. Lucas has no Play developer account yet: creating it ($25) opens block B.
 
-- **Sizes on family phones** (block 2): the pill reads SystemUI's clock and top padding (`SystemBar`, panel 2026-11-10 8/10, `outputs/apptime-panel-tamanho.md`); verify on a Samsung and a Motorola that they exist and match the icons, and that the overlay still shows inside the bar (stock 15 verified 2026-11-10: our window sits under SystemUI's StatusBar, above every app).
+**A — validation**
+- **Family phones** (Lucas brings them when asked): install the approved debug build on a Samsung and a Motorola. The pill reads SystemUI's clock and top padding (`SystemBar`, `outputs/apptime-panel-tamanho.md`); check they exist and match the icons, the overlay shows inside the bar, and the pill's ink is legible on their launcher (else Ajustes › "Cor do texto na tela inicial", or a `ChipShade.knownDark` entry).
+- **Battery**: the release-build run under v1 design decisions below, started at a session's end and read the next day.
+- **Reviews**: `prelaunch-legal` (milestone below) and `ux-20` (App screens below).
+
+**B — publishing**: the milestone below — Play account, signing, store assets, internal testing.
 - **Low priority**: the Aba zigzagged once on opening Telegram (Lucas 2026-11-09, not repeated). Hypothesis: a transient package between apps moves it, since `OverlayService` follows `current_pkg` unfiltered. Diagnose only if it returns.
 - **Waiting on real days** (loops, peak message) — not v1.
 
@@ -106,7 +110,7 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   dark theme), Maps with its light map at system night. MIUI Settings at night fixed: miuix's root
   theme declares a light bar that `Theme.Dark` keeps, so the light-bar flag counts only when the theme
   does not resolve dark (Codex 8/10). MIUI Recents declares a light bar over dark cards: `ChipShade.knownDark`.
-  Asymmetry: `ChipShade` and `chip_shades` still name a chip that is gone. The pill
+  Asymmetry: `ChipShade` and `chip_shades` still name a chip that is gone; the UI says "Cor do texto" (2026-11-16). The pill
   stays untouchable (tap-to-invert: Codex 2/10; Bloco 9, Aba 8 if wanted).
 - **Pill fit** (Lucas 2026-11-05, built): never leaves the bar; text 13 dp (= the HyperOS clock,
   which ignores font_scale); a 52 dp slot, and a transient icon (Maps' arrow) may draw over it — the
@@ -172,6 +176,8 @@ These files belong here, not on the root roadmap; entropy counts regenerate in `
   flows nearly lost five deliberately unwired components reserved for later milestones.
 
 ## Rejected
+
+- The home screen's ink fix: launchers as Apps rows (their switch would also drop the time from the total, Codex 2/10), night mode when the bar is hidden (3/10), hiding the pill there (2/10) — a known-dark entry plus a row under "Monitorar tela inicial" won (Lucas 2026-11-16).
 
 - Pill padding and growing it left toward the camera (Lucas 2026-11-02): the 52 dp fit of 2026-11-05 covers it, and the home delay is 500 ms (Lucas 2026-11-10).
 - A message that follows the visor down the screen: it lands mid-app wherever the Bloco was dropped; it stays at the top (Lucas 2026-11-10).

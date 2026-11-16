@@ -19,4 +19,5 @@
 | [`settings_screen.dart`](settings_screen.dart) | [`settings_screen.dart.api`](settings_screen.dart.api) | App settings screen (Ajustes): how the overlay looks for me — overlay, apps, language, data; setup only while something is off |
 | [`settings_screen_sections.dart`](settings_screen_sections.dart) | [`settings_screen_sections.dart.api`](settings_screen_sections.dart.api) | Settings screen sections, under the charter: the overlay as rows of drawings, then data/privacy; the language row opens a sheet |
 | [`settings_screen_widgets.dart`](settings_screen_widgets.dart) | [`settings_screen_widgets.dart.api`](settings_screen_widgets.dart.api) | SettingsScreen helper widgets and private action methods: permission tile, dialogs |
+| [`settings_size_slider.dart`](settings_size_slider.dart) | [`settings_size_slider.dart.api`](settings_size_slider.dart.api) | SizeSlider: the visor's size as a horizontal slider of three stops, each named underneath in two lines (Lucas 2026-11-16) |
 <!-- routing:end -->

@@ -8,6 +8,7 @@ import '../widgets/index.dart';
 import 'apps/index.dart';
 import 'onboarding_screen.dart';
 import 'settings_choice_art.dart';
+import 'settings_size_slider.dart';
 
 part 'settings_screen_widgets.dart';
 part 'settings_screen_sections.dart';

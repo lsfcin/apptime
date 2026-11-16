@@ -96,7 +96,7 @@ class OverlayService : Service() {
         feedbackEngine?.refresh(pkg, now, messages)
         if (++evalTick >= 5) {
             evalTick = 0
-            showRhythm(ThermometerLevel.intensity(phoneThermometer.read(null, false, now,
+            showRhythm(ThermometerLevel.intensity(phoneThermometer.read(pkg, false, now,
                 prefs.safeGetCount("flutter.current_session_start_ms"), usage.phoneUsual.meanMs, disabled),
                 usage.phoneUsual.realDays))
             if (messages && timer.isAdded) {

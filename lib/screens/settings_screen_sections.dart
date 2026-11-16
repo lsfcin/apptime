@@ -199,12 +199,12 @@ class _OverlaySection extends StatelessWidget {
       'large': (pill ? l10n.overlaySizeLarger : l10n.overlaySizeLarge, pill ? l10n.overlaySizeBarLimit : null),
       'xlarge': (l10n.overlaySizeXLarge, null),
     };
-    return _ChoiceRow<String>(
+    return SizeSlider(
       title: l10n.overlaySize,
       value: s.overlaySize(style),
       enabled: s.overlayEnabled,
       onSelect: (v) { s.setOverlaySize(style, v); onChanged(); },
-      choices: [for (final v in s.overlaySizeChoices(style)) (v, labels[v]!.$1, labels[v]!.$2)],
+      stops: [for (final v in s.overlaySizeChoices(style)) (v, labels[v]!.$1, labels[v]!.$2)],
     );
   }
 }

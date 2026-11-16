@@ -27,6 +27,13 @@ class ThermometerSourceTest {
         assertEquals(Thermometer.read(now, { 1_000L }, 3_400_000L), phone)
     }
 
+    // Lucas 2026-11-16: Spotify (switched off) in front ran the notification icon agitated.
+    @Test fun aSwitchedOffAppInFrontAddsNoOpenSessionToThePhone() {
+        val off = setOf("com.spotify")
+        val phone = source.read("com.spotify", false, now, now - hour, 3_400_000L, off)
+        assertEquals(source.read("com.spotify", false, now, 0L, 3_400_000L, off), phone)
+    }
+
     @Test fun bucketsAreReadOnceUntilTheSessionChanges() {
         source.read("com.app", true, now, now - hour, 3_400_000L)
         val first = reads.size

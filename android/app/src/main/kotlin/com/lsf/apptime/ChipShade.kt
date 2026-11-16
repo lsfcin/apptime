@@ -23,7 +23,11 @@ object ChipShade {
 
     // Screens whose theme declares a light bar over a dark screen; seen on the phone, never guessed.
     // MIUI Recents: dark blurred cards under a light-bar theme (2026-11-04).
-    private val DARK_SCREENS = setOf("com.miui.home.recents.RecentsActivity")
+    // Minimalist Launcher: all black, the bar hidden, so the guess drew black on black (2026-11-16).
+    private val DARK_SCREENS = setOf(
+        "com.miui.home.recents.RecentsActivity",
+        "com.qqlabs.minimalistlauncher.ui.MainActivity",
+    )
 
     fun knownDark(activity: String?) = activity in DARK_SCREENS
 

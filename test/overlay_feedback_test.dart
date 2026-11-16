@@ -41,13 +41,14 @@ void main() {
       final storage = await pumpSettings(tester, lang);
       final l10n = settingsL10n(tester);
       expect(storage.overlaySize('tab'), 'auto');
+      // The slider's last stop, named underneath (Lucas 2026-11-16: a slider, not a sheet).
       Future<void> pickSize(String label) async {
-        final row = find.widgetWithText(ListTile, l10n.overlaySize);
-        await tester.ensureVisible(row);
+        final slider = find.byType(Slider);
+        await tester.ensureVisible(slider);
         await tester.pumpAndSettle();
-        await tester.tap(row);
-        await tester.pumpAndSettle();
-        await tester.tap(find.text(label).last);
+        expect(find.textContaining(label), findsOneWidget);
+        final box = tester.getRect(slider);
+        await tester.tapAt(Offset(box.right - 4, box.center.dy));
         await tester.pumpAndSettle();
       }
       await pickSize(l10n.overlaySizeXLarge);

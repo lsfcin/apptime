@@ -51,13 +51,20 @@ class MessageOverlay(context: Context) {
     fun reposition(): OverlaySpan? {
         if (!active) return null
         val bounds = window.bounds()
-        val width = (bounds.width * 0.88f).toInt()
+        val width = fitWidth((bounds.width * 0.88f).toInt())
         view.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.UNSPECIFIED)
         // Always at the top (Lucas 2026-11-10): a message that followed the visor landed mid-app.
         window.place(width, view.measuredHeight, bounds.rightInset + window.dp(8), bounds.statusBarHeight + window.dp(8))
         view.visibility = View.VISIBLE
         return window.span()
+    }
+
+    // Laid out once at the cap, then shown at its final width from the first frame.
+    private fun fitWidth(capPx: Int): Int {
+        view.measure(View.MeasureSpec.makeMeasureSpec(capPx, View.MeasureSpec.EXACTLY), View.MeasureSpec.UNSPECIFIED)
+        val lines = body.layout?.let { layout -> (0 until layout.lineCount).map(layout::getLineWidth) } ?: return capPx
+        return MessageWidth.fit(capPx, view.paddingLeft + view.paddingRight, header.paint.measureText(header.text.toString()), lines)
     }
 
     fun remove() = window.remove()

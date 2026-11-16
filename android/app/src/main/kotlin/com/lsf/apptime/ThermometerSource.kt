@@ -18,8 +18,10 @@ class ThermometerSource(private val readMs: (String) -> Long) {
         val bucketMs: (String) -> Long =
             if (inApp) { hour -> readMs("flutter.hourly_ms_${pkg}_$hour") }
             else { hour -> PhoneTotal.hourMs(hour, disabled, readMs) }
+        // A switched-off app in front is not counted live either, as its closed hours are not (Lucas 2026-11-16).
+        val openStartMs = if (pkg in disabled) 0L else sessionStartMs
         return Thermometer.read(nowMs, { start -> buckets.getOrPut(start) { bucketMs(Thermometer.hourKey(start)) } },
-            usualDailyMs, sessionStartMs)
+            usualDailyMs, openStartMs)
     }
 
     private companion object { const val HOUR_MS = 60 * 60 * 1000L }

@@ -1,0 +1,3 @@
+// settings_size_slider.dart
+class SizeSlider extends StatelessWidget
+  Widget build(BuildContext context)

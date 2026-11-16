@@ -18,6 +18,7 @@ class ChipShadeTest {
     @Test
     fun miuiRecentsIsDarkWhateverItsThemeSays() {
         assertTrue(ChipShade.knownDark("com.miui.home.recents.RecentsActivity"))
+        assertTrue(ChipShade.knownDark("com.qqlabs.minimalistlauncher.ui.MainActivity"))
         assertEquals(false, ChipShade.knownDark("com.miui.home.launcher.Launcher"))
         assertEquals(false, ChipShade.knownDark(null))
     }

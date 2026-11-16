@@ -1,9 +1,5 @@
-// Step widget for OnboardingScreen: one large sentence, its buttons appearing after a short pause
+// Step widget for OnboardingScreen: one large sentence, its image and tip, and its buttons
 part of 'onboarding_screen.dart';
-
-/// The pause before a sentence's buttons appear, so they are read rather than tapped on reflex.
-/// Only the first time a sentence shows, and never under TalkBack.
-const kSentencePause = Duration(milliseconds: 800);
 
 /// What the primary button does, so each kind looks different:
 /// [next] only moves to the next screen (an unfilled ›), [opensSettings] leaves for a system
@@ -24,18 +20,17 @@ Widget _sentenceTransition(BuildContext context, Widget child, Animation<double>
   return SlideTransition(position: animation.drive(slide), child: still);
 }
 
-class _SentenceView extends StatefulWidget {
+class _SentenceView extends StatelessWidget {
   const _SentenceView({
     super.key,
     required this.text,
     required this.progress,
     required this.primaryLabel,
     required this.onPrimary,
-    required this.kind,
-    required this.pause,
+    this.kind = _ButtonKind.next,
     this.secondaryLabel,
     this.onSecondary,
-    this.image,
+    this.visual,
     this.tip,
   });
 
@@ -46,38 +41,17 @@ class _SentenceView extends StatefulWidget {
   final _ButtonKind kind;
   final String? secondaryLabel;
   final VoidCallback? onSecondary;
-  final bool pause;
-  final String? image;
+  final Widget? visual;
   final String? tip;
-
-  @override
-  State<_SentenceView> createState() => _SentenceViewState();
-}
-
-class _SentenceViewState extends State<_SentenceView> {
-  bool _ready = false;
-
-  @override
-  void initState() {
-    super.initState();
-    if (!widget.pause) {
-      _ready = true;
-    } else {
-      Future.delayed(kSentencePause, () {
-        if (mounted) setState(() => _ready = true);
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final ready = _ready || MediaQuery.of(context).accessibleNavigation;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.progress != null)
-          Text(widget.progress!,
+        if (progress != null)
+          Text(progress!,
               style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.outline)),
         // Scrolls only when a large system font makes the sentence taller than the screen.
         Expanded(
@@ -85,27 +59,20 @@ class _SentenceViewState extends State<_SentenceView> {
             alignment: Alignment.centerLeft,
             child: SingleChildScrollView(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(widget.text, style: theme.textTheme.headlineMedium?.copyWith(height: 1.3)),
-                if (widget.image != null) ...[
+                Text(text, style: theme.textTheme.headlineMedium?.copyWith(height: 1.3)),
+                if (visual != null) ...[
                   const SizedBox(height: AppSpacing.lg),
-                  Image.asset(widget.image!),
+                  visual!,
                 ],
-                if (widget.tip != null) ...[
+                if (tip != null) ...[
                   const SizedBox(height: AppSpacing.md),
-                  Text(widget.tip!, style: theme.textTheme.bodyLarge),
+                  Text(tip!, style: theme.textTheme.bodyLarge),
                 ],
               ]),
             ),
           ),
         ),
-        IgnorePointer(
-          ignoring: !ready,
-          child: AnimatedOpacity(
-            opacity: ready ? 1 : 0,
-            duration: const Duration(milliseconds: 250),
-            child: widget.kind == _ButtonKind.next ? _nextRow() : _filledColumn(),
-          ),
-        ),
+        kind == _ButtonKind.next ? _nextRow() : _filledColumn(),
         const SizedBox(height: AppSpacing.sm),
       ],
     );
@@ -113,12 +80,12 @@ class _SentenceViewState extends State<_SentenceView> {
 
   /// "Depois" on the left, the round › on the right; its label is read by TalkBack and shown on long press.
   Widget _nextRow() => Row(children: [
-        if (widget.secondaryLabel != null)
-          TextButton(onPressed: widget.onSecondary, child: Text(widget.secondaryLabel!)),
+        if (secondaryLabel != null)
+          TextButton(onPressed: onSecondary, child: Text(secondaryLabel!)),
         const Spacer(),
         IconButton.outlined(
-          onPressed: widget.onPrimary,
-          tooltip: widget.primaryLabel,
+          onPressed: onPrimary,
+          tooltip: primaryLabel,
           iconSize: 32,
           constraints: const BoxConstraints.tightFor(width: 64, height: 64),
           icon: const Icon(Icons.chevron_right),
@@ -126,23 +93,23 @@ class _SentenceViewState extends State<_SentenceView> {
       ]);
 
   Widget _filledColumn() {
-    final label = Text(widget.primaryLabel);
+    final label = Text(primaryLabel);
     return Column(children: [
       SizedBox(
         width: double.infinity,
-        child: widget.kind == _ButtonKind.opensSettings
+        child: kind == _ButtonKind.opensSettings
             ? FilledButton.icon(
-                onPressed: widget.onPrimary,
+                onPressed: onPrimary,
                 icon: const Icon(Icons.open_in_new, size: 18),
                 iconAlignment: IconAlignment.end,
                 label: label,
               )
-            : FilledButton(onPressed: widget.onPrimary, child: label),
+            : FilledButton(onPressed: onPrimary, child: label),
       ),
-      if (widget.secondaryLabel != null)
+      if (secondaryLabel != null)
         SizedBox(
           width: double.infinity,
-          child: TextButton(onPressed: widget.onSecondary, child: Text(widget.secondaryLabel!)),
+          child: TextButton(onPressed: onSecondary, child: Text(secondaryLabel!)),
         ),
     ]);
   }

@@ -104,8 +104,7 @@ class MonitoringService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(RhythmNotification.ID, RhythmNotification.build(this,
-            RhythmNotification.storedLevel(getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE))))
+        startForeground(ServiceNotification.ID, ServiceNotification.build(this))
         // A second start (boot + app open, onboarding) must not double the tick or the receiver.
         if (isRunning) return START_STICKY
         isRunning = true

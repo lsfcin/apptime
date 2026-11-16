@@ -118,8 +118,7 @@ References: [refs/REFS.md](refs/REFS.md) (round 1, round 2 Claude Design canvas,
   on the right; pie 8 dp, ECG 8 dp (Lucas 2026-11-06): "5h41" with pie + ECG fills the 52 dp slot at
   13 dp, its pie gap 2 dp. Bold (past the usual) is 2 px wider and fits one step down, pie gap
   1.5 dp, pie whole (Roboto advances on this phone's fonts, 2026-11-06; kerning not modelled).
-- **Notification icon** (Lucas 2026-11-06): the phone, corners radius 5, with a zigzag whose amplitude
-  is the whole phone's pace — one notification for both services (`RhythmNotification`). Launcher icon cyan.
+- **Launcher icon** cyan.
 - **Settings screen** (Claude canvas S4 is the base): gallery shows every built style.
 
 **Still to test on the phone**: WindowInsets for 3-button nav, keyboard and
@@ -177,6 +176,7 @@ These files belong here, not on the root roadmap; entropy counts regenerate in `
 
 ## Rejected
 
+- The status-bar rhythm icon and the notification permission it needed: one system screen fewer and a cleaner app; the foreground services keep a fixed notification, hidden on Android 13+ (`ServiceNotification`, Lucas 2026-11-16).
 - The home screen's ink fix: launchers as Apps rows (their switch would also drop the time from the total, Codex 2/10), night mode when the bar is hidden (3/10), hiding the pill there (2/10) — a known-dark entry plus a row under "Monitorar tela inicial" won (Lucas 2026-11-16).
 
 - Pill padding and growing it left toward the camera (Lucas 2026-11-02): the 52 dp fit of 2026-11-05 covers it, and the home delay is 500 ms (Lucas 2026-11-10).

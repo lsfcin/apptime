@@ -11,7 +11,6 @@ import 'service_channel_mock.dart';
 /// Past the pause before a sentence's buttons answer taps.
 Future<void> _settle(WidgetTester tester) async {
   await tester.pumpAndSettle();
-  await tester.pump(kSentencePause);
   await tester.pumpAndSettle();
 }
 

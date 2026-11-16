@@ -20,7 +20,6 @@ class ServiceChannel
   static Future<void> openAutostartSettings()
   static Future<void> requestIgnoreBatteryOptimizations()
   static Future<void> openHibernationSettings()
-  static Future<void> requestNotifications()
   static Future<Map<Object?, Object?>> getBackgroundStatus() async
   static Future<Map<String, String>> getInstalledAppLabels() async
   static Future<Uint8List?> getAppIcon(String package, int sizePx)

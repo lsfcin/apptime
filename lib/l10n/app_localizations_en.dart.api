@@ -1,3 +1,2 @@
 // app_localizations_en.dart
 class AppLocalizationsEn extends AppLocalizationsEnBase
-  static const _enable = 'On the settings screen that opens next, turn AppTime on.';

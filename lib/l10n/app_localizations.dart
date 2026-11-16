@@ -49,11 +49,18 @@ abstract class AppLocalizations {
   List<String> get setupWelcome;
   List<String> get setupOverlay;
   List<String> get setupUsage;
-  List<String> get setupNotifications;
   List<String> get setupAutostart;
   List<String> get setupBattery;
   List<String> get setupHibernation;
   String get setupAutostartTip;
+  /// Under every drawn screen: it is an example, the phone's own may differ.
+  String get setupSketchCaption;
+  String get setupUsageTip;
+  /// After a return with overlay or usage still off: Android 13+ blocks both for an app installed from a file.
+  String get setupRestrictedTip;
+  /// The switch row's label in the drawn usage and hibernation pages.
+  String get setupUsageSwitch;
+  String get setupHibernationSwitch;
   String get setupReopen;
   String get setupRetryEnable;
   String get setupRetryAutostart;
@@ -73,7 +80,6 @@ abstract class AppLocalizations {
   String get setupBannerAutostart;
   // Settings checklist
   String get sectionSetup;
-  String get setupLabelNotifications;
   String get setupLabelAutostart;
   String get setupLabelBattery;
   String get setupLabelHibernation;

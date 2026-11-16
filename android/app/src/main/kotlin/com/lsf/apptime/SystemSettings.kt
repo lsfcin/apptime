@@ -1,9 +1,7 @@
 package com.lsf.apptime
 
-import android.Manifest
 import android.app.Activity
 import android.app.AppOpsManager
-import android.app.NotificationManager
 import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Context
@@ -54,24 +52,6 @@ object SystemSettings {
         *AUTOSTART_SCREENS.map { Intent().setComponent(it) }.toTypedArray(),
         Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageUri(context)),
     )
-
-    fun areNotificationsOn(context: Context): Boolean =
-        (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).areNotificationsEnabled()
-
-    /** The system dialog the first time (API 33+); after that Android stops showing it, so the app's page. */
-    fun requestNotifications(activity: Activity) {
-        val prefs = activity.getSharedPreferences("system_settings", Context.MODE_PRIVATE)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !prefs.getBoolean("notifications_asked", false)) {
-            prefs.edit().putBoolean("notifications_asked", true).apply()
-            activity.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0)
-            return
-        }
-        openFirst(
-            activity,
-            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, activity.packageName),
-            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageUri(activity)),
-        )
-    }
 
     /** "Pausar atividade do app quando sem uso" (API 30+), on AppTime's own page. */
     fun openHibernation(context: Context) = openFirst(

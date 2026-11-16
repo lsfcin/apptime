@@ -11,7 +11,7 @@
 | [`peak_hour.dart`](peak_hour.dart) | [`peak_hour.dart.api`](peak_hour.dart.api) | Peak hour: the clock hour with the most mean phone use over the measured days among the 30 before today |
 | [`period_summary.dart`](period_summary.dart) | [`period_summary.dart.api`](period_summary.dart.api) | PeriodSummary: the last N complete days against the N days before them, and the use between 22h and 6h |
 | [`service_channel.dart`](service_channel.dart) | [`service_channel.dart.api`](service_channel.dart.api) | ServiceChannel: MethodChannel bridge to Kotlin OverlayService and MonitoringService |
-| [`setup_check.dart`](setup_check.dart) | [`setup_check.dart.api`](setup_check.dart.api) | SetupCheck: which of the six system settings AppTime needs are on, and how to open each |
+| [`setup_check.dart`](setup_check.dart) | [`setup_check.dart.api`](setup_check.dart.api) | SetupCheck: which of the five system settings AppTime needs are on, and how to open each |
 | [`storage_service.dart`](storage_service.dart) | [`storage_service.dart.api`](storage_service.dart.api) | StorageService: typed SharedPreferences wrapper for screen time and settings |
 | [`storage_service_queries.dart`](storage_service_queries.dart) | [`storage_service_queries.dart.api`](storage_service_queries.dart.api) | StorageService query helpers: weekday-pattern aggregation and data maintenance methods |
 | [`storage_service_settings.dart`](storage_service_settings.dart) | [`storage_service_settings.dart.api`](storage_service_settings.dart.api) | StorageService extension: per-app control, onboarding, and language settings |

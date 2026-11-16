@@ -6,7 +6,6 @@ part of 'settings_screen.dart';
 String _setupLabel(AppLocalizations l10n, SetupItem item) => switch (item) {
       SetupItem.overlay => l10n.permFloatingWindow,
       SetupItem.usage => l10n.permUsageStats,
-      SetupItem.notifications => l10n.setupLabelNotifications,
       SetupItem.autostart => l10n.setupLabelAutostart,
       SetupItem.battery => l10n.setupLabelBattery,
       SetupItem.hibernation => l10n.setupLabelHibernation,

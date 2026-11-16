@@ -54,12 +54,7 @@ class MainActivity : FlutterActivity() {
                         SystemSettings.openHibernation(this)
                         result.success(null)
                     }
-                    "requestNotifications" -> {
-                        SystemSettings.requestNotifications(this)
-                        result.success(null)
-                    }
                     "getBackgroundStatus" -> result.success(mapOf(
-                        "notificationsOn" to SystemSettings.areNotificationsOn(this),
                         "batteryExempt" to SystemSettings.isIgnoringBatteryOptimizations(this),
                         "hibernationExempt" to SystemSettings.isHibernationExempt(this),
                         "autostartScreen" to SystemSettings.autostartScreen(this),

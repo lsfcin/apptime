@@ -1,9 +1,9 @@
-// SetupCheck: which of the six system settings AppTime needs are on, and how to open each
+// SetupCheck: which of the five system settings AppTime needs are on, and how to open each
 import 'service_channel.dart';
 import 'storage_service.dart';
 
 /// In the order the setup flow asks for them.
-enum SetupItem { overlay, usage, notifications, autostart, battery, hibernation }
+enum SetupItem { overlay, usage, autostart, battery, hibernation }
 
 class SetupCheck {
   const SetupCheck({
@@ -32,7 +32,6 @@ class SetupCheck {
       state: {
         SetupItem.overlay: overlay,
         SetupItem.usage: usage,
-        SetupItem.notifications: background['notificationsOn'] as bool? ?? false,
         if (screen != null) SetupItem.autostart: background['autostartAllowed'] as bool?,
         SetupItem.battery: background['batteryExempt'] as bool? ?? false,
         SetupItem.hibernation: background['hibernationExempt'] as bool? ?? true,
@@ -74,7 +73,6 @@ class SetupCheck {
   static Future<void> open(SetupItem item) => switch (item) {
         SetupItem.overlay => ServiceChannel.requestOverlayPermission(),
         SetupItem.usage => ServiceChannel.requestUsagePermission(),
-        SetupItem.notifications => ServiceChannel.requestNotifications(),
         SetupItem.autostart => ServiceChannel.openAutostartSettings(),
         SetupItem.battery => ServiceChannel.requestIgnoreBatteryOptimizations(),
         SetupItem.hibernation => ServiceChannel.openHibernationSettings(),

@@ -54,9 +54,7 @@ class ServiceChannel {
   static Future<void> openHibernationSettings() =>
       _channel.invokeMethod('openHibernationSettings');
 
-  static Future<void> requestNotifications() => _channel.invokeMethod('requestNotifications');
-
-  /// `{notificationsOn, batteryExempt, hibernationExempt, autostartScreen?, autostartAllowed?}` —
+  /// `{batteryExempt, hibernationExempt, autostartScreen?, autostartAllowed?}` —
   /// parsed by [SetupCheck.fromStatus].
   static Future<Map<Object?, Object?>> getBackgroundStatus() async =>
       await _channel.invokeMethod<Map<Object?, Object?>>('getBackgroundStatus') ?? {};

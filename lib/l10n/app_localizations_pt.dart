@@ -14,25 +14,29 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get monitoringInactive => 'O visor está parado.';
   @override String get actionStart => 'Iniciar';
 
-  static const _enable = 'Na próxima tela de configuração que vai abrir, habilite o AppTime.';
   @override List<String> get setupWelcome =>
       ['O AppTime mostra seu tempo de hoje em cada app.', 'Sem bloquear nada. Só para você ver.'];
-  @override List<String> get setupOverlay => ['O tempo aparece ao lado da câmera.', _enable];
+  @override List<String> get setupOverlay =>
+      ['O tempo aparece ao lado da câmera.', 'Vai abrir uma lista de apps. Ache o AppTime e ligue a chave.'];
   @override List<String> get setupUsage =>
-      ['Para contar, o AppTime vê qual app está aberto.', 'Nada sai do seu celular.', _enable];
-  @override List<String> get setupNotifications =>
-      ['Uma notificação discreta mostra que o AppTime está ligado.', 'Toque em Permitir.'];
+      ['Para contar, o AppTime vê qual app está aberto.', 'Nada sai do seu celular.', 'Na próxima tela, ligue a chave do AppTime.'];
   @override List<String> get setupAutostart =>
       ['Sem isso, o AppTime não volta quando o celular reinicia.', 'Na lista, ache o AppTime e ligue a chave.'];
   @override List<String> get setupBattery => [
         'A economia de bateria pode fechar o AppTime.',
-        'Ele gasta pouco: menos de 1% por dia.',
         'Toque em Permitir.',
       ];
   @override List<String> get setupHibernation => [
         'Sem uso, o Android pode tirar as permissões do AppTime.',
         'Na próxima tela de configuração que vai abrir, desligue “Pausar atividade do app”.',
       ];
+  @override String get setupSketchCaption => 'Exemplo. No seu celular, a tela pode ser diferente.';
+  @override String get setupUsageTip =>
+      'O Android mostra um aviso forte, igual para qualquer app. Se aparecer um contador, espere e confirme.';
+  @override String get setupRestrictedTip =>
+      'Se o Android disse “Configuração restrita”: abra Configurações › Apps › AppTime, toque em ⋮ e em “Permitir configurações restritas”.';
+  @override String get setupUsageSwitch => 'Permitir acesso ao uso';
+  @override String get setupHibernationSwitch => 'Pausar atividade do app';
   @override String get setupAutostartTip => 'Dica: toque na lupa e digite AppTime.';
   @override String get setupReopen => 'Depois, abra o AppTime de novo.';
   @override String get setupRetryEnable => 'De novo, na tela de configuração, habilite o AppTime.';
@@ -53,7 +57,6 @@ class AppLocalizationsPt extends AppLocalizationsPtBase {
   @override String get setupRelaunch => 'Religar';
   @override String get setupBannerAutostart => 'Se o celular reiniciar, o contador pode não voltar sozinho.';
   @override String get sectionSetup => 'Funcionamento';
-  @override String get setupLabelNotifications => 'Notificações';
   @override String get setupLabelAutostart => 'Início automático';
   @override String get setupLabelBattery => 'Sem economia de bateria';
   @override String get setupLabelHibernation => 'Sem pausa por falta de uso';

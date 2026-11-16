@@ -15,11 +15,15 @@ abstract class AppLocalizations
   List<String> get setupWelcome;
   List<String> get setupOverlay;
   List<String> get setupUsage;
-  List<String> get setupNotifications;
   List<String> get setupAutostart;
   List<String> get setupBattery;
   List<String> get setupHibernation;
   String get setupAutostartTip;
+  String get setupSketchCaption;
+  String get setupUsageTip;
+  String get setupRestrictedTip;
+  String get setupUsageSwitch;
+  String get setupHibernationSwitch;
   String get setupReopen;
   String get setupRetryEnable;
   String get setupRetryAutostart;
@@ -38,7 +42,6 @@ abstract class AppLocalizations
   String get setupRelaunch;
   String get setupBannerAutostart;
   String get sectionSetup;
-  String get setupLabelNotifications;
   String get setupLabelAutostart;
   String get setupLabelBattery;
   String get setupLabelHibernation;

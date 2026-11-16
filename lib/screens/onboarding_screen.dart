@@ -6,6 +6,7 @@ import '../theme/index.dart';
 import '../index.dart';
 
 part 'onboarding_screen_steps.dart';
+part 'setup_sketch.dart';
 
 /// Where the user is inside one item: reading its sentences, back from settings
 /// with it still off, or asked whether they switched an unreadable autostart on.
@@ -36,7 +37,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
   int _sentence = 0;
   _Phase _phase = _Phase.reading;
   bool _awaitingReturn = false;
-  final _seen = <String>{};
 
   @override
   void initState() {
@@ -131,8 +131,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
   Widget _welcome(AppLocalizations l10n) {
     final sentences = l10n.setupWelcome;
     final last = _sentence == sentences.length - 1;
-    return _view(
-      id: 'welcome-$_sentence',
+    return _SentenceView(key: ValueKey('welcome-$_sentence'),
       text: sentences[_sentence],
       progress: null,
       primaryLabel: last ? l10n.onboardStart : l10n.continueAction,
@@ -151,23 +150,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
         : _opensDialog(item) ? l10n.continueAction : l10n.setupConfigure;
     switch (_phase) {
       case _Phase.done:
-        return _view(id: 'done-$item', text: l10n.setupDone, progress: progress,
-            primaryLabel: l10n.continueAction, onPrimary: _next, pause: false);
+        return _SentenceView(key: ValueKey('done-$item'), text: l10n.setupDone, progress: progress,
+            primaryLabel: l10n.continueAction, onPrimary: _next);
       case _Phase.ask:
-        return _view(id: 'ask-$item', text: l10n.setupAskAutostart, progress: progress,
+        return _SentenceView(key: ValueKey('ask-$item'), text: l10n.setupAskAutostart, progress: progress,
             primaryLabel: l10n.setupYesDone, kind: _ButtonKind.plain,
             onPrimary: () { widget.storage.autostartConfirmed = true; _next(); },
             secondaryLabel: l10n.setupNotYet,
             onSecondary: () => setState(() => _phase = _Phase.retry));
       case _Phase.retry:
-        return _view(id: 'retry-$item', text: _retryText(l10n, item), progress: progress,
+        return _SentenceView(key: ValueKey('retry-$item'), text: _retryText(l10n, item), progress: progress,
             primaryLabel: action, kind: _actionKind(item), onPrimary: _open, secondaryLabel: later, onSecondary: _next,
-            image: _image(item), tip: _tip(l10n, item));
+            visual: _visual(l10n, item, retry: true), tip: _tip(l10n, item, retry: true));
       case _Phase.reading:
         final sentences = _sentences(l10n, item);
         final last = _sentence == sentences.length - 1;
-        return _view(
-          id: 'read-$item-$_sentence',
+        return _SentenceView(key: ValueKey('read-$item-$_sentence'),
           text: sentences[_sentence],
           progress: progress,
           primaryLabel: last ? action : l10n.continueAction,
@@ -175,62 +173,51 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
           onPrimary: last ? _open : () => setState(() => _sentence++),
           secondaryLabel: last ? later : null,
           onSecondary: _next,
-          image: last ? _image(item) : null,
+          visual: last ? _visual(l10n, item) : null,
           tip: last ? _tip(l10n, item) : null,
         );
     }
   }
 
-  Widget _view({
-    required String id,
-    required String text,
-    required String? progress,
-    required String primaryLabel,
-    required VoidCallback onPrimary,
-    _ButtonKind kind = _ButtonKind.next,
-    String? secondaryLabel,
-    VoidCallback? onSecondary,
-    String? image,
-    String? tip,
-    bool pause = true,
-  }) =>
-      _SentenceView(
-        key: ValueKey(id),
-        text: text,
-        progress: progress,
-        primaryLabel: primaryLabel,
-        onPrimary: onPrimary,
-        kind: kind,
-        secondaryLabel: secondaryLabel,
-        onSecondary: onSecondary,
-        image: image,
-        tip: tip,
-        pause: pause && _seen.add(id),
-      );
-
   /// A system dialog keeps the user here; every other item leaves for a settings screen.
   static _ButtonKind _actionKind(SetupItem item) =>
       _opensDialog(item) ? _ButtonKind.plain : _ButtonKind.opensSettings;
 
-  static bool _opensDialog(SetupItem item) =>
-      item == SetupItem.notifications || item == SetupItem.battery;
+  static bool _opensDialog(SetupItem item) => item == SetupItem.battery;
 
   bool get _miui => _check?.autostartScreen == 'miui';
 
-  String? _image(SetupItem item) =>
-      item == SetupItem.autostart && _miui ? 'assets/setup/autostart_miui.png' : null;
+  /// Overlay and usage are the two Android 13+ restricts for an app installed from a file.
+  static bool _restrictable(SetupItem item) => item == SetupItem.overlay || item == SetupItem.usage;
+
+  /// The drawn screen the step opens; back with it still off, the restricted-setting block instead.
+  Widget? _visual(AppLocalizations l10n, SetupItem item, {bool retry = false}) {
+    final kinds = retry && _restrictable(item) ? const [_Sketch.restricted] : switch (item) {
+      SetupItem.overlay || SetupItem.autostart => const [_Sketch.list],
+      SetupItem.usage => const [_Sketch.page, _Sketch.countdown],
+      SetupItem.hibernation => const [_Sketch.page],
+      SetupItem.battery => const [_Sketch.countdown],
+    };
+    return _SetupSketches(
+      kinds: kinds,
+      switchLabel: item == SetupItem.hibernation ? l10n.setupHibernationSwitch : l10n.setupUsageSwitch,
+      switchOn: item == SetupItem.hibernation,
+      caption: l10n.setupSketchCaption,
+    );
+  }
 
   /// Under every screen that leaves for the system: some vendors close AppTime there (B3, MIUI autostart).
-  String? _tip(AppLocalizations l10n, SetupItem item) {
+  String? _tip(AppLocalizations l10n, SetupItem item, {bool retry = false}) {
     if (_opensDialog(item)) return null;
     final reopen = l10n.setupReopen;
+    if (retry && _restrictable(item)) return '${l10n.setupRestrictedTip}\n$reopen';
+    if (item == SetupItem.usage) return '${l10n.setupUsageTip}\n$reopen';
     return item == SetupItem.autostart && _miui ? '${l10n.setupAutostartTip}\n$reopen' : reopen;
   }
 
   static List<String> _sentences(AppLocalizations l10n, SetupItem item) => switch (item) {
         SetupItem.overlay => l10n.setupOverlay,
         SetupItem.usage => l10n.setupUsage,
-        SetupItem.notifications => l10n.setupNotifications,
         SetupItem.autostart => l10n.setupAutostart,
         SetupItem.battery => l10n.setupBattery,
         SetupItem.hibernation => l10n.setupHibernation,

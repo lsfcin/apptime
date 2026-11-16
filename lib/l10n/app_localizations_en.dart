@@ -15,25 +15,29 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get monitoringInactive => 'The overlay is stopped.';
   @override String get actionStart => 'Start';
 
-  static const _enable = 'On the settings screen that opens next, turn AppTime on.';
   @override List<String> get setupWelcome =>
       ["AppTime shows today's time in each app.", 'Nothing is blocked. It is just for you to see.'];
-  @override List<String> get setupOverlay => ['The time appears next to the camera.', _enable];
+  @override List<String> get setupOverlay =>
+      ['The time appears next to the camera.', 'A list of apps opens next. Find AppTime and turn its switch on.'];
   @override List<String> get setupUsage =>
-      ['To count, AppTime sees which app is open.', 'Nothing leaves your phone.', _enable];
-  @override List<String> get setupNotifications =>
-      ['A quiet notification shows AppTime is on.', 'Tap Allow.'];
+      ['To count, AppTime sees which app is open.', 'Nothing leaves your phone.', "On the next screen, turn AppTime's switch on."];
   @override List<String> get setupAutostart =>
       ['Without this, AppTime does not come back after a restart.', 'In the list, find AppTime and turn it on.'];
   @override List<String> get setupBattery => [
         'Battery saving can close AppTime.',
-        'It uses little: under 1% a day.',
         'Tap Allow.',
       ];
   @override List<String> get setupHibernation => [
         "Unused, Android may take AppTime's permissions away.",
         'On the settings screen that opens next, turn off “Pause app activity if unused”.',
       ];
+  @override String get setupSketchCaption => 'An example. Your phone may show a different screen.';
+  @override String get setupUsageTip =>
+      'Android shows a strong warning, the same for every app. If a countdown appears, wait and confirm.';
+  @override String get setupRestrictedTip =>
+      'If Android said “Restricted setting”: open Settings › Apps › AppTime, tap ⋮ and “Allow restricted settings”.';
+  @override String get setupUsageSwitch => 'Permit usage access';
+  @override String get setupHibernationSwitch => 'Pause app activity if unused';
   @override String get setupAutostartTip => 'Tip: tap the magnifier and type AppTime.';
   @override String get setupReopen => 'Then, open AppTime again.';
   @override String get setupRetryEnable => 'Once more, on the settings screen, turn AppTime on.';
@@ -54,7 +58,6 @@ class AppLocalizationsEn extends AppLocalizationsEnBase {
   @override String get setupRelaunch => 'Turn on';
   @override String get setupBannerAutostart => 'If the phone restarts, the counter may not come back on its own.';
   @override String get sectionSetup => 'Running';
-  @override String get setupLabelNotifications => 'Notifications';
   @override String get setupLabelAutostart => 'Autostart';
   @override String get setupLabelBattery => 'No battery saving';
   @override String get setupLabelHibernation => 'No pause when unused';

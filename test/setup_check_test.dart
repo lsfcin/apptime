@@ -15,13 +15,13 @@ SetupCheck _check({
       autostartConfirmed: confirmed,
     );
 
-const _allOn = {'notificationsOn': true, 'batteryExempt': true, 'hibernationExempt': true};
+const _allOn = {'batteryExempt': true, 'hibernationExempt': true};
 
 void main() {
-  test('no autostart switch: five items, autostart never asked', () {
+  test('no autostart switch: four items, autostart never asked', () {
     final check = _check(background: _allOn);
     expect(check.items, isNot(contains(SetupItem.autostart)));
-    expect(check.items.length, 5);
+    expect(check.items.length, 4);
     expect(check.missing, isEmpty);
   });
 

@@ -77,7 +77,7 @@ lib/
 | `PeakHour.kt` · `PeakCache.kt` | Peak hour — mirror of `peak_hour.dart` · cached per day |
 | `Thermometer.kt` | Thermometer — mirror of `thermometer.dart`, held equal by `test/fixtures/thermometer.json` |
 | `Thermometer{Level,Motion,Glyph,Source}.kt` | Intensity and look · clock-based motion · drawing · cached hour buckets |
-| `RhythmLevel.kt` · `RhythmNotification.kt` | Pure: the whole phone's pace in 3 steps with a down margin · the one notification (id 1001, LOW channel `apptime_rhythm`) both foreground services share |
+| `ServiceNotification.kt` | The one fixed notification (id 1001, MIN channel `apptime_service`) both foreground services must carry; never asked for, so hidden on Android 13+ |
 | `UsualDaily.kt` | "Your usual" — mirror of `usual_daily.dart`, held equal by `test/fixtures/usual_daily.json` |
 | `AppConstants.kt` | Shared launcher resolution/classification, parseDisabledApps(), CHANNEL constant |
 | `DateUtils.kt` | today(), dateKey(epochMs), currentHour(), daysBefore(), safeGetCount() extension |
@@ -133,7 +133,6 @@ BootReceiver → MonitoringSwitch on reboot / reinstall
 | `overlay_style` | String | `"pill"`, `"block"` or `"tab"` (default, and any unknown value) |
 | `overlay_feedback` | String | `"fill"`, `"bar"`, `"outline"` (default; also fallback for unknown values), `"none"`; Kotlin reads `flutter.overlay_feedback` |
 | `overlay_thermometer` | String | `"vertical"`, `"ecg"` (default; also fallback for unknown values), `"mao"`, `"none"`; Kotlin reads `flutter.overlay_thermometer` |
-| `rhythm_level` | Long | Kotlin only: the notification icon's last level, 0–2 (`RhythmLevel`), kept across service restarts (`RhythmNotification`) |
 | `overlay_enabled` | Boolean | Show timer/messages; monitoring continues (default true) |
 | `monitor_launcher` | Boolean | Show overlay on launcher (default true) |
 | `overlay_visible` | Boolean | Whether overlay should appear |

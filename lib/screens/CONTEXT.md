@@ -14,10 +14,11 @@
 |------|-----------|-------------|
 | [`index.dart`](index.dart) | [`index.dart.api`](index.dart.api) | **facade** — Facade for screens/: top-level screens |
 | [`onboarding_screen.dart`](onboarding_screen.dart) | [`onboarding_screen.dart.api`](onboarding_screen.dart.api) | Onboarding screen: the setup flow, one sentence per screen — first run, or only what turned off since |
-| [`onboarding_screen_steps.dart`](onboarding_screen_steps.dart) | [`onboarding_screen_steps.dart.api`](onboarding_screen_steps.dart.api) | Step widget for OnboardingScreen: one large sentence, its buttons appearing after a short pause |
+| [`onboarding_screen_steps.dart`](onboarding_screen_steps.dart) | [`onboarding_screen_steps.dart.api`](onboarding_screen_steps.dart.api) | Step widget for OnboardingScreen: one large sentence, its image and tip, and its buttons |
 | [`settings_choice_art.dart`](settings_choice_art.dart) | [`settings_choice_art.dart.api`](settings_choice_art.dart.api) | ChoiceArt: the small geometric drawing of one Ajustes option — the visor's shape, its comparison, the rhythm glyph, its colours |
 | [`settings_screen.dart`](settings_screen.dart) | [`settings_screen.dart.api`](settings_screen.dart.api) | App settings screen (Ajustes): how the overlay looks for me — overlay, apps, language, data; setup only while something is off |
 | [`settings_screen_sections.dart`](settings_screen_sections.dart) | [`settings_screen_sections.dart.api`](settings_screen_sections.dart.api) | Settings screen sections, under the charter: the overlay as rows of drawings, then data/privacy; the language row opens a sheet |
 | [`settings_screen_widgets.dart`](settings_screen_widgets.dart) | [`settings_screen_widgets.dart.api`](settings_screen_widgets.dart.api) | SettingsScreen helper widgets and private action methods: permission tile, dialogs |
 | [`settings_size_slider.dart`](settings_size_slider.dart) | [`settings_size_slider.dart.api`](settings_size_slider.dart.api) | SizeSlider: the visor's size as a horizontal slider of three stops, each named underneath in two lines (Lucas 2026-11-16) |
+| [`setup_sketch.dart`](setup_sketch.dart) | [`setup_sketch.dart.api`](setup_sketch.dart.api) | SetupSketch: a drawn, vendor-neutral miniature of the system screen a setup step opens — list, switch page or alert |
 <!-- routing:end -->

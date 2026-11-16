@@ -14,7 +14,7 @@ List<String> mockServiceChannel({
   messenger.setMockMethodCallHandler(channel, (call) async {
     calls.add(call.method);
     return call.method == 'getBackgroundStatus'
-        ? {'notificationsOn': true, 'batteryExempt': true, 'hibernationExempt': true, ...background}
+        ? {'batteryExempt': true, 'hibernationExempt': true, ...background}
         : call.method.startsWith('has') && !denied.contains(call.method);
   });
   addTearDown(() => messenger.setMockMethodCallHandler(channel, null));

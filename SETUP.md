@@ -46,6 +46,7 @@ install push it back with `run-as ... cp` and `appops set <pkg> GET_USAGE_STATS 
 `input tap`, so someone has to hold the phone; a missed prompt fails with
 `INSTALL_FAILED_VERIFICATION_FAILURE`, and a retry asks again. When it never shows, `adb install` hangs:
 `adb push` the APK to `/sdcard/Download/` and install it from the Files app (same key, data kept).
+An APK installed from the Files app is "restricted" on Android 13+: overlay and usage access stay blocked until App info › ⋮ › "Permitir configurações restritas" (Lucas's sister, 2026-11-16). `adb install` and Play are not restricted.
 Every update re-grants `SYSTEM_ALERT_WINDOW`: to test the "counter off" banner, deny it after installing.
 Battery saver on the cable: `cmd battery unplug` then `cmd power set-mode 1`; undo with `set-mode 0`, `cmd battery reset`.
 

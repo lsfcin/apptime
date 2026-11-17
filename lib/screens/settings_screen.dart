@@ -68,10 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       _check != null && _check!.isOn(SetupItem.overlay) && _check!.isOn(SetupItem.usage);
 
   Future<void> _openSetupFlow() async {
-    await Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) =>
-          OnboardingScreen(storage: _s, onLocaleChange: widget.onLocaleChange, firstRun: false),
-    ));
+    await OnboardingScreen.reopen(context, _s, widget.onLocaleChange);
     await _refreshStatus();
   }
 
@@ -92,13 +89,13 @@ class _SettingsScreenState extends State<SettingsScreen>
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           if (_check?.stopped ?? false) ...[
-            _SetupBanner(text: l10n.setupBanner, action: l10n.setupRelaunch, onTap: _openSetupFlow),
+            SetupBanner(text: l10n.setupBanner, action: l10n.setupRelaunch, onTap: _openSetupFlow),
             gap,
           ] else if (_allGranted && !_isRunning) ...[
-            _SetupBanner(text: l10n.monitoringInactive, action: l10n.actionStart, onTap: _startMonitoring),
+            SetupBanner(text: l10n.monitoringInactive, action: l10n.actionStart, onTap: _startMonitoring),
             gap,
           ] else if (_check?.autostartOff ?? false) ...[
-            _SetupBanner(
+            SetupBanner(
               text: l10n.setupBannerAutostart,
               action: l10n.setupAdjust,
               onTap: () => SetupCheck.open(SetupItem.autostart),

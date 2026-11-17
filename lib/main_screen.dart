@@ -28,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   final _screens = <int, Widget>{};
 
   Widget _buildScreen(int index) => switch (index) {
-        0 => TodayScreen(storage: widget.storage),
+        0 => TodayScreen(storage: widget.storage, onLocaleChange: widget.onLocaleChange),
         1 => HabitsScreen(storage: widget.storage),
         _ => SettingsScreen(storage: widget.storage, onLocaleChange: widget.onLocaleChange),
       };

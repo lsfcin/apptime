@@ -43,32 +43,6 @@ class _SetupTile extends StatelessWidget {
   }
 }
 
-/// Shown on top only while the timer is stopped, or will not survive a reboot.
-class _SetupBanner extends StatelessWidget {
-  const _SetupBanner({required this.text, required this.action, required this.onTap});
-  final String text;
-  final String action;
-  final VoidCallback onTap;
-
-  // Neutral card, checklist icon: a step to finish, not an alarm about the phone.
-  @override
-  Widget build(BuildContext context) => Card(
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Row(children: [
-              Icon(Icons.checklist, color: Theme.of(context).colorScheme.primary),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(child: Text(text, style: Theme.of(context).textTheme.bodyLarge)),
-              const SizedBox(width: AppSpacing.sm),
-              FilledButton.tonal(onPressed: onTap, child: Text(action)),
-            ]),
-          ),
-        ),
-      );
-}
-
 // ── Section header ─────────────────────────────────────────────────────────────
 
 // ── _SettingsScreenState action helpers ────────────────────────────────────────

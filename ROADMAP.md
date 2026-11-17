@@ -10,7 +10,7 @@ Two blocks left, in order. Lucas has no Play developer account yet: creating it 
 - **Family phones** (Lucas brings them when asked): install the approved debug build on a Samsung and a Motorola. The pill reads SystemUI's clock and top padding (`SystemBar`, `outputs/apptime-panel-tamanho.md`); check they exist and match the icons, the overlay shows inside the bar, and the pill's ink is legible on their launcher (else Ajustes › "Cor do texto na tela inicial", or a `ChipShade.knownDark` entry).
 - **Battery**: the release-build run under v1 design decisions below, started at a session's end and read the next day.
 - **Reviews**: `prelaunch-legal` (milestone below) and `ux-20` (App screens below).
-- **Onboarding sketches** (built 2026-11-16, not yet seen on a phone): check them on both Xiaomis, then a privacy screen before step 1 with Concordo / Agora não (Play's prominent disclosure) that also says why Android warns.
+- **Onboarding sketches**: overlay and usage approved on the Redmi Note 10 Pro (2026-11-16); autostart, battery and hibernation still to see there. Then a privacy screen before step 1 with Concordo / Agora não (Play's prominent disclosure) that also says why Android warns. Lucas's sister's Redmi 12 keeps the beta informally: nothing waits on reading it (Lucas 2026-11-16).
 
 **B — publishing**: the milestone below — Play account, signing, store assets, internal testing.
 - **Low priority**: the Aba zigzagged once on opening Telegram (Lucas 2026-11-09, not repeated). Hypothesis: a transient package between apps moves it, since `OverlayService` follows `current_pkg` unfiltered. Diagnose only if it returns.

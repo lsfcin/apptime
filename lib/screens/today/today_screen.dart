@@ -6,25 +6,50 @@ import '../../theme/index.dart';
 import '../../utils/index.dart';
 import '../../widgets/index.dart';
 import '../apps/index.dart';
+import '../index.dart' show OnboardingScreen;
 
 /// From this much use in the last 2 h, the line says "quase sem pausa" (Lucas 2026-11-06).
 const _kNonstopFromMs = 100 * 60 * 1000;
 
 class TodayScreen extends StatefulWidget {
-  const TodayScreen({super.key, required this.storage});
+  const TodayScreen({super.key, required this.storage, required this.onLocaleChange});
   final StorageService storage;
+  final void Function(String?) onLocaleChange;
 
   @override
   State<TodayScreen> createState() => _TodayScreenState();
 }
 
 class _TodayScreenState extends State<TodayScreen> with ReloadOnResume {
+  /// The app opens here, so a stopped timer must show here too, not only in Ajustes (B11).
+  bool _stopped = false;
+
   @override
   StorageService get storage => widget.storage;
   @override
   Duration get reloadEvery => const Duration(minutes: 1);
+
   @override
-  void onReloaded() => setState(() {});
+  void initState() {
+    super.initState();
+    _readStopped();
+  }
+
+  @override
+  void onReloaded() {
+    setState(() {});
+    _readStopped();
+  }
+
+  Future<void> _readStopped() async {
+    final stopped = (await SetupCheck.load(widget.storage)).stopped;
+    if (mounted && stopped != _stopped) setState(() => _stopped = stopped);
+  }
+
+  Future<void> _openSetup() async {
+    await OnboardingScreen.reopen(context, widget.storage, widget.onLocaleChange);
+    await reloadNow();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +66,10 @@ class _TodayScreenState extends State<TodayScreen> with ReloadOnResume {
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.md),
           children: [
+            if (_stopped) ...[
+              SetupBanner(text: l10n.setupBanner, action: l10n.setupRelaunch, onTap: _openSetup),
+              const SizedBox(height: AppSpacing.lg),
+            ],
             LeadNumber(label: l10n.todayLead, value: fmtDuration(day.phoneMs), sentence: phone.text, past: phone.past),
             const SizedBox(height: AppSpacing.sm),
             // A plain fact, no comparison: the 2-hour share of a typical day was a sum, not a habit (panel 2026-11-06).

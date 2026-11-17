@@ -13,9 +13,9 @@ List<String> mockServiceChannel({
   final messenger = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   messenger.setMockMethodCallHandler(channel, (call) async {
     calls.add(call.method);
-    return call.method == 'getBackgroundStatus'
-        ? {'batteryExempt': true, 'hibernationExempt': true, ...background}
-        : call.method.startsWith('has') && !denied.contains(call.method);
+    if (call.method == 'getBackgroundStatus') return {'batteryExempt': true, 'hibernationExempt': true, ...background};
+    // Anything not a has-check answers null, the "no data" every ServiceChannel caller already defaults.
+    return call.method.startsWith('has') ? !denied.contains(call.method) : null;
   });
   addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
   return calls;

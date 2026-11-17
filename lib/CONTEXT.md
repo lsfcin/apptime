@@ -22,5 +22,6 @@
 | [`widgets/app_icon.dart`](widgets/app_icon.dart) | [`widgets/app_icon.dart.api`](widgets/app_icon.dart.api) | AppIcon widget: an installed app's own icon, fetched once per package and size, a neutral disc while it loads |
 | [`widgets/lead_number.dart`](widgets/lead_number.dart) | [`widgets/lead_number.dart.api`](widgets/lead_number.dart.api) | LeadNumber widget: a screen's one big number with the sentence that says what it means, and dayAgainstUsual() for it |
 | [`widgets/reload_on_resume.dart`](widgets/reload_on_resume.dart) | [`widgets/reload_on_resume.dart.api`](widgets/reload_on_resume.dart.api) | ReloadOnResume: a State mixin that rereads what the Kotlin side wrote on every return to the app and every [reloadEvery], then calls onReloaded() |
-| [`widgets/section_header.dart`](widgets/section_header.dart) | [`widgets/section_header.dart.api`](widgets/section_header.dart.api) | SectionHeader widget: styled section title bar used across multiple screens |
+| [`widgets/section_header.dart`](widgets/section_header.dart) | [`widgets/section_header.dart.api`](widgets/section_header.dart.api) | SectionHeader widget: a section's title, flush left and heavy enough to read as one, on every screen |
+| [`widgets/setup_banner.dart`](widgets/setup_banner.dart) | [`widgets/setup_banner.dart.api`](widgets/setup_banner.dart.api) | SetupBanner: a setting left to finish, as one neutral card with its action — on Hoje and in Ajustes |
 <!-- routing:end -->

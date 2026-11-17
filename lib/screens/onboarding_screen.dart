@@ -26,6 +26,12 @@ class OnboardingScreen extends StatefulWidget {
   /// Otherwise (the home banner, the settings checklist): the missing items, then back.
   final bool firstRun;
 
+  /// The missing items only, from a banner (Hoje or Ajustes); completes when the flow closes.
+  static Future<void> reopen(BuildContext context, StorageService storage, void Function(String?) onLocaleChange) =>
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => OnboardingScreen(storage: storage, onLocaleChange: onLocaleChange, firstRun: false),
+      ));
+
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
@@ -88,7 +94,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
 
   void _next() {
     if (!mounted) return;
-    if (_index + 1 >= _queue.length) return _finish();
+    if (_index + 1 >= _queue.length) {
+      _finish();
+      return;
+    }
     setState(() {
       _index++;
       _sentence = 0;
@@ -96,11 +105,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
     });
   }
 
-  void _finish() {
+  /// Awaits the start, so the screen underneath rereads a running timer, not "Iniciar" (Lucas 2026-11-16).
+  Future<void> _finish() async {
     widget.storage.onboardingDone = true;
     final check = _check;
     if (check != null && check.isOn(SetupItem.overlay) && check.isOn(SetupItem.usage)) {
-      ServiceChannel.startMonitoring();
+      await ServiceChannel.startMonitoring();
     }
     if (!mounted) return;
     if (!widget.firstRun) return Navigator.of(context).pop();

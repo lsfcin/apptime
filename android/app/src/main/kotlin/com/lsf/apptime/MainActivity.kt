@@ -21,7 +21,7 @@ class MainActivity : FlutterActivity() {
                 when (call.method) {
                     "startMonitoring" -> {
                         MonitoringSwitch.turnOn(this)
-                        result.success(null)
+                        replyWhenRunning(result)
                     }
                     "stopMonitoring" -> {
                         MonitoringSwitch.turnOff(this)
@@ -129,6 +129,18 @@ class MainActivity : FlutterActivity() {
         return mode == AppOpsManager.MODE_ALLOWED
     }
 
+    /** The service flags itself running in onStartCommand, after turnOn returns: answer once it has,
+     *  so a screen that rereads isRunning right after does not offer "Iniciar" for a running timer. */
+    private fun replyWhenRunning(result: MethodChannel.Result, waitedMs: Long = 0) {
+        if (MonitoringService.isRunning || waitedMs >= START_WAIT_MS) return result.success(null)
+        android.os.Handler(mainLooper).postDelayed({ replyWhenRunning(result, waitedMs + START_POLL_MS) }, START_POLL_MS)
+    }
+
     private fun isServiceRunning(serviceClass: Class<*>): Boolean =
         serviceClass == MonitoringService::class.java && MonitoringService.isRunning
+
+    private companion object {
+        const val START_WAIT_MS = 2000L
+        const val START_POLL_MS = 50L
+    }
 }

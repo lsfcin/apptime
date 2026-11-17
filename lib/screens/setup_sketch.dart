@@ -48,7 +48,12 @@ class _PhoneState extends State<_Phone> with SingleTickerProviderStateMixin {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Three times, then it rests tapped: a guide, not a loop to stare at.
-    MediaQuery.of(context).disableAnimations ? _pulse.value = 1 : _pulse.repeat(count: 3);
+    // repeat(count:) stops back at the loop's start, so park it at the end by hand.
+    if (MediaQuery.of(context).disableAnimations) {
+      _pulse.value = 1;
+    } else {
+      _pulse.repeat(count: 3).whenComplete(() { if (mounted) _pulse.value = 1; });
+    }
   }
 
   @override
@@ -118,12 +123,16 @@ class _PhoneState extends State<_Phone> with SingleTickerProviderStateMixin {
     );
   }
 
-  /// Off (or on, for a switch to turn off) until the pulse's second half, when the tap lands.
+  /// Each loop: a quiet beat in the start state, the ring, then the tap flips it and it holds.
+  /// The quiet beat keeps the loop's reset apart from the ring, else the reset reads as the tap (Lucas 2026-11-16).
+  static const _ringFrom = 0.2, _tapAt = 0.55;
+
+  /// Off (or on, for a switch to turn off) until the ring closes, when the tap lands.
   Widget _switch(ColorScheme scheme, {required bool pulsing}) {
     final t = _pulse.value;
-    final tapped = pulsing && t > 0.5;
+    final tapped = pulsing && t > _tapAt;
     final on = widget.switchOn != tapped;
-    final ring = pulsing && t <= 0.5 ? t * 2 : 0.0;
+    final ring = pulsing && t > _ringFrom && t <= _tapAt ? (t - _ringFrom) / (_tapAt - _ringFrom) : 0.0;
     final track = Container(
       width: 22, height: 12,
       alignment: on ? Alignment.centerRight : Alignment.centerLeft,
@@ -135,11 +144,13 @@ class _PhoneState extends State<_Phone> with SingleTickerProviderStateMixin {
       child: Container(width: 8, height: 8, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle)),
     );
     if (ring == 0) return track;
-    return Stack(clipBehavior: Clip.none, alignment: Alignment.center, children: [
-      Container(
-        width: 22 + 18 * ring, height: 22 + 18 * ring,
-        decoration: BoxDecoration(shape: BoxShape.circle,
-            border: Border.all(color: AppColors.brand(scheme.brightness).withValues(alpha: 1 - ring), width: 2)),
+    // Positioned, so the ring draws past the track without growing the row (it shook the list).
+    final size = 22 + 18 * ring;
+    return Stack(clipBehavior: Clip.none, children: [
+      Positioned(
+        left: (22 - size) / 2, top: (12 - size) / 2, width: size, height: size,
+        child: Container(decoration: BoxDecoration(shape: BoxShape.circle,
+            border: Border.all(color: AppColors.brand(scheme.brightness).withValues(alpha: 1 - ring), width: 2))),
       ),
       track,
     ]);

@@ -1,7 +1,5 @@
 # AppTime — Roadmap
 
-Read the next milestone, implement it bullet by bullet. Delete a bullet once it is done, and commit.
-
 ## Next, to close v1 (Lucas 2026-11-16: features done, the Redmi build approved)
 
 Two blocks left, in order. Lucas has no Play developer account yet: creating it ($25) opens block B.
@@ -9,7 +7,7 @@ Two blocks left, in order. Lucas has no Play developer account yet: creating it 
 **A — validation**
 - **Family phones** (Lucas brings them when asked): install the approved debug build on a Samsung and a Motorola. The pill reads SystemUI's clock and top padding (`SystemBar`, `outputs/apptime-panel-tamanho.md`); check they exist and match the icons, the overlay shows inside the bar, and the pill's ink is legible on their launcher (else Ajustes › "Cor do texto na tela inicial", or a `ChipShade.knownDark` entry).
 - **Battery**: the release-build run under v1 design decisions below, started at a session's end and read the next day.
-- **Reviews**: `prelaunch-legal` (milestone below) and `ux-20` (App screens below).
+- **Reviews**: `prelaunch-legal` (below); `ux-20` and next design pass `unslop-20` (App screens).
 - **Onboarding sketches**: overlay and usage approved on the Redmi Note 10 Pro (2026-11-16); autostart, battery and hibernation still to see there. Then a privacy screen before step 1 with Concordo / Agora não (Play's prominent disclosure) that also says why Android warns. Lucas's sister's Redmi 12 keeps the beta informally: nothing waits on reading it (Lucas 2026-11-16).
 
 **B — publishing**: the milestone below — Play account, signing, store assets, internal testing.
@@ -19,6 +17,8 @@ Two blocks left, in order. Lucas has no Play developer account yet: creating it 
 ## To evaluate for 1.1 (Lucas 2026-11-10)
 
 Out of v1. Each goes to a usability and design panel first, and enters 1.1 only if it proves worth it.
+
+- [ ] [rust-anything] Assess usefulness for AppTime and identify other projects only where a measured hotspot fits. Check Dart/Kotlin/platform support, bridge cost and replay coverage before any trial; the author's Prettier speedup is not AppTime evidence. Ref: [refs/REFS.md](refs/REFS.md) [rust-anything]. Evaluation only; no rewrite selected.
 
 - **Per-app screen**: a position control with "back to default" (the drag already saves one per app), fullscreen/landscape behaviour, and a 24-hour "quando você costuma usar" map.
 - **Intensity as a setting**: none · colour/weight (built: bold + amber past the usual) · contrast · grow slowly (capped, ~300 ms between apps).
@@ -127,6 +127,8 @@ rotation; app-switch latency of `UsageStatsManager` on Xiaomi (panel warns 2–5
 rail must not swallow taps meant for edge UI (back-swipe zones, side buttons of vertical video).
 
 ### App screens (screen review, 2026-10-31; panel Codex · Gemini agreed unless noted)
+
+- [ ] [unslop-20] Next design pass (Lucas, INBOX 2026-11-09): review Charles Liu's 20 directives against current screens; map before/after examples to concrete changes, compare `ux-20`, and test usability. Preserve the chosen visual system; the reel does not decide style. Ref: [refs/REFS.md](refs/REFS.md) [unslop-20].
 
 - [ ] [ux-20] Reconstruct each spoken directive→screen item; preserve illegible labels and blank item 20. Compare guidance and test usability changes; no universal thresholds. Ref: refs/REFS.md [20 UX principles].
 

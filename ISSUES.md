@@ -42,6 +42,10 @@ so each value below holds there and is unknown elsewhere:
 Next step: a stock-Android emulator pass (Pixel image) for the first four; a second physical
 brand before the Play release.
 
+## B12 — intermittent black screen at startup
+
+Lucas (2026-11-25) reports a long black screen before AppTime’s first screen on some launches. Check the first launch after a fresh install and after a device reboot separately. Measure time to the first usable screen, reduce the delay, and assess a splash screen or loading animation for any remaining wait.
+
 ## B9 — the session at 04:00 and the time zone
 
 At the 04:00 rollover `MonitoringService.tick` drops the open session from the totals and the
@@ -53,6 +57,10 @@ session log alike, and neither stores the time zone, so a trip re-reads past hou
 Dart prunes at 90 days (`storage_service_queries.dart` `pruneOldData`), Kotlin at 31
 (`MonitoringService.pruneOldData`), and Kotlin runs daily, so 31 wins; README/CONTEXT still say 90.
 One owner and one number is the fix; the session log follows Kotlin's 31 meanwhile.
+
+## Validation blocked by a read-only Flutter cache
+
+The 2026-11-25 close pushed `feature/inbox-design-tools` (`c1b6c8149d8654af5e6d0df56f99683109273f8f`) as a draft and released the checkout. `make verify-fast` stopped before analysis and tests because Flutter could not write `engine.stamp.tmp` and `engine.realm` under `/opt/flutter/bin/cache`. Resume the branch only with Lucas’s approval, then verify with a writable Flutter cache. Brain already tracks the `unslop-20` and `rust-anything` evaluations and cleared their captures (`84b22dd`, `29c2d0d`). [src: agent 2026-11-25]
 
 <!-- entropy:start -->
 ## Entropy
